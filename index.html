@@ -1,4 +1,8 @@
-<title>Задачи</title>
+<!DOCTYPE html>
+<html lang="ru" data-theme="tasks" data-mode="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -6,9 +10,10 @@
 <meta name="theme-color" content="#05353d">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAADpElEQVR42u3dTVLcMBAGUKOCI7EkZ8hROQPXYpMFVSkWqTCesaT+ed+WDW69aUkzsv308vp2iPwrQwkEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOKRanlP8l5/vH/VK//L7V/D/8CnsIxhKgsgFJSKOViwiEwmEo62JsEoGGabUuJ0Di7AtZJChhUTEQUbwKg0y+IiFg4wUFduwIL3vOuN/n1ivCKtxnC1KMRO5CrIUx6lClGcRvzLrcNx+/a1YRC5RuJ/s28o42v62cstnojOLmOUaZCRtIQs2t06CSWwc2kbMmkzH8WP3I+PuysyeWUwrsgmHtpG6eegcEhKHthG8SjqH7MDh0MaazKvzts5hTolfK9OKwCFwCBwCh8AhcAgcAofAIQ8l9W8IcEyXkdcHHCt6RlIfcCyaTT7fP9IRgcMSBI4wAhL5gGNDb8jiA449s0aKJQgcO9cTwX3AsXOlGfysJBxkwBEsKc5Xw7GnbditkJG4bcBBBhxkwEEGHGTAQQYc5ZP3lnE4preNvIHDhFIdx+zPdM93xIwyMub5aPv2oFFDxrz+0fm9UqOMjBk+mr9xbFSSEWFPUelZZ6OYjAt9eBriqCfjkqH1CsuUOE6d8CajEY6zw7bsRHjJx6omw3HHGJwabDJyTyvzfJBRYUE6u3+QkXsre7kPG9c6OK71YUKphuMqH2TUxPG4DzIq43jEBxn1cazcv7R6h1CdY4ILhq3b26VKnSGdOngN3ztW7YCxV8fBsdpHT3M1b024dizbdqOy961cNaKd56nKNzU9Pq7NVzDF73h7ZHStbevfDnnfGJNxNLlX1kjDcZkPmHrhuH3IyeiI4/8D//UnMr7nudsFfw3/959k/4IgozsODkwrAofAIXAIHMdxuIkoQ60m4rAjyL7zMq1ISBxmluBV0jlkE44fp0PN48H6TF3Y6RyyD4fmkbRtROkcfMSsiWlFtuK4pftpHmerseA7xqeX17dQfbL596qhqjSSVsc6Y0HWdY6zF9+qhcSszFIcd3w4yhOJXJDVOA7PW8pThA047E3mbfoqLEgd9UhRsdHqaslIs5XlI3iVRtsrJyPogtQSNcXHZqgFGdE7hy4S8BMSEUdDIjEbZ1wc5aHEn0lz4JDWC1KBQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUPgEIFDzuYPMCCQRIDm650AAAAASUVORK5CYII=">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAADpElEQVR42u3dTVLcMBAGUKOCI7EkZ8hROQPXYpMFVSkWqTCesaT+ed+WDW69aUkzsv308vp2iPwrQwkEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOKRanlP8l5/vH/VK//L7V/D/8CnsIxhKgsgFJSKOViwiEwmEo62JsEoGGabUuJ0Di7AtZJChhUTEQUbwKg0y+IiFg4wUFduwIL3vOuN/n1ivCKtxnC1KMRO5CrIUx6lClGcRvzLrcNx+/a1YRC5RuJ/s28o42v62cstnojOLmOUaZCRtIQs2t06CSWwc2kbMmkzH8WP3I+PuysyeWUwrsgmHtpG6eegcEhKHthG8SjqH7MDh0MaazKvzts5hTolfK9OKwCFwCBwCh8AhcAgcAofAIQ8l9W8IcEyXkdcHHCt6RlIfcCyaTT7fP9IRgcMSBI4wAhL5gGNDb8jiA449s0aKJQgcO9cTwX3AsXOlGfysJBxkwBEsKc5Xw7GnbditkJG4bcBBBhxkwEEGHGTAQQYc5ZP3lnE4preNvIHDhFIdx+zPdM93xIwyMub5aPv2oFFDxrz+0fm9UqOMjBk+mr9xbFSSEWFPUelZZ6OYjAt9eBriqCfjkqH1CsuUOE6d8CajEY6zw7bsRHjJx6omw3HHGJwabDJyTyvzfJBRYUE6u3+QkXsre7kPG9c6OK71YUKphuMqH2TUxPG4DzIq43jEBxn1cazcv7R6h1CdY4ILhq3b26VKnSGdOngN3ztW7YCxV8fBsdpHT3M1b024dizbdqOy961cNaKd56nKNzU9Pq7NVzDF73h7ZHStbevfDnnfGJNxNLlX1kjDcZkPmHrhuH3IyeiI4/8D//UnMr7nudsFfw3/959k/4IgozsODkwrAofAIXAIHMdxuIkoQ60m4rAjyL7zMq1ISBxmluBV0jlkE44fp0PN48H6TF3Y6RyyD4fmkbRtROkcfMSsiWlFtuK4pftpHmerseA7xqeX17dQfbL596qhqjSSVsc6Y0HWdY6zF9+qhcSszFIcd3w4yhOJXJDVOA7PW8pThA047E3mbfoqLEgd9UhRsdHqaslIs5XlI3iVRtsrJyPogtQSNcXHZqgFGdE7hy4S8BMSEUdDIjEbZ1wc5aHEn0lz4JDWC1KBQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUPgEIFDzuYPMCCQRIDm650AAAAASUVORK5CYII=">
+<title>Задачи</title>
 <style>
 /* ============ ТОКЕНЫ ============ */
-:root, [data-app-theme="tasks"] {
+:root, [data-theme="tasks"] {
     --bg-sidebar: #06323a; --bg-main: #05353d;
     --border-color: #1a525d; --text-white: #ffffff; --text-muted: #7eaeb6;
     --accent-cyan: #00e5ff;
@@ -36,10 +41,10 @@
     --line: rgba(255,255,255,0.07);
     --seg-bg: rgba(255,255,255,0.06); --seg-active: rgba(255,255,255,0.16);
     --shadow-pop: 0 12px 32px rgba(0,0,0,0.45);
-    --radius: 10px;
+    --radius: 10px; --cb: 1.1rem;
     --w-clock: #00e5ff; --w-sw: #ff9f43; --w-weather: #8ea8ff; --w-search: #8fb8c0; --w-calc: #c084fc;
 }
-[data-app-theme="tasks"][data-mode="light"] {
+[data-theme="tasks"][data-mode="light"] {
     --bg-sidebar:#e8f0f2; --bg-main:#f5f9fa;
     --border-color:#c6d5d9; --text-white:#14262a; --text-muted:#5a7a82;
     --accent-cyan:#0088a8; --danger:#d32f2f; --warning:#e08600; --success:#388e3c;
@@ -63,7 +68,7 @@
 }
 
 /* ====== Тема iPhone (в стиле «Заметок») ====== */
-[data-app-theme="iphone"] {
+[data-theme="iphone"] {
     --bg-sidebar: #1c1c1e; --bg-main: #000000;
     --left-bg: #1c1c1e; --left-text: #ffffff; --right-bg: #000000; --right-text: #ffffff;
     --top-bg: #1c1c1e; --topbar-border: #2c2c2e; --topbar-text: #ffffff; --topbar-text-dim: #8e8e93; --topbar-accent: #ffd60a;
@@ -80,7 +85,7 @@
     --shadow-pop: 0 16px 40px rgba(0,0,0,0.6);
     --w-clock: #ff453a; --w-sw: #30d158; --w-weather: #0a84ff; --w-search: #8e8e93; --w-calc: #ff9f0a;
 }
-[data-app-theme="iphone"][data-mode="light"] {
+[data-theme="iphone"][data-mode="light"] {
     --bg-sidebar: #f2f2f7; --bg-main: #ffffff;
     --left-bg: #f2f2f7; --left-text: #000000; --right-bg: #ffffff; --right-text: #000000;
     --top-bg: #f9f9f9; --topbar-border: #e5e5ea; --topbar-text: #000000; --topbar-text-dim: #8a8a8e; --topbar-accent: #c99a00;
@@ -98,23 +103,98 @@
     --w-clock: #ff3b30; --w-sw: #34c759; --w-weather: #007aff; --w-search: #8a8a8e; --w-calc: #ff9500;
 }
 /* iPhone: виджеты как в iOS — нейтральная плашка, цветная иконка */
-[data-app-theme="iphone"] .w-chip { background: var(--seg-bg); border-color: transparent; border-radius: 12px; }
-[data-app-theme="iphone"] .w-sw.running { background: color-mix(in srgb, var(--wc) 20%, transparent); }
-[data-app-theme="iphone"] .w-search:focus-within { border-color: transparent; box-shadow: 0 0 0 2px color-mix(in srgb, var(--topbar-accent) 50%, transparent); }
-[data-app-theme="iphone"] .w-sep { background: var(--line); }
-[data-app-theme="iphone"] .folder-row { text-transform: none; letter-spacing: 0; font-size: .95rem; font-weight: 700; color: var(--text-white); }
-[data-app-theme="iphone"] .list-row.active { color: var(--text-white); }
-[data-app-theme="iphone"] .list-row.active .count { background: var(--accent-cyan); color: #000; }
-[data-app-theme="iphone"] .rte-editor:focus { box-shadow: none; }
-[data-app-theme="iphone"] .task-item.editing { box-shadow: none; background: var(--input-bg); }
-[data-app-theme="iphone"] .checkbox svg { stroke: #000; }
-[data-app-theme="iphone"] .editor-head { color: var(--text-muted); }
-[data-app-theme="iphone"] .tb-mic { color: var(--accent-cyan); }
-[data-app-theme="iphone"] .sidebar, [data-app-theme="iphone"] .panel-header { border-color: var(--line); }
-[data-app-theme="iphone"] .settings-section-title { color: var(--text-muted); }
-[data-app-theme="iphone"] .add-task-btn .plus { background: var(--accent-cyan); color: #000; }
+[data-theme="iphone"] .w-chip { background: var(--seg-bg); border-color: transparent; border-radius: 12px; }
+[data-theme="iphone"] .w-sw.running { background: color-mix(in srgb, var(--wc) 20%, transparent); }
+[data-theme="iphone"] .w-search:focus-within { border-color: transparent; box-shadow: 0 0 0 2px color-mix(in srgb, var(--topbar-accent) 50%, transparent); }
+[data-theme="iphone"] .w-sep { background: var(--line); }
+[data-theme="iphone"] .folder-row { text-transform: none; letter-spacing: 0; font-size: .88rem; font-weight: 600; color: var(--text-white); }
+[data-theme="iphone"] .list-row.active { box-shadow: none; }
+[data-theme="iphone"] .list-row.active { color: var(--text-white); }
+[data-theme="iphone"] .list-row.active .count { background: var(--accent-cyan); color: #000; }
+[data-theme="iphone"] .rte-editor:focus { box-shadow: none; }
+[data-theme="iphone"] .task-item.editing { box-shadow: none; background: var(--input-bg); }
+[data-theme="iphone"] .checkbox svg { stroke: #000; }
+[data-theme="iphone"] .editor-head { color: var(--text-muted); }
+[data-theme="iphone"] .tb-mic { color: var(--accent-cyan); }
+[data-theme="iphone"] .sidebar, [data-theme="iphone"] .panel-header { border-color: var(--line); }
+[data-theme="iphone"] .settings-section-title { color: var(--text-muted); }
+[data-theme="iphone"] .add-task-btn .plus { background: var(--accent-cyan); color: #000; }
+/* ====== Тема Unibody: алюминий, белый, графит и красный провод ====== */
+[data-theme="unibody"] {
+    --bg-sidebar: #1e1f21; --bg-main: #161718;
+    --left-bg: #1e1f21; --left-text: #e8e8ea; --right-bg: #161718; --right-text: #ececee;
+    --top-bg: #1b1c1e; --topbar-border: #2c2d30; --topbar-text: #ececee; --topbar-text-dim: #8b8d92; --topbar-accent: #e8202f;
+    --border-color: #2c2d30; --text-white: #f2f2f3; --text-muted: #8b8d92;
+    --accent-cyan: #e8202f; --danger: #ff3b47; --warning: #e0a030; --success: #8fbf6a;
+    --accent-glow: rgba(232,32,47,0.25); --accent-glow-strong: rgba(232,32,47,0.5);
+    --checkbox-border: #5a5c61; --checkbox-check: #e8202f;
+    --task-hover-bg: rgba(255,255,255,0.03);
+    --input-bg: #1e1f21; --input-active-bg: #1e1f21; --input-active-border: rgba(232,32,47,0.45);
+    --folder-header-bg: transparent; --folder-header-hover: rgba(255,255,255,0.04); --folder-header-selected: rgba(255,255,255,0.06);
+    --menu-item-hover: rgba(255,255,255,0.05); --menu-item-active: rgba(255,255,255,0.07);
+    --count-bg: transparent; --count-color: #8b8d92;
+    --line: rgba(255,255,255,0.07); --seg-bg: rgba(255,255,255,0.06); --seg-active: #3a3b3f;
+    --shadow-pop: 0 14px 36px rgba(0,0,0,0.55);
+    --w-clock: #e8202f; --w-sw: #c8c9cc; --w-weather: #c8c9cc; --w-search: #8b8d92; --w-calc: #e8202f;
+    --radius: 6px;
+}
+[data-theme="unibody"][data-mode="light"] {
+    --bg-sidebar: #ececee; --bg-main: #f7f7f8;
+    --left-bg: #ececee; --left-text: #202124; --right-bg: #f7f7f8; --right-text: #1d1e20;
+    --top-bg: #e4e4e7; --topbar-border: #d3d3d7; --topbar-text: #1d1e20; --topbar-text-dim: #7d7f84; --topbar-accent: #d0101f;
+    --border-color: #d6d6da; --text-white: #1d1e20; --text-muted: #7d7f84;
+    --accent-cyan: #d0101f; --danger: #d0101f; --warning: #c47f00; --success: #4f8a2f;
+    --accent-glow: rgba(208,16,31,0.15); --accent-glow-strong: rgba(208,16,31,0.35);
+    --checkbox-border: #a9abb0; --checkbox-check: #d0101f;
+    --task-hover-bg: rgba(0,0,0,0.025);
+    --input-bg: #ffffff; --input-active-bg: #ffffff; --input-active-border: rgba(208,16,31,0.4);
+    --folder-header-hover: rgba(0,0,0,0.04); --folder-header-selected: rgba(0,0,0,0.05);
+    --menu-item-hover: rgba(0,0,0,0.04); --menu-item-active: rgba(0,0,0,0.06);
+    --count-bg: transparent; --count-color: #7d7f84;
+    --line: rgba(0,0,0,0.08); --seg-bg: rgba(0,0,0,0.05); --seg-active: #ffffff;
+    --shadow-pop: 0 14px 36px rgba(0,0,0,0.14);
+    --w-clock: #d0101f; --w-sw: #55575c; --w-weather: #55575c; --w-search: #7d7f84; --w-calc: #d0101f;
+}
+/* Unibody: тонкие линии, «шлифованный» верх с решёткой динамика, красный провод */
+[data-theme="unibody"] .topbar { background: linear-gradient(180deg, color-mix(in srgb, var(--top-bg) 100%, #fff 4%), var(--top-bg)); }
+[data-theme="unibody"] .topbar::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--accent-cyan) 0 64px, transparent 64px); }
+[data-theme="unibody"] .topbar::before { content: ''; position: absolute; left: 50%; top: 5px; width: 120px; height: 4px; transform: translateX(-50%); background-image: radial-gradient(circle, var(--topbar-text-dim) .9px, transparent 1.2px); background-size: 5px 4px; opacity: .45; pointer-events: none; }
+[data-theme="unibody"] .w-chip { background: transparent; border-color: var(--topbar-border); border-radius: 6px; }
+[data-theme="unibody"] .w-chip:hover, [data-theme="unibody"] .w-chip.open { border-color: color-mix(in srgb, var(--wc) 60%, transparent); background: transparent; }
+[data-theme="unibody"] .w-sw.running { border-color: var(--accent-cyan); }
+[data-theme="unibody"] .w-main { font-weight: 300; letter-spacing: .5px; }
+[data-theme="unibody"] .w-clock .w-main { font-size: 1rem; }
+[data-theme="unibody"] .w-sep { background: var(--topbar-border); }
+[data-theme="unibody"] .app-name, [data-theme="unibody"] .panel-title { font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
+[data-theme="unibody"] .panel-title { font-size: 1.2rem; }
+[data-theme="unibody"] .folder-row { font-size: .72rem; letter-spacing: 1.6px; font-weight: 600; opacity: .7; }
+[data-theme="unibody"] .list-row { font-weight: 400; }
+[data-theme="unibody"] .list-row.active { background: transparent; color: var(--text-white); font-weight: 600; box-shadow: inset 2px 0 0 var(--accent-cyan); border-radius: 0 6px 6px 0; }
+[data-theme="unibody"] .list-row.active .count, [data-theme="unibody"] .count { background: transparent; color: var(--text-muted); font-weight: 500; }
+[data-theme="unibody"] .checkbox { border-width: 1.2px; }
+[data-theme="unibody"] .checkbox svg { stroke: #fff; }
+[data-theme="unibody"] .task-title { font-weight: 500; }
+[data-theme="unibody"] .task-item.editing { box-shadow: inset 0 0 0 1px var(--border-color); background: var(--input-bg); }
+[data-theme="unibody"] .rte-editor { border-radius: 6px; box-shadow: inset 0 0 0 1px var(--border-color); }
+[data-theme="unibody"] .rte-editor:focus { box-shadow: inset 0 0 0 1px var(--input-active-border); }
+[data-theme="unibody"] .tb-group, [data-theme="unibody"] .segmented, [data-theme="unibody"] .pill { border-radius: 6px; }
+[data-theme="unibody"] .tb-btn, [data-theme="unibody"] .segmented button { border-radius: 4px; }
+[data-theme="unibody"] .segmented button.active { box-shadow: none; color: var(--accent-cyan); }
+[data-theme="unibody"] .pill .num { color: var(--accent-cyan); }
+[data-theme="unibody"] .editor-head, [data-theme="unibody"] .settings-section-title, [data-theme="unibody"] .settings-sub-title { color: var(--text-muted); letter-spacing: 2px; font-weight: 600; }
+[data-theme="unibody"] .add-task-btn .plus { background: transparent; box-shadow: inset 0 0 0 1.2px var(--accent-cyan); }
+[data-theme="unibody"] .add-task-btn:hover .plus { background: var(--accent-cyan); color: #fff; }
+[data-theme="unibody"] .tb-mic { color: var(--accent-cyan); }
+[data-theme="unibody"] .tb-mic.dict, [data-theme="unibody"] .tb-mic.on { background: var(--accent-cyan); color: #fff; }
+[data-theme="unibody"] .toggle.on, [data-theme="unibody"] .layer.on .mini-toggle { background: var(--accent-cyan); }
+[data-theme="unibody"] .calc-keys button { border-radius: 8px; }
+[data-theme="unibody"] .calc-keys .op { background: transparent; box-shadow: inset 0 0 0 1px var(--border-color); color: var(--accent-cyan); }
+[data-theme="unibody"] .calc-keys .op.on, [data-theme="unibody"] .calc-keys .eq { background: var(--accent-cyan); color: #fff; box-shadow: none; }
+[data-theme="unibody"] .calc-display { font-weight: 200; }
+[data-theme="unibody"] .clock-pop .cal-d.today { color: #fff; }
+[data-theme="unibody"] .settings-panel, [data-theme="unibody"] .w-pop, [data-theme="unibody"] .calendar-popup { border-radius: 10px; }
 /* TRON: лёгкое неоновое свечение виджетов */
-[data-app-theme="tasks"]:not([data-mode="light"]) .w-chip { box-shadow: 0 0 14px color-mix(in srgb, var(--wc) 10%, transparent); }
+[data-theme="tasks"]:not([data-mode="light"]) .w-chip { box-shadow: 0 0 14px color-mix(in srgb, var(--wc) 10%, transparent); }
 
 /* ============ БАЗА ============ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -124,7 +204,7 @@ html { font-size: calc(var(--font-size-base) * var(--ui-scale)); -webkit-text-si
 body {
     font-family: var(--font-family); font-size: 1rem; line-height: 1.4;
     background: var(--bg-main); color: var(--text-white);
-    height: 100%; overflow: hidden;
+    height: 100vh; height: 100dvh; overflow: hidden;
     display: flex; flex-direction: column;
     padding-top: env(safe-area-inset-top);
     -webkit-font-smoothing: antialiased;
@@ -176,7 +256,7 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .w-pop.visible { display: block; }
 .clock-pop { width: 312px; --wc: var(--w-clock); --ev: #0a84ff; }
 .clock-pop .cal-d.today { background: var(--wc); color: #fff; font-weight: 700; }
-[data-app-theme="tasks"]:not([data-mode="light"]) .clock-pop .cal-d.today { color: #001a1f; }
+[data-theme="tasks"]:not([data-mode="light"]) .clock-pop .cal-d.today { color: #001a1f; }
 .clock-pop .cal-d.sel:not(.today) { box-shadow: inset 0 0 0 1.5px var(--wc); }
 .clock-pop .cal-d { position: relative; flex-direction: column; }
 .clock-pop .dots { position: absolute; bottom: 3px; left: 0; right: 0; display: flex; justify-content: center; gap: 2px; }
@@ -192,6 +272,22 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .mini-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: transform .2s; }
 .layer.on .mini-toggle { background: var(--lc, var(--success)); box-shadow: none; }
 .layer.on .mini-toggle::after { transform: translateX(11px); }
+.cal-src-list { display: flex; flex-direction: column; gap: 6px; }
+.cal-src { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--input-bg); }
+.cal-src .sw { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; cursor: pointer; }
+.cal-src .nm { flex: 1; min-width: 0; color: var(--text-white); font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-src.cal-edit { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px; box-shadow: inset 0 0 0 1px var(--input-active-border); }
+.cal-src.builtin input.nm { background: transparent; border: 0; font: inherit; color: var(--text-white); outline: 0; }
+.cal-src .nm:focus { border-bottom: 1px solid var(--accent-cyan); }
+.cal-src .meta { font-size: .72rem; color: var(--text-muted); white-space: nowrap; max-width: 46%; overflow: hidden; text-overflow: ellipsis; }
+.cal-src .meta.err { color: var(--danger); }
+.cal-src .row-btn { opacity: 1; }
+.cal-src.builtin .nm { pointer-events: none; }
+.swatches { display: flex; gap: 6px; }
+body:not(.is-app) .app-only { display: none !important; }
+body.is-app .web-only { display: none !important; }
+.swatches button { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(0,0,0,.15); }
+.swatches button.on { box-shadow: 0 0 0 2px var(--bg-sidebar), 0 0 0 4px var(--text-white); }
 .cp-status { grid-column: 1 / -1; font-size: .72rem; color: var(--text-muted); cursor: pointer; line-height: 1.4; }
 .cp-status:hover { color: var(--accent-cyan); }
 .cp-status:empty { display: none; }
@@ -208,14 +304,56 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .clock-pop .cal-d.out { color: var(--text-muted); opacity: .45; }
 .pop-today { height: 26px; padding: 0 10px; border-radius: 8px; background: var(--seg-bg); font-size: .75rem; font-weight: 600; color: var(--wc); }
 .day-head { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--text-muted); }
-.day-list { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; max-height: 180px; overflow-y: auto; }
+.day-list { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; max-height: min(320px, 40vh); overflow-y: auto; }
 .day-item { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; cursor: pointer; font-size: .84rem; }
 .day-item:hover { background: var(--menu-item-hover); }
 .day-item .stat-dot { width: 8px; height: 8px; }
 .day-item .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.day-item.ev { align-items: flex-start; }
+.day-item.ev .stat-dot { margin-top: 5px; }
+.day-item.ev .tm { line-height: 1.35; padding-top: 1px; }
+.day-item.ev .t { line-height: 1.35; }
+.day-item.ev.open { background: var(--menu-item-hover); border-radius: 8px 8px 0 0; }
+.day-item.ev.open .t { white-space: normal; overflow-wrap: anywhere; }
+.ev-details { background: var(--menu-item-hover); border-radius: 0 0 8px 8px; padding: 2px 10px 10px 24px; margin-bottom: 4px; font-size: .8rem; display: flex; flex-direction: column; gap: 6px; }
+.ev-row { display: flex; align-items: flex-start; gap: 6px; color: var(--text-muted); line-height: 1.4; overflow-wrap: anywhere; }
+.ev-row svg.i { width: 13px; height: 13px; margin-top: 2px; flex-shrink: 0; }
+.ev-row .stat-dot { width: 7px; height: 7px; margin: 5px 3px 0; flex-shrink: 0; }
+.ev-src a { margin-left: auto; white-space: nowrap; }
+.ev-desc { color: var(--text-white); opacity: .85; line-height: 1.45; max-height: 140px; overflow-y: auto; overflow-wrap: anywhere; white-space: normal; }
+.ev-details a { color: var(--accent-cyan); text-decoration: none; }
+.ev-details a:hover { text-decoration: underline; }
 .day-item .l { color: var(--text-muted); font-size: .72rem; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .day-empty { font-size: .8rem; color: var(--text-muted); padding: 6px 2px; }
 /* калькулятор */
+.w-warn { display: none; width: 15px; height: 15px; border-radius: 50%; background: var(--warning); color: #1a1a1a; font-size: .66rem; font-weight: 800; line-height: 15px; text-align: center; margin-left: -2px; }
+.w-weather.stale .w-warn { display: inline-block; }
+.w-weather.stale .w-main { opacity: .7; }
+.wx-pop { width: 300px; --wc: var(--w-weather); }
+.wx-now { display: flex; align-items: center; gap: 12px; }
+.wx-big-ico svg { width: 40px; height: 40px; color: var(--wc); stroke-width: 1.5; }
+.wx-now-temp { font-size: 1.9rem; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+.wx-now-desc { font-size: .82rem; color: var(--text-muted); margin-top: 4px; }
+.wx-meta { font-size: .74rem; color: var(--text-muted); margin-top: 10px; line-height: 1.45; }
+.wx-meta.warn { color: var(--warning); }
+.wx-days { margin-top: 10px; border-top: 1px solid var(--line); }
+.wx-day { display: grid; grid-template-columns: 72px 22px 1fr 50px; align-items: center; gap: 8px; height: 34px; border-bottom: 1px solid var(--line); font-size: .85rem; }
+.wx-day:last-child { border-bottom: 0; }
+.wx-day .d { white-space: nowrap; } .wx-day .d.today { font-weight: 700; }
+.wx-day .ic svg { width: 18px; height: 18px; color: var(--wc); }
+.wx-day .rng { display: flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
+.wx-day .rng .lo { color: var(--text-muted); width: 30px; text-align: right; }
+.wx-day .rng .bar { flex: 1; height: 4px; border-radius: 2px; background: var(--seg-bg); position: relative; overflow: hidden; }
+.wx-day .rng .bar i { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: linear-gradient(90deg, #64d2ff, #ffd60a, #ff9f0a); }
+.wx-day .rng .hi { width: 30px; }
+.wx-day .pop { font-size: .72rem; color: #64d2ff; text-align: right; font-variant-numeric: tabular-nums; display: inline-flex; align-items: center; justify-content: flex-end; gap: 2px; white-space: nowrap; }
+.wx-day .pop svg { width: 9px; height: 9px; }
+.wx-day .pop.low { color: var(--text-muted); opacity: .6; }
+.wx-day.wx-head { height: 22px; font-size: .62rem; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); }
+.wx-day.wx-head .lo, .wx-day.wx-head .hi { color: var(--text-muted); font-size: .62rem; }
+.wx-day.wx-head .pop { font-size: .62rem; }
+.wx-empty { font-size: .8rem; color: var(--text-muted); padding: 10px 0; }
+.wx-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; font-size: .72rem; color: var(--text-muted); }
 .calc-pop { width: 264px; --wc: var(--w-calc); padding: 14px 14px 16px; }
 .calc-expr { height: 18px; text-align: right; font-size: .78rem; color: var(--text-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .calc-display { text-align: right; font-size: 2.1rem; font-weight: 300; line-height: 1.2; margin: 2px 0 12px; overflow: hidden; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: copy; }
@@ -228,10 +366,10 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .calc-keys .op.on { background: var(--wc); color: #fff; }
 .calc-keys .eq { background: var(--wc); color: #fff; font-size: 1.35rem; }
 .calc-keys .zero { grid-column: span 2; text-align: left; padding-left: 22px; }
-[data-app-theme="iphone"] .calc-keys .op { background: var(--wc); color: #fff; }
-[data-app-theme="iphone"] .calc-keys .op.on { background: #fff; color: var(--wc); }
-[data-app-theme="iphone"] .calc-keys .fn { background: #a5a5a5; color: #000; }
-[data-app-theme="iphone"][data-mode="light"] .calc-keys .fn { background: #d4d4d2; }
+[data-theme="iphone"] .calc-keys .op { background: var(--wc); color: #fff; }
+[data-theme="iphone"] .calc-keys .op.on { background: #fff; color: var(--wc); }
+[data-theme="iphone"] .calc-keys .fn { background: #a5a5a5; color: #000; }
+[data-theme="iphone"][data-mode="light"] .calc-keys .fn { background: #d4d4d2; }
 @media (max-width: 760px) { .w-pop { left: 12px !important; right: 12px; width: auto; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom)); } }
 .w-clock { --wc: var(--w-clock); } .w-sw { --wc: var(--w-sw); padding-right: 6px; } .w-weather { --wc: var(--w-weather); } .w-search { --wc: var(--w-search); }
 .w-sw.running { background: color-mix(in srgb, var(--wc) 18%, transparent); border-color: color-mix(in srgb, var(--wc) 50%, transparent); }
@@ -251,55 +389,67 @@ body.topbar-on .app-body { margin-top: var(--topbar-height); }
 
 /* ============ САЙДБАР ============ */
 .sidebar {
-    width: var(--sidebar-width); background: var(--left-bg); color: var(--left-text);
+    width: min(var(--sidebar-width), 45vw); min-width: 140px; background: var(--left-bg); color: var(--left-text);
     display: flex; flex-direction: column; border-right: 1px solid var(--border-color);
     flex-shrink: 0; position: relative; min-height: 0; overflow: hidden; z-index: 2;
 }
-.sidebar.collapsed { width: 0 !important; border-right: 0; }
+.sidebar.collapsed { width: 0 !important; min-width: 0 !important; border-right: 0; }
+.sidebar.collapsed .sidebar-footer { display: none; }
 .sidebar-resizer { position: absolute; top: 0; right: -3px; width: 6px; height: 100%; cursor: col-resize; z-index: 10; }
 .sidebar-resizer:hover, .sidebar-resizer.active { background: var(--accent-cyan); opacity: .4; }
 .sidebar-header {
-    height: var(--header-h); flex-shrink: 0; display: flex; align-items: center; gap: 4px;
-    padding: 0 12px 0 20px; border-bottom: 1px solid var(--border-color);
+    height: var(--header-h); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 0 10px 0 16px; border-bottom: 1px solid var(--border-color);
 }
-.app-name { font-size: 1.05rem; font-weight: 700; letter-spacing: .2px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-tools { display: flex; gap: 2px; }
+/* низ панели: создание списков/папок — как в Things, To Do, Todoist */
+.sidebar-footer { flex-shrink: 0; display: flex; align-items: center; gap: 4px; padding: 8px; border-top: 1px solid var(--border-color); }
+.footer-add { flex: 1; display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 8px; border-radius: 8px; color: var(--text-muted); font-size: .92rem; font-weight: 500; text-align: left; transition: background-color .15s, color .15s; }
+.footer-add svg.i { width: 16px; height: 16px; color: var(--accent-cyan); }
+.footer-add:hover, .footer-add.active { background: var(--menu-item-hover); color: var(--text-white); }
+.sidebar-footer .icon-btn { width: 34px; height: 34px; }
+.sidebar-footer .icon-btn svg.i { width: 17px; height: 17px; }
+.sidebar-tools .icon-btn { width: 26px; height: 26px; border-radius: 7px; }
+.sidebar-tools .icon-btn svg.i { width: 15px; height: 15px; }
+.app-name { font-size: 1.05rem; font-weight: 700; letter-spacing: .2px; min-width: 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hidden-counter { position: absolute; top: -3px; right: -3px; background: var(--danger); color: #fff; font-size: .58rem; font-weight: 700; min-width: 15px; height: 15px; border-radius: 8px; display: none; align-items: center; justify-content: center; padding: 0 4px; line-height: 1; }
 .hidden-counter.visible { display: flex; }
-.menu-list { list-style: none; overflow-y: auto; padding: 12px; flex: 1; }
+.menu-list { list-style: none; overflow-y: auto; padding: 10px 4px 10px 8px; flex: 1; }
 .menu-list ul { list-style: none; }
 
-.folder { margin-bottom: 4px; }
+.folder { margin-bottom: 1px; }
 .folder-row, .list-row {
-    display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 8px 0 10px;
-    border-radius: 8px; cursor: pointer; user-select: none; position: relative;
-    transition: background-color .15s, color .15s;
+    display: flex; align-items: center; gap: 6px; height: 2.1rem; padding: 0 6px 0 8px;
+    border-radius: 6px; cursor: pointer; user-select: none; position: relative;
+    transition: background-color .12s, color .12s;
 }
-.folder-row { color: var(--text-muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .9px; }
+.folder-row { color: var(--left-text); opacity: .88; font-size: .88rem; font-weight: 500; text-transform: uppercase; letter-spacing: .3px; }
+.folder-row:hover { opacity: 1; }
 .folder-row:hover { background: var(--folder-header-hover); color: var(--left-text); }
 .folder.selected > .folder-row { color: var(--left-text); }
 .folder.drop-into > .folder-row { background: var(--menu-item-active); box-shadow: inset 0 0 0 1px var(--accent-cyan); }
-.chev { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: transform .2s; flex-shrink: 0; }
-.chev svg { width: 12px; height: 12px; }
+.chev { width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: transform .2s; flex-shrink: 0; }
+.chev svg { width: 11px; height: 11px; stroke-width: 2.2; }
 .chev.open { transform: rotate(90deg); }
 .folder-name, .list-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.folder-lists { padding-left: 18px; margin: 2px 0 6px 9px; border-left: 1px solid var(--line); }
+.folder-lists { padding-left: 8px; margin: 1px 0 2px 15px; border-left: 1px solid var(--line); }
+.menu-list > .list-row { padding-left: 28px; }
 .folder-lists[hidden] { display: none; }
-.folder-empty { padding: 6px 10px; font-size: .75rem; color: var(--text-muted); font-style: italic; }
+.folder-empty { padding: 4px 8px; font-size: .75rem; color: var(--text-muted); font-style: italic; }
 
-.list-row { font-size: .9rem; color: var(--left-text); margin-bottom: 2px; }
+.list-row { font-size: .95rem; color: var(--left-text); margin-bottom: 1px; }
 .list-row:hover { background: var(--menu-item-hover); }
-.list-row.active { background: var(--menu-item-active); color: var(--accent-cyan); font-weight: 600; }
-.list-row .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); opacity: .55; flex-shrink: 0; margin: 0 2px; }
-.list-row.active .dot { background: var(--accent-cyan); opacity: 1; }
+.list-row.active { background: var(--folder-header-selected); color: var(--text-white); font-weight: 500; box-shadow: inset 2px 0 0 var(--accent-cyan); }
 .list-row.dragging { opacity: .4; }
 .list-row.drop-top::before, .list-row.drop-bottom::after { content: ''; position: absolute; left: 6px; right: 6px; height: 2px; background: var(--accent-cyan); border-radius: 1px; }
 .list-row.drop-top::before { top: -1px; } .list-row.drop-bottom::after { bottom: -1px; }
 .is-hidden { opacity: .45; }
-.count { min-width: 22px; height: 20px; padding: 0 7px; border-radius: 10px; background: var(--count-bg); color: var(--count-color); font-size: .7rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; flex-shrink: 0; }
-.count.zero { background: transparent; color: var(--text-muted); opacity: .6; }
+.count { min-width: 16px; height: 15px; padding: 0 5px; border-radius: 8px; background: var(--count-bg); color: var(--count-color); font-size: .62rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.count.zero { display: none; }
 .list-row.active .count { background: var(--accent-cyan); color: var(--bg-sidebar); }
-.row-actions { display: flex; gap: 2px; opacity: 0; transition: opacity .15s; flex-shrink: 0; }
-.folder-row:hover .row-actions, .list-row:hover .row-actions { opacity: 1; }
+.row-actions { display: none; gap: 2px; flex-shrink: 0; }
+.folder-row:hover .row-actions, .list-row:hover .row-actions { display: flex; }
+.list-row:hover .count { display: none; }
 .row-btn { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
 .row-btn svg { width: 14px; height: 14px; }
 .row-btn:hover { background: var(--menu-item-hover); color: var(--accent-cyan); }
@@ -312,21 +462,22 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 
 /* ============ ПРАВАЯ ПАНЕЛЬ ============ */
 .task-list-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--right-bg); color: var(--right-text); }
-.wrap { width: 100%; max-width: 1100px; margin: 0; padding: 0 24px; }
-@media (min-width: 761px) { .header-wrap { padding-left: 56px; } } /* заголовок на одной линии с кружками задач */
+:root { --wrap-pad: clamp(16px, 2.2vw, 28px); }
+.wrap { width: 100%; max-width: 1100px; margin: 0; padding: 0 var(--wrap-pad); }
+@media (min-width: 761px) { .header-wrap { padding-left: calc(var(--wrap-pad) + 4px); } } /* заголовок на одной линии с кружками задач */
 .panel-header { flex-shrink: 0; border-bottom: 1px solid var(--border-color); }
-.header-wrap { min-height: var(--header-h); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.header-wrap { max-width: none; min-height: calc(var(--header-h) - 1px); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .menu-btn { display: none; }
-.panel-title { font-size: 1.35rem; font-weight: 700; letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 40%; }
+.panel-title { font-size: 1.3rem; font-weight: 700; letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 40%; }
 .header-filters { display: flex; align-items: center; gap: 8px; }
 .header-spacer { flex: 1; }
-.task-scroll { flex: 1; overflow-y: auto; min-height: 0; padding: 24px 0 48px; -webkit-overflow-scrolling: touch; }
+.task-scroll { flex: 1; overflow-y: auto; min-height: 0; padding: 10px 0 40px; -webkit-overflow-scrolling: touch; }
 
 .pill { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 15px; background: var(--seg-bg); font-size: .8rem; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap; transition: background-color .15s, color .15s; }
 .pill:hover { color: var(--accent-cyan); }
 .pill.active { background: var(--menu-item-active); color: var(--accent-cyan); }
 .pill svg { width: 14px; height: 14px; }
-.pill .num { color: var(--accent-cyan); font-weight: 700; font-variant-numeric: tabular-nums; }
+.pill .num { color: var(--accent-cyan); font-weight: 600; font-variant-numeric: tabular-nums; }
 .filter-indicator { width: 8px; height: 8px; border-radius: 50%; display: none; }
 .hub { position: relative; }
 .dropdown { position: absolute; top: calc(100% + 8px); left: 0; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 12px; padding: 6px; box-shadow: var(--shadow-pop); z-index: 100; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity .15s, transform .15s; }
@@ -356,18 +507,18 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 
 /* ============ ЗАДАЧИ (общая сетка) ============ */
 /* колонки: [ручка 16] [кружок 22] [текст] [действия] — редактор использует те же колонки */
-.task-item, .task-input-area { display: grid; grid-template-columns: 16px 22px minmax(0,1fr) auto; column-gap: 12px; }
+.task-item, .task-input-area { display: grid; grid-template-columns: var(--cb) minmax(0,1fr) auto; column-gap: .75rem; }
 .task-item {
-    align-items: start; padding: 12px 8px 12px 4px; border-radius: 10px; position: relative;
+    align-items: start; padding: .55rem 8px .55rem 4px; border-radius: 10px; position: relative;
     cursor: pointer; transition: background-color .15s, opacity .4s, transform .4s;
 }
-.task-item + .task-item::before { content: ''; position: absolute; top: 0; left: 54px; right: 8px; height: 1px; background: var(--line); }
+.task-item + .task-item::before { content: ''; position: absolute; top: 0; left: calc(4px + var(--cb) + .75rem); right: 8px; height: 1px; background: var(--line); }
 .task-item:hover { background: var(--task-hover-bg); }
 .task-item:hover::before, .task-item:hover + .task-item::before, .task-item.editing::before, .task-item.editing + .task-item::before { opacity: 0; }
 .task-item.editing { background: var(--input-active-bg); box-shadow: inset 0 0 0 1px var(--input-active-border); }
 .task-item.is-new { animation: fadeIn .25s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-.task-item::after { content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 2px; background: transparent; }
+.task-item::after { content: ''; position: absolute; left: -10px; top: .55rem; bottom: .55rem; width: 3px; border-radius: 2px; background: transparent; }
 .task-item.dl-success::after { background: var(--success); }
 .task-item.dl-warning::after { background: var(--warning); }
 .task-item.dl-danger::after { background: var(--danger); }
@@ -380,19 +531,19 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 .task-item.drop-bottom { box-shadow: inset 0 -3px 0 var(--accent-cyan); }
 .task-item.move-source { box-shadow: inset 0 0 0 2px var(--accent-cyan); background: var(--input-active-bg); }
 
-.task-handle { height: 22px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0; cursor: grab; font-size: .85rem; letter-spacing: -2px; user-select: none; transition: opacity .15s; }
+.task-handle { position: absolute; left: -15px; top: .55rem; width: 14px; height: 1.4rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0; cursor: grab; font-size: .85rem; letter-spacing: -2px; user-select: none; transition: opacity .15s; }
 .task-item:hover .task-handle { opacity: .6; }
 .task-handle:hover { opacity: 1 !important; color: var(--accent-cyan); }
-.checkbox { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--checkbox-border); display: flex; align-items: center; justify-content: center; transition: border-color .15s, background-color .15s; }
-.checkbox svg { width: 13px; height: 13px; stroke: var(--bg-main); stroke-width: 3; opacity: 0; }
+.checkbox { width: var(--cb); height: var(--cb); margin-top: calc((1.4rem - var(--cb)) / 2); border-radius: 50%; border: 1.5px solid var(--checkbox-border); display: flex; align-items: center; justify-content: center; transition: border-color .15s, background-color .15s; }
+.checkbox svg { width: 65%; height: 65%; stroke: var(--bg-main); stroke-width: 3; opacity: 0; }
 .checkbox:hover { border-color: var(--accent-cyan); background: var(--input-active-bg); }
 .task-item.pending .checkbox, .task-item.done .checkbox { background: var(--checkbox-check); border-color: var(--checkbox-check); }
 .task-item.pending .checkbox svg, .task-item.done .checkbox svg { opacity: 1; }
 .task-body { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.task-title { font-size: .98rem; font-weight: 600; line-height: 22px; color: var(--right-text); overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.task-title { font-size: .98rem; font-weight: 600; line-height: 1.4rem; color: var(--right-text); overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .task-title.empty { color: var(--text-muted); font-style: italic; font-weight: 400; }
 .task-text { font-size: .85rem; line-height: 1.45; color: var(--text-muted); white-space: pre-line; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.task-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 5px; font-size: .72rem; color: var(--text-muted); min-height: 20px; }
+.task-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; font-size: .72rem; color: var(--text-muted); min-height: 20px; }
 .meta-item { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .meta-item svg { width: 12px; height: 12px; }
 .chip { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 8px; border-radius: 10px; font-size: .68rem; font-weight: 700; letter-spacing: .3px; white-space: nowrap; cursor: pointer; }
@@ -412,15 +563,15 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 .empty-state { padding: 48px 16px; text-align: center; color: var(--text-muted); font-size: .9rem; }
 
 /* ============ РЕДАКТОР ============ */
-.task-input-area { margin-bottom: 16px; padding: 0 8px 0 4px; }
-.add-task-btn { grid-column: 2 / 5; display: flex; align-items: center; gap: 12px; height: 46px; padding: 0; color: var(--text-muted); cursor: pointer; font-size: .95rem; user-select: none; border-radius: 10px; transition: color .15s; }
-.add-task-btn .plus { width: 22px; height: 22px; border-radius: 50%; background: var(--input-active-bg); color: var(--accent-cyan); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 0; }
-.add-task-btn .plus svg { width: 14px; height: 14px; stroke-width: 2.4; }
+.task-input-area { margin-bottom: 2px; padding: 0 8px 0 4px; }
+.add-task-btn { grid-column: 1 / 4; display: flex; align-items: center; gap: .75rem; height: 2.3rem; padding: 0; color: var(--text-muted); cursor: pointer; font-size: .95rem; user-select: none; border-radius: 10px; transition: color .15s; }
+.add-task-btn .plus { width: var(--cb); height: var(--cb); border-radius: 50%; background: var(--input-active-bg); color: var(--accent-cyan); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 0; }
+.add-task-btn .plus svg { width: 70%; height: 70%; stroke-width: 2.4; }
 .add-task-btn:hover { color: var(--accent-cyan); }
 .add-task-btn:hover .plus { background: var(--accent-cyan); color: var(--bg-main); }
 .task-input-area.open .add-task-btn { display: none; }
-.editor-circle { grid-column: 2; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--accent-cyan); margin-top: -3px; display: none; }
-.editor-col { grid-column: 3 / 5; min-width: 0; display: none; flex-direction: column; gap: 10px; }
+.editor-circle { grid-column: 1; width: var(--cb); height: var(--cb); border-radius: 50%; border: 1.5px solid var(--accent-cyan); margin-top: -3px; display: none; }
+.editor-col { grid-column: 2 / 4; min-width: 0; display: none; flex-direction: column; gap: 10px; }
 .task-input-area.open .editor-circle { display: block; }
 .task-input-area.open .editor-col { display: flex; }
 .editor-head { font-size: .7rem; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--accent-cyan); height: 16px; }
@@ -440,6 +591,14 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 .tb-mic { margin-left: auto; width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--seg-bg); color: var(--accent-cyan); transition: background-color .15s, color .15s; flex-shrink: 0; }
 .tb-mic svg { width: 18px; height: 18px; }
 .tb-mic:hover { background: var(--menu-item-active); }
+.tb-win { margin-left: 4px; color: var(--text-muted); }
+.tb-win svg { width: 15px; height: 15px; }
+.tb-win:hover { color: var(--accent-cyan); }
+.tb-mic + .tb-win { margin-left: 4px; }
+body.voice-off .tb-mic, body.voice-off .voice-live { display: none !important; }
+.tb-mic.dict { background: var(--accent-cyan); color: var(--bg-main); }
+.tb-mic.busy { background: var(--menu-item-active); animation: micBusy 1s linear infinite; }
+@keyframes micBusy { 50% { opacity: .45; } }
 .tb-mic.on { background: var(--danger); color: #fff; animation: micPulse 1.4s ease-in-out infinite; }
 @keyframes micPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,82,82,.5); } 50% { box-shadow: 0 0 0 7px rgba(255,82,82,0); } }
 .voice-live { display: none; font-size: .8rem; color: var(--text-muted); font-style: italic; padding: 0 4px; min-height: 18px; }
@@ -512,24 +671,30 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 .settings-body { padding: 8px 24px 24px; }
 .settings-section { padding: 18px 0; border-bottom: 1px solid var(--line); }
 .settings-section:last-child { border-bottom: 0; }
-.settings-section-title { font-size: .7rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent-cyan); margin-bottom: 10px; font-weight: 700; }
+.settings-section-title { font-size: .76rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent-cyan); margin-bottom: 10px; font-weight: 700; }
 .settings-sub { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
-.settings-sub-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .8px; color: var(--topbar-accent); margin-bottom: 8px; font-weight: 700; }
-.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 40px; }
+.settings-sub-title { font-size: .76rem; text-transform: uppercase; letter-spacing: .8px; color: var(--topbar-accent); margin-bottom: 8px; font-weight: 700; }
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 38px; }
 .settings-row.column { flex-direction: column; align-items: stretch; gap: 6px; min-height: 0; margin-bottom: 10px; }
-.settings-label { font-size: .88rem; color: var(--text-white); }
-.settings-hint { font-size: .74rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+.settings-label { font-size: .96rem; color: var(--text-white); }
+.settings-hint { font-size: .8rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
 .settings-hint code { font-family: var(--font-mono); background: var(--input-active-bg); padding: 1px 5px; border-radius: 4px; color: var(--accent-cyan); }
-.text-input, .theme-select { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-white); font: inherit; font-size: .88rem; padding: 8px 12px; border-radius: 8px; width: 100%; }
+.text-input, .theme-select { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-white); font: inherit; font-size: .95rem; padding: 8px 12px; border-radius: 8px; width: 100%; }
 .text-input:focus, .theme-select:focus { border-color: var(--accent-cyan); outline: none; }
-.theme-select { width: auto; min-width: 200px; cursor: pointer; }
+.theme-select { width: auto; min-width: 150px; height: 32px; padding: 0 30px 0 10px; font-size: .9rem; cursor: pointer; border-radius: 8px;
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23889aa0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center; }
+/* компактные поля внутри строки настроек (рядом с подписью) */
+.settings-row:not(.column) > .text-input { height: 32px; padding: 0 10px; font-size: .9rem; }
+.settings-row .btn-row .settings-btn { height: 32px; }
 .theme-select option { background: var(--bg-sidebar); color: var(--text-white); }
 .theme-textarea { font-family: var(--font-mono); font-size: .8rem; resize: vertical; min-height: 120px; line-height: 1.5; }
-.toggle { position: relative; width: 46px; height: 28px; border-radius: 14px; background: var(--seg-bg); box-shadow: inset 0 0 0 1px var(--border-color); cursor: pointer; transition: background-color .25s; flex-shrink: 0; }
-.toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .25s; }
+.toggle { position: relative; width: 38px; height: 22px; border-radius: 11px; background: var(--seg-bg); box-shadow: inset 0 0 0 1px var(--border-color); cursor: pointer; transition: background-color .25s; flex-shrink: 0; }
+.toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .25s; }
 .toggle.on { background: var(--success); box-shadow: none; }
-.toggle.on::after { transform: translateX(18px); }
-.settings-btn { height: 36px; padding: 0 16px; background: var(--seg-bg); border-radius: 9px; color: var(--accent-cyan); font-size: .85rem; font-weight: 600; transition: background-color .15s; white-space: nowrap; }
+.toggle.on::after { transform: translateX(16px); }
+.settings-btn { height: 34px; padding: 0 14px; background: var(--seg-bg); border-radius: 9px; color: var(--accent-cyan); font-size: .9rem; font-weight: 600; transition: background-color .15s; white-space: nowrap; }
 .settings-btn:hover { background: var(--menu-item-active); }
 .settings-btn.danger { color: var(--danger); }
 .settings-btn.danger:hover { background: rgba(255,82,82,.15); }
@@ -547,11 +712,12 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 .gcal-status.warn { color: var(--warning); } .gcal-status.warn::before { background: var(--warning); }
 .gcal-status.err { color: var(--danger); } .gcal-status.err::before { background: var(--danger); }
 .info-details { background: var(--input-bg); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
-.info-details > summary { padding: 11px 14px; cursor: pointer; font-size: .88rem; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 8px; }
+.fold-body { padding: 4px 14px 14px; }
+.info-details > summary { padding: 10px 14px; cursor: pointer; font-size: .95rem; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 8px; }
 .info-details > summary::-webkit-details-marker { display: none; }
 .info-details > summary::before { content: '›'; font-size: 1.1rem; color: var(--accent-cyan); transition: transform .2s; width: 10px; }
 .info-details[open] > summary::before { transform: rotate(90deg); }
-.info-content { padding: 2px 16px 14px 32px; font-size: .82rem; line-height: 1.6; color: var(--text-muted); }
+.info-content { padding: 2px 16px 14px 32px; font-size: .88rem; line-height: 1.6; color: var(--text-muted); }
 .info-content p { margin-bottom: 8px; }
 .info-content ul, .info-content ol { margin: 4px 0 4px 18px; }
 .info-content li { margin-bottom: 4px; }
@@ -576,8 +742,9 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
 .hint-pop b { color: var(--accent-cyan); }
 
 /* ============ ТАЧ / МОБИЛЬНЫЕ (iPhone) ============ */
+@media (pointer: coarse) { :root { --cb: 1.4rem; } }
 @media (hover: none) {
-    .row-actions, .task-actions { opacity: 1; }
+    .row-actions { display: flex; } .task-actions { opacity: 1; }
     .task-handle { visibility: hidden; }
     .task-item:hover { background: none; }
 }
@@ -596,11 +763,11 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
     .header-filters { order: 5; }
     .segmented { order: 6; margin-left: auto; }
     .segmented button { padding: 0 10px; }
-    .task-scroll { padding: 12px 0 calc(40px + env(safe-area-inset-bottom)); }
-    .task-item, .task-input-area { grid-template-columns: 0 24px minmax(0,1fr) auto; column-gap: 10px; }
-    .task-item { padding: 12px 4px 12px 2px; }
-    .task-item + .task-item::before { left: 36px; }
-    .checkbox { width: 24px; height: 24px; }
+    .task-scroll { padding: 6px 0 calc(40px + env(safe-area-inset-bottom)); }
+    .task-item, .task-input-area { grid-template-columns: var(--cb) minmax(0,1fr) auto; column-gap: .65rem; }
+    .task-item { padding: .5rem 4px .5rem 2px; }
+    .task-input-area { padding: 0 4px 0 2px; }
+    .task-item + .task-item::before { left: calc(2px + var(--cb) + .65rem); }
     .rte-toolbar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
     .rte-toolbar::-webkit-scrollbar { display: none; }
     .tb-btn { height: 34px; min-width: 36px; }
@@ -609,7 +776,7 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
     .topbar { padding: 0 12px; gap: 12px; }
     #widget-stopwatch { display: none !important; }
     .editor-circle, .task-input-area.open .editor-circle { display: none; }
-    .editor-col, .add-task-btn { grid-column: 2 / 5; }
+    .editor-col, .add-task-btn { grid-column: 1 / 4; }
     .tb-mic { order: -1; margin-left: 0; }
     .gear-btn { order: 2; }
     .panel-title { flex: 1 0 calc(100% - 100px); }
@@ -619,31 +786,15 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
     .dropdown { position: fixed; left: 16px !important; right: 16px; top: auto; margin-top: 8px; }
     .status-dropdown { flex-wrap: wrap; }
 }
-
-html { height: 100%; box-sizing: border-box; }
-html[data-mode="dark"] { color-scheme: dark; }
-#cloud-pill { position: fixed; right: calc(10px + env(safe-area-inset-right, 0px)); bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 9000;
-  font: 500 11px/1.2 var(--font-family); padding: 4px 9px; border-radius: 999px; pointer-events: none;
-  background: color-mix(in srgb, var(--bg-sidebar) 88%, transparent); color: var(--text-muted); border: 1px solid var(--border-color);
-  opacity: .85; transition: opacity .3s; }
-#cloud-pill.ok { opacity: .55; }
-#cloud-pill.busy { color: var(--accent-cyan); }
-#cloud-pill.warn { color: var(--warning); opacity: 1; }
-#cloud-pill::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
-.app-dialog-back { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.45); display: grid; place-items: center; padding: 16px; }
-.app-dialog { background: var(--bg-sidebar); color: var(--text-white); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px 18px 14px; width: min(420px, 100%); box-shadow: 0 18px 50px rgba(0,0,0,.4); font-family: var(--font-family); }
-.app-dialog p { margin: 0 0 16px; white-space: pre-line; line-height: 1.45; }
-.app-dialog .row { display: flex; gap: 8px; justify-content: flex-end; }
-.app-dialog button { font: inherit; font-weight: 600; border-radius: 9px; padding: 9px 16px; cursor: pointer; border: 1px solid var(--border-color); background: transparent; color: var(--text-white); }
-.app-dialog button.yes { background: var(--accent-cyan); border-color: transparent; color: #001a1f; }
-.app-dialog button.yes.danger { background: var(--danger); color: #fff; }
 </style>
+</head>
+<body>
 <!-- ТОПБАР -->
 <div class="topbar" id="topbar">
     <div class="topbar-resizer" id="topbar-resizer"></div>
     <div class="topbar-widget" id="widget-clock" data-widget="clock" draggable="true" title="Открыть календарь"><div class="w-chip w-clock"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="w-main" id="clock-time">00:00</span><span class="w-sub" id="clock-date"></span></div></div>
     <div class="topbar-widget" id="widget-stopwatch" data-widget="stopwatch" draggable="true"><div class="w-chip w-sw" id="sw-chip"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><line x1="12" y1="13.5" x2="12" y2="10"/><line x1="10" y1="3" x2="14" y2="3"/><line x1="18.5" y1="6.5" x2="17.3" y2="7.7"/></svg><span class="w-main w-mono" id="stopwatch-display">00:00:00</span><span class="w-sep"></span><button class="w-btn" id="sw-toggle" title="Старт/Пауза"><svg id="sw-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg id="sw-icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button><button class="w-btn" id="sw-reset" title="Сброс"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button></div></div>
-    <div class="topbar-widget" id="widget-weather" data-widget="weather" draggable="true"><div class="w-chip w-weather"><span class="w-ico" id="weather-icon"></span><span class="w-main" id="weather-temp">--°</span><span class="w-sub" id="weather-city">Москва</span></div></div>
+    <div class="topbar-widget" id="widget-weather" data-widget="weather" draggable="true"><div class="w-chip w-weather"><span class="w-ico" id="weather-icon"></span><span class="w-main" id="weather-temp">--°</span><span class="w-sub" id="weather-city">Москва</span><span class="w-warn" id="weather-warn" title="">!</span></div></div>
     <div class="topbar-widget" id="widget-calc" data-widget="calc" draggable="true" title="Калькулятор"><div class="w-chip w-calc"><svg class="i" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><rect x="8" y="6" width="8" height="3.5" rx=".8"/><path d="M8.5 13.5h.01M12 13.5h.01M15.5 13.5h.01M8.5 17h.01M12 17h.01M15.5 17h.01" stroke-width="2.4"/></svg><span class="w-main" id="calc-last" style="display:none"></span></div></div>
     <div class="topbar-widget" id="widget-search" data-widget="search" draggable="true"><div class="w-chip w-search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><input type="search" id="search-input" placeholder="Поиск по задачам…"></div></div>
 </div>
@@ -655,12 +806,15 @@ html[data-mode="dark"] { color-scheme: dark; }
         <div class="sidebar-resizer" id="sidebar-resizer"></div>
         <div class="sidebar-header">
             <div class="app-name">Задачи</div>
-            <button class="icon-btn" id="hidden-manager-btn" title="Показать скрытые папки и списки"><svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="hidden-counter" id="hidden-counter">0</span></button>
-            <button class="icon-btn" id="add-folder-btn" title="Новая папка"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="12" y1="10.5" x2="12" y2="15.5"/><line x1="9.5" y1="13" x2="14.5" y2="13"/></svg></button>
-            <button class="icon-btn" id="add-list-btn" title="Новый список"><svg class="i" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            <div class="sidebar-tools">
             <button class="icon-btn" id="collapse-sidebar-btn" title="Свернуть панель (Ctrl+B)"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><polyline points="15 10 13 12 15 14"/></svg></button>
+            </div>
         </div>
         <ul class="menu-list" id="lists-container"></ul>
+        <div class="sidebar-footer">
+            <button class="footer-add" id="add-list-btn" title="Новый список"><svg class="i" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Новый список</button>
+            <button class="icon-btn" id="add-folder-btn" title="Новая папка"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="12" y1="10.5" x2="12" y2="15.5"/><line x1="9.5" y1="13" x2="14.5" y2="13"/></svg></button>
+        </div>
     </aside>
     <div class="drawer-backdrop" id="drawer-backdrop"></div>
     <div class="sidebar-expand-tab" id="expand-sidebar-tab" title="Развернуть панель (Ctrl+B)"><svg class="i" viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></div>
@@ -770,12 +924,15 @@ html[data-mode="dark"] { color-scheme: dark; }
     <div class="day-head" style="display:flex;align-items:center;justify-content:space-between"><span id="cp-day-title"></span><span class="cp-head-btns"><button class="pop-icon" id="cp-sync" title="Синхронизировать праздники и встречи"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><polyline points="4 3.5 4 8 8.5 8"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><polyline points="20 20.5 20 16 15.5 16"/></svg></button><button class="pop-today" id="cp-today">Сегодня</button></span></div>
     <div class="day-list" id="cp-day-list"></div>
     <div class="cp-layers" id="cp-layers">
-        <label class="layer" data-layer="calShowTasks" style="--lc:var(--w-clock)"><span class="mini-toggle"></span>Задачи</label>
-        <label class="layer" data-layer="calShowEvents" style="--lc:#0a84ff"><span class="mini-toggle"></span>Встречи</label>
-        <label class="layer" data-layer="calShowHolidays" style="--lc:var(--danger)"><span class="mini-toggle"></span>Праздники</label>
-        <label class="layer" data-layer="calShowWeekends" style="--lc:var(--danger)"><span class="mini-toggle"></span>Выходные</label>
+        <div class="cp-layer-list" id="cp-layer-list" style="display:contents"></div>
         <div class="cp-status" id="cp-status"></div>
     </div>
+</div>
+<div class="w-pop wx-pop" id="wx-pop">
+    <div class="wx-now"><span class="wx-big-ico" id="wx-now-ico"></span><div class="wx-now-txt"><div class="wx-now-temp" id="wx-now-temp">--°</div><div class="wx-now-desc" id="wx-now-desc"></div></div></div>
+    <div class="wx-meta" id="wx-meta"></div>
+    <div class="wx-days" id="wx-days"></div>
+    <div class="wx-foot"><span id="wx-src"></span><button class="pop-today" id="wx-refresh">Обновить</button></div>
 </div>
 <div class="w-pop calc-pop" id="calc-pop">
     <div class="calc-expr" id="calc-expr"></div>
@@ -797,44 +954,74 @@ html[data-mode="dark"] { color-scheme: dark; }
                 <div class="settings-section-title">Тема оформления</div>
                 <div class="settings-row"><div class="settings-label">Тема</div><div class="btn-row"><select class="theme-select" id="theme-select"></select><button class="settings-btn danger" id="delete-theme-btn" title="Удалить выбранную тему" style="display:none">Удалить</button></div></div>
                 <div class="settings-row"><div class="settings-label">Тёмное оформление</div><div class="toggle" id="dark-mode-toggle"></div></div>
-                <div class="settings-sub">
-                    <div class="settings-sub-title">Добавить свою тему</div>
+                <details class="info-details fold" style="margin-top:12px">
+                    <summary>Добавить свою тему</summary>
+                    <div class="fold-body">
                     <div class="settings-row column"><div class="settings-label">Название</div><input type="text" class="text-input" id="new-theme-name" placeholder="Моя тема"></div>
                     <div class="settings-row column"><div class="settings-label">CSS-переменные</div><textarea class="text-input theme-textarea" id="new-theme-css" rows="8" placeholder="--bg-main: #16213e;&#10;--accent-cyan: #e94560;"></textarea></div>
                     <div class="btn-row"><button class="settings-btn" id="add-theme-btn">Добавить тему</button><button class="settings-btn" id="copy-theme-example-btn">Скопировать пример</button></div>
                     <div class="settings-hint">«Скопировать пример» → вставьте в чат с ИИ, попросите поменять цвета → вставьте результат в поле выше.</div>
                     <div class="settings-hint" id="theme-error" style="color:var(--danger);display:none"></div>
-                </div>
+                    </div>
+                </details>
             </div>
 
             <div class="settings-section">
                 <div class="settings-section-title">Google Календарь</div>
+                <div class="settings-hint" style="margin-top:0">Встречи из Google добавляются в разделе «Календарь» ниже — по ссылке iCal (например, через Apps Script). Блок ниже — двусторонняя синхронизация (дедлайны задач уходят в Google как события); для неё нужен проект в Google Cloud, который сейчас недоступен для России.</div>
+                <details class="info-details" id="gcal-adv" style="margin-top:10px">
+                    <summary>Двусторонняя синхронизация через Google Cloud</summary>
+                    <div style="padding:4px 14px 14px">
                 <div class="settings-row"><div class="settings-label">Статус</div><span class="gcal-status" id="gcal-status">Не подключено</span></div>
-                <div class="settings-row column"><div class="settings-label">OAuth Client ID</div><input type="text" class="text-input" id="gcal-client-id" placeholder="1234567890-xxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"></div>
-                <div class="settings-row column"><div class="settings-label">ID календаря</div><input type="text" class="text-input" id="gcal-calendar-id" placeholder="primary"></div>
-                <div class="settings-row"><div class="settings-label">Автоматически отправлять дедлайны в календарь</div><div class="toggle" id="gcal-auto-toggle"></div></div>
-                <div class="btn-row" style="margin-top:8px"><button class="settings-btn" id="gcal-connect-btn">Подключить</button><button class="settings-btn" id="gcal-sync-btn">Синхронизировать все</button><button class="settings-btn danger" id="gcal-disconnect-btn">Отключить</button></div>
-                <div class="settings-hint">Задачи с дедлайном становятся событиями на весь день; при выполнении или удалении задачи событие удаляется. Без настройки тоже можно: в открытой задаче есть кнопка «В Google», а в разделе «Данные» — экспорт <code>.ics</code>.</div>
-                <details class="info-details" style="margin-top:10px">
-                    <summary>Как получить Client ID (один раз, ~5 минут)</summary>
-                    <div class="info-content"><ol>
-                        <li>Откройте <code>console.cloud.google.com</code> → создайте проект.</li>
-                        <li>«APIs &amp; Services» → «Library» → включите <b>Google Calendar API</b>.</li>
-                        <li>«OAuth consent screen» → тип <b>External</b>, добавьте свою почту в <b>Test users</b>.</li>
-                        <li>«Credentials» → «Create credentials» → <b>OAuth client ID</b> → тип <b>Web application</b>.</li>
-                        <li>В «Authorized JavaScript origins» добавьте адрес, где открыто приложение (например <code>https://ваш-логин.github.io</code> или <code>http://localhost:8080</code>).</li>
-                        <li>Скопируйте Client ID сюда и нажмите «Подключить».</li>
-                    </ol><p>Важно: Google не разрешает вход со страницы, открытой как файл (<code>file://</code>). Синхронизация работает, когда приложение открыто по адресу <code>http(s)://</code>.</p></div>
+                        <div class="settings-row column"><div class="settings-label">OAuth Client ID</div><input type="text" class="text-input" id="gcal-client-id" placeholder="1234567890-xxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"></div>
+                        <div class="settings-row column app-only"><div class="settings-label">Client secret</div><input type="password" class="text-input" id="gcal-client-secret" placeholder="GOCSPX-…" autocomplete="off" spellcheck="false"></div>
+                        <div class="settings-row column"><div class="settings-label">ID календаря</div><input type="text" class="text-input" id="gcal-calendar-id" placeholder="primary"></div>
+                        <div class="settings-row"><div class="settings-label">Автоматически отправлять дедлайны в календарь</div><div class="toggle" id="gcal-auto-toggle"></div></div>
+                        <div class="btn-row" style="margin-top:8px"><button class="settings-btn" id="gcal-connect-btn">Подключить</button><button class="settings-btn" id="gcal-sync-btn">Синхронизировать все</button><button class="settings-btn danger" id="gcal-disconnect-btn">Отключить</button></div>
+                        <div class="settings-hint">Задачи с дедлайном становятся событиями на весь день; при выполнении или удалении задачи событие удаляется. Без настройки тоже можно: в открытой задаче есть кнопка «В Google», а в разделе «Данные» — экспорт <code>.ics</code>.</div>
+                        <details class="info-details" style="margin-top:10px">
+                            <summary>Как подключить Google (один раз, ~5 минут)</summary>
+                            <div class="info-content"><ol>
+                                <li>Откройте <code>console.cloud.google.com</code> под своим Google-аккаунтом → вверху «Select project» → <b>New project</b> (любое название, например «Задачи»).</li>
+                                <li>Меню ☰ → «APIs &amp; Services» → <b>Library</b> → найдите <b>Google Calendar API</b> → <b>Enable</b>.</li>
+                                <li>«APIs &amp; Services» → <b>OAuth consent screen</b> (или «Google Auth Platform») → тип <b>External</b> → название приложения и ваша почта → сохранить. В разделе <b>Audience / Test users</b> добавьте свою почту.</li>
+                                <li>«Credentials» (или «Clients») → <b>Create credentials → OAuth client ID</b> → тип <b>Desktop app</b> (Приложение для ПК) → Create.</li>
+                                <li>Скопируйте <b>Client ID</b> и <b>Client secret</b> в поля выше → нажмите <b>«Подключить»</b>.</li>
+                                <li>Откроется ваш браузер → выберите аккаунт → «Продолжить» (Google предупредит, что приложение не проверено — это нормально, оно ваше) → разрешите доступ к календарю → вкладку можно закрыть.</li>
+                            </ol><p>Вход нужен один раз: программа хранит ключ доступа в зашифрованном виде и сама продлевает его. Отключить — кнопка «Отключить».</p>
+                            <p class="web-only">В браузерной версии (без программы) тип клиента — <b>Web application</b>, а в «Authorized JavaScript origins» нужно добавить адрес сайта; со страницы, открытой как файл, Google вход не разрешает.</p></div>
+                        </details>
+                    </div>
                 </details>
             </div>
 
             <div class="settings-section">
                 <div class="settings-section-title">Календарь (клик по часам)</div>
                 <div class="settings-row"><div class="settings-label">Страна для праздников</div><input type="text" class="text-input" id="hol-country" maxlength="2" style="width:80px;text-align:center;text-transform:uppercase" placeholder="RU"></div>
-                <div class="settings-row"><div class="settings-label">Встречи из Google Календаря</div><div class="toggle" id="cal-google-toggle"></div></div>
-                <div class="btn-row" style="margin-top:6px"><button class="settings-btn" id="cal-sync-btn">Синхронизировать сейчас</button><button class="settings-btn" id="ics-import-btn">Импорт встреч (.ics)</button><button class="settings-btn danger" id="ics-clear-btn">Очистить импорт</button><input type="file" id="ics-file" accept=".ics,text/calendar" style="display:none"></div>
-                <div class="settings-hint" id="cal-info"></div>
-                <div class="settings-hint">Праздники загружаются бесплатно с <code>date.nager.at</code> (для России есть встроенный список на случай отсутствия интернета). Встречи берутся из Google Календаря (нужно подключение в разделе выше) или из файла .ics — его можно выгрузить из Outlook, Яндекс Календаря, iPhone. Что показывать, включается ползунками внизу календаря.</div>
+                <div class="settings-sub-title" style="margin-top:12px">Мои календари</div>
+                <div class="cal-src-list" id="cal-src-list"></div>
+                <details class="info-details fold" id="cal-add-fold" style="margin-top:12px">
+                    <summary>Добавить календарь</summary>
+                    <div class="fold-body">
+                    <div class="settings-row column"><div class="settings-label">Название</div><input type="text" class="text-input" id="cal-new-name" placeholder="Например: Работа, Встречи, Отпуска"></div>
+                    <div class="settings-row column"><div class="settings-label">Ссылка на календарь (.ics / iCal) — или загрузите файл</div><input type="text" class="text-input" id="cal-new-url" placeholder="https://calendar.google.com/calendar/ical/.../basic.ics" spellcheck="false"></div>
+                    <div class="settings-row"><div class="settings-label">Цвет</div><div class="swatches" id="cal-new-color"></div></div>
+                    <div class="btn-row" style="margin-top:6px"><button class="settings-btn" id="cal-add-url-btn">Добавить по ссылке</button><button class="settings-btn" id="cal-add-file-btn">Загрузить файл .ics</button><input type="file" id="ics-file" accept=".ics,text/calendar" style="display:none"></div>
+                    <div class="settings-hint" id="cal-add-error" style="color:var(--danger);display:none"></div>
+                    <details class="info-details" style="margin-top:10px"><summary>Где взять ссылку на календарь</summary><div class="info-content"><ul>
+                        <li><b>Google Календарь</b>: calendar.google.com → ⚙ Настройки → слева выберите календарь → «Интеграция календаря» → <b>«Секретный адрес в формате iCal»</b>.</li>
+                        <li><b>Яндекс Календарь</b>: наведите на календарь → ⚙ → «Экспорт» → скопируйте ссылку iCal.</li>
+                        <li><b>Outlook</b>: Параметры → Календарь → Общие календари → «Опубликовать календарь» → ссылка ICS.</li>
+                        <li><b>Праздники других стран</b>: в Google Календаре добавьте «Праздники» нужной страны и возьмите его ссылку iCal.</li>
+                    </ul><p>Ссылочные календари обновляются сами (раз в 30 минут при открытии календаря) и кнопкой ⟳. В программе они работают всегда; в браузере некоторые сервисы ссылку не отдадут.</p></div></details>
+                    </div>
+                </details>
+            </div>
+            <div class="settings-section">
+                <div class="settings-section-title">Голосовой ввод</div>
+                <div class="settings-row"><div class="settings-label">Кнопка микрофона в редакторе</div><div class="toggle" id="voice-toggle"></div></div>
+                <div class="settings-hint app-only">Кнопка открывает диктовку Windows. Скажите «<b>следующая строка</b>», «<b>новая строка</b>» или «<b>новый абзац</b>» — текст перейдёт на новую строку. Сохранить — Ctrl+Enter или клик мимо. Для точек и запятых включите в окне диктовки (⚙) <b>«Автоматическая расстановка знаков препинания»</b>.</div>
+                <div class="settings-hint web-only">Кнопка включает распознавание речи браузера (Chrome, Edge, Safari). Скажите «<b>новая строка</b>» или «<b>новый абзац</b>» — текст перейдёт на новую строку. На iPhone можно также пользоваться микрофоном на клавиатуре.</div>
             </div>
             <div class="settings-section">
                 <div class="settings-section-title">Виджеты в шапке</div>
@@ -843,15 +1030,27 @@ html[data-mode="dark"] { color-scheme: dark; }
                 <div class="settings-row"><div class="settings-label">Строка поиска</div><div class="toggle" id="topbar-search-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Калькулятор</div><div class="toggle" id="topbar-calc-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Погода</div><div class="toggle" id="topbar-weather-toggle"></div></div>
-                <div class="settings-sub" id="weather-extra" style="display:none">
-                    <div class="settings-row column"><div class="settings-label">Ссылка на API (пусто — Open-Meteo, Москва)</div><input type="text" class="text-input" id="weather-url-input" placeholder="https://api.open-meteo.com/v1/forecast?latitude=55.75&longitude=37.62&current_weather=true"></div>
-                    <div class="settings-row column"><div class="settings-label">Город</div><input type="text" class="text-input" id="weather-city-input" placeholder="Москва"></div>
-                </div>
+                <details class="info-details fold" id="weather-extra" style="display:none;margin-top:10px">
+                    <summary>Настройки погоды</summary>
+                    <div class="fold-body">
+                        <div class="settings-row column"><div class="settings-label">Город</div><input type="text" class="text-input" id="weather-city-input2" placeholder="Москва"></div>
+                        <div class="settings-row"><div class="settings-label">Обновлять</div><select class="theme-select" id="weather-every"><option value="5">каждые 5 минут</option><option value="15">каждые 15 минут</option><option value="30">каждые 30 минут</option><option value="60">каждый час</option></select></div>
+                        <div class="btn-row" style="margin:4px 0 8px"><button class="settings-btn" id="weather-diag-btn">Проверить погоду</button></div>
+                        <div class="settings-hint" id="weather-diag" style="display:none;line-height:1.7"></div>
+                        <div class="settings-hint" style="margin:0 0 6px">Достаточно указать город — погода берётся бесплатно: Open-Meteo, а если он не ответит — wttr.in.</div>
+                        <details class="info-details fold" style="margin:4px 0 0">
+                            <summary>Свой сервис погоды (необязательно)</summary>
+                            <div class="fold-body">
+                            <div class="settings-row column"><div class="settings-label">Своя ссылка на API (необязательно)</div><input type="text" class="text-input" id="weather-url-input" placeholder="https://api.open-meteo.com/v1/forecast?latitude=55.75&longitude=37.62&current_weather=true"></div>
+                            <div class="settings-row column"><div class="settings-label">API-ключ (для Яндекс Погоды и др.)</div><input type="text" class="text-input" id="weather-key-input" placeholder="необязательно" autocomplete="off" spellcheck="false"></div><input type="hidden" id="weather-city-input">
+                            </div>
+                        </details>
+                    </div>
+                </details>
             </div>
 
             <div class="settings-section">
                 <div class="settings-section-title">Списки</div>
-                <div class="settings-row"><div class="settings-label">Показывать скрытые папки и списки</div><div class="toggle" id="show-hidden-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Показывать количество задач</div><div class="toggle" id="show-counts-toggle"></div></div>
             </div>
 
@@ -870,7 +1069,7 @@ html[data-mode="dark"] { color-scheme: dark; }
             <div class="settings-section">
                 <div class="settings-section-title">Справка</div>
                 <details class="info-details"><summary>Инструкция</summary><div class="info-content"><ol>
-                    <li><b>Список</b> — кнопка <code>+</code> в левой панели; папка — кнопка с папкой. Двойной клик — переименовать.</li>
+                    <li><b>Список</b> — «+ Новый список» внизу левой панели; папка — кнопка с папкой рядом. Двойной клик — переименовать.</li>
                     <li><b>Задача</b> — «Новая заявка». Первая строка — заголовок, дальше обычный текст. Всё сохраняется само: можно нажать <kbd>Enter</kbd> или просто кликнуть в любое другое место.</li>
                     <li><b>Голосовой ввод</b> — кнопка микрофона в панели форматирования.</li>
                     <li><b>Дедлайн</b> — «Установить дедлайн» под задачей. Цвет полосы слева показывает срочность.</li>
@@ -954,24 +1153,6 @@ const ICON = {
     google: '<svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 15 11 17 15 13"/></svg>',
 };
 
-
-/* ----- свои окна подтверждения (системные confirm/alert в приложении по ссылке не работают) ----- */
-function appConfirm(msg, yes = 'Удалить') {
-    return new Promise(res => {
-        const back = document.createElement('div'); back.className = 'app-dialog-back';
-        back.innerHTML = '<div class="app-dialog" role="dialog" aria-modal="true"><p></p><div class="row"><button type="button" class="no">Отмена</button><button type="button" class="yes"></button></div></div>';
-        back.querySelector('p').textContent = msg;
-        const y = back.querySelector('.yes'); y.textContent = yes; if (/Удал|Стереть/.test(yes)) y.classList.add('danger');
-        const done = (v) => { back.remove(); document.removeEventListener('keydown', key, true); res(v); };
-        const key = (e) => { if (e.key === 'Escape') { e.stopPropagation(); done(false); } else if (e.key === 'Enter') { e.stopPropagation(); e.preventDefault(); done(true); } };
-        back.addEventListener('click', (e) => { if (e.target === back) done(false); });
-        back.querySelector('.no').addEventListener('click', () => done(false));
-        y.addEventListener('click', () => done(true));
-        document.addEventListener('keydown', key, true);
-        document.body.appendChild(back); y.focus();
-    });
-}
-function appAlert(msg) { toast(msg, 5000); }
 let toastTimer = null;
 function toast(msg, ms = 2400) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms); }
 
@@ -1015,8 +1196,8 @@ function normalizeTask(t) {
     return t;
 }
 function normalizeData() {
-    folders = (folders || []).map(f => ({ expanded: true, hidden: false, ...f }));
-    lists = (lists || []).map(l => ({ hidden: false, folderId: null, ...l, tasks: (l.tasks || []).map(normalizeTask) }));
+    folders = (folders || []).map(f => ({ expanded: true, ...f, hidden: false }));
+    lists = (lists || []).map(l => ({ folderId: null, ...l, hidden: false, tasks: (l.tasks || []).map(normalizeTask) }));
 }
 function loadData() {
     try {
@@ -1032,15 +1213,14 @@ function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(flushS
 function flushSave() {
     clearTimeout(saveTimer); saveTimer = null;
     try { localStorage.setItem(LS_DATA, JSON.stringify({ folders, lists, listIdCounter, folderIdCounter })); }
-    catch (e) { if (!(typeof Cloud !== 'undefined' && Cloud.ready)) toast('Не удалось сохранить: память заполнена. Удалите большие картинки или сделайте экспорт.', 5000); }
-    if (typeof Cloud !== 'undefined') Cloud.push();
+    catch (e) { toast('Не удалось сохранить: память заполнена. Удалите большие картинки или сделайте экспорт.', 5000); }
 }
 const getList = (id) => lists.find(l => l.id === id);
 const getFolder = (id) => folders.find(f => f.id === id);
 const countActive = (l) => (l.tasks || []).filter(t => !t.completedFinal && !t.pendingDelete).length;
 
 /* ===================== НАСТРОЙКИ ===================== */
-const DEFAULT_SETTINGS = { theme: BASE_THEME, mode: 'dark', fontSize: 15, uiScale: 100, topbarClock: false, topbarStopwatch: false, topbarSearch: false, topbarWeather: false, topbarCalc: false, weatherUrl: '', weatherCity: 'Москва', widgetOrder: ['clock','calc','stopwatch','weather','search'], leftWidth: 300, topHeight: 56, showHidden: false, showCounts: true, sidebarCollapsed: false, gcalClientId: '', gcalCalendarId: 'primary', gcalAuto: true, calShowTasks: true, calShowEvents: true, calShowHolidays: true, calShowWeekends: true, holCountry: 'RU', calGoogleEvents: true };
+const DEFAULT_SETTINGS = { theme: BASE_THEME, mode: 'dark', fontSize: 15, uiScale: 100, topbarClock: false, topbarStopwatch: false, topbarSearch: false, topbarWeather: false, topbarCalc: false, weatherUrl: '', weatherCity: 'Москва', widgetOrder: ['clock','calc','stopwatch','weather','search'], leftWidth: 300, topHeight: 56, showHidden: false, showCounts: true, sidebarCollapsed: false, gcalClientId: '', gcalCalendarId: 'primary', gcalAuto: true, voiceMode: 'windows', voiceEnabled: true, voiceModel: 'small', calShowTasks: true, calShowEvents: true, calShowHolidays: true, calShowWeekends: true, holCountry: 'RU', calGoogleEvents: true };
 let settings = { ...DEFAULT_SETTINGS };
 function loadSettings() { try { const s = localStorage.getItem(LS_SETTINGS); if (s) settings = { ...DEFAULT_SETTINGS, ...JSON.parse(s) }; } catch (e) {} }
 function saveSettings() { try { localStorage.setItem(LS_SETTINGS, JSON.stringify(settings)); } catch (e) {} }
@@ -1062,7 +1242,8 @@ const el = {
 let customThemes = [];
 function applySettings() {
     const root = document.documentElement, scale = (settings.uiScale || 100) / 100;
-    root.setAttribute('data-app-theme', settings.theme || BASE_THEME);
+    document.body.classList.toggle('voice-off', settings.voiceEnabled === false);
+    root.setAttribute('data-theme', settings.theme || BASE_THEME);
     root.setAttribute('data-mode', settings.mode || 'dark');
     root.style.setProperty('--ui-scale', scale);
     root.style.setProperty('--font-size-base', settings.fontSize + 'px');
@@ -1088,12 +1269,12 @@ function injectCustomThemes() {
     let st = $('custom-themes-style'); if (st) st.remove();
     if (!customThemes.length) return;
     st = document.createElement('style'); st.id = 'custom-themes-style';
-    st.textContent = customThemes.map(t => `[data-app-theme="${t.id}"] { ${t.css.replace(/:root\s*\{|\}/g, '')} }`).join('\n');
+    st.textContent = customThemes.map(t => `[data-theme="${t.id}"] { ${t.css.replace(/:root\s*\{|\}/g, '')} }`).join('\n');
     document.head.appendChild(st);
 }
 function renderThemeSelect() {
     const s = $('theme-select');
-    s.innerHTML = `<option value="${BASE_THEME}">TRON</option><option value="iphone">iPhone</option>` + customThemes.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('');
+    s.innerHTML = `<option value="${BASE_THEME}">TRON</option><option value="iphone">iPhone</option><option value="unibody">Unibody</option>` + customThemes.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('');
     s.value = settings.theme || BASE_THEME;
     $('delete-theme-btn').style.display = customThemes.some(t => t.id === settings.theme) ? '' : 'none';
 }
@@ -1106,11 +1287,9 @@ function listRowHTML(l) {
     if (moveState && moveState.listId === l.id) cls.push('move-self');
     const cnt = countActive(l);
     return `<li class="${cls.join(' ')}" data-list="${esc(l.id)}" draggable="true">
-        <span class="dot"></span>
         <span class="list-name">${esc(l.name)}</span>
         ${settings.showCounts !== false ? `<span class="count${cnt ? '' : ' zero'}" data-count="${esc(l.id)}">${cnt}</span>` : ''}
         <span class="row-actions">
-            ${settings.showHidden ? `<button class="row-btn" data-act="hide-list" title="${l.hidden ? 'Показать' : 'Скрыть'}">${l.hidden ? ICON.eyeOff : ICON.eye}</button>` : ''}
             <button class="row-btn danger" data-act="del-list" title="Удалить список">${ICON.x}</button>
         </span></li>`;
 }
@@ -1125,7 +1304,6 @@ function renderSidebar() {
                 <span class="chev${f.expanded ? ' open' : ''}">${ICON.chev}</span>
                 <span class="folder-name">${esc(f.name)}</span>
                 <span class="row-actions">
-                    ${showH ? `<button class="row-btn" data-act="hide-folder" title="${f.hidden ? 'Показать' : 'Скрыть'}">${f.hidden ? ICON.eyeOff : ICON.eye}</button>` : ''}
                     <button class="row-btn danger" data-act="del-folder" title="Удалить папку">${ICON.x}</button>
                 </span>
             </div>
@@ -1138,11 +1316,7 @@ function renderSidebar() {
 function updateCounts() {
     el.lists.querySelectorAll('[data-count]').forEach(b => { const l = getList(b.dataset.count); if (!l) return; const n = countActive(l); if (b.textContent !== String(n)) b.textContent = n; b.classList.toggle('zero', !n); });
 }
-function updateHiddenCounter() {
-    const n = folders.filter(f => f.hidden).length + lists.filter(l => l.hidden).length;
-    const c = $('hidden-counter'); c.textContent = n; c.classList.toggle('visible', n > 0);
-    $('hidden-manager-btn').classList.toggle('active', !!settings.showHidden);
-}
+function updateHiddenCounter() {}
 
 function startRename(target, obj, after) {
     const nameEl = target.querySelector('.folder-name, .list-name'); if (!nameEl || target.querySelector('.rename-input')) return;
@@ -1161,9 +1335,7 @@ el.lists.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-act]'), act = btn && btn.dataset.act;
     const row = e.target.closest('.list-row'), folderEl = e.target.closest('.folder');
     if (act === 'del-list') return deleteList(row.dataset.list);
-    if (act === 'hide-list') { const l = getList(row.dataset.list); l.hidden = !l.hidden; if (l.hidden && l.id === activeListId) { const v = lists.find(x => !x.hidden); v ? setActiveList(v.id) : setActiveList(null); } renderSidebar(); scheduleSave(); return; }
     if (act === 'del-folder') return deleteFolder(folderEl.dataset.folder);
-    if (act === 'hide-folder') { const f = getFolder(folderEl.dataset.folder); f.hidden = !f.hidden; renderSidebar(); scheduleSave(); return; }
     if (row) {
         if (e.target.closest('.rename-input')) return;
         const id = row.dataset.list;
@@ -1221,19 +1393,19 @@ function setActiveList(id) {
     renderTasks(); updateStats(); renderSidebar();
     el.scroll.scrollTop = 0;
 }
-async function deleteList(id) {
+function deleteList(id) {
     const l = getList(id); if (!l) return;
-    if (!(await appConfirm(`Удалить список «${l.name}» и все его задачи?`))) return;
+    if (!confirm(`Удалить список «${l.name}» и все его задачи?`)) return;
     if (ed && ed.listId === id) closeEditor();
     (l.tasks || []).forEach(t => { clearTimeout(pendingTimers[t.id]); delete pendingTimers[t.id]; gcalRemoved(t); });
     lists.splice(lists.indexOf(l), 1);
     if (activeListId === id) { const v = lists.find(x => !x.hidden); setActiveList(v ? v.id : null); } else renderSidebar();
     scheduleSave();
 }
-async function deleteFolder(id) {
+function deleteFolder(id) {
     const f = getFolder(id); if (!f) return;
     const sub = lists.filter(l => l.folderId === id);
-    if (!(await appConfirm(sub.length ? `Удалить папку «${f.name}»? Внутри ${sub.length} ${plural(sub.length, ['список','списка','списков'])} — они тоже удалятся.` : `Удалить папку «${f.name}»?`))) return;
+    if (!confirm(sub.length ? `Удалить папку «${f.name}»? Внутри ${sub.length} ${plural(sub.length, ['список','списка','списков'])} — они тоже удалятся.` : `Удалить папку «${f.name}»?`)) return;
     sub.forEach(l => { if (ed && ed.listId === l.id) closeEditor(); (l.tasks || []).forEach(t => { clearTimeout(pendingTimers[t.id]); gcalRemoved(t); }); });
     lists = lists.filter(l => l.folderId !== id); folders.splice(folders.indexOf(f), 1);
     if (activeFolderId === id) activeFolderId = null;
@@ -1256,8 +1428,6 @@ $('add-folder-btn').addEventListener('click', () => {
     folders.push(f); activeFolderId = id; renderSidebar(); scheduleSave();
     const fr = el.lists.querySelector(`.folder[data-folder="${id}"] .folder-row`); if (fr) startRename(fr, f);
 });
-$('hidden-manager-btn').addEventListener('click', () => setShowHidden(!settings.showHidden));
-function setShowHidden(v) { settings.showHidden = !!v; saveSettings(); renderSidebar(); $('show-hidden-toggle').classList.toggle('on', settings.showHidden); }
 
 /* сворачивание / мобильное меню */
 function setSidebarCollapsed(c) {
@@ -1275,7 +1445,7 @@ mqMobile.addEventListener ? mqMobile.addEventListener('change', () => { setSideb
 
 /* изменение ширины сайдбара */
 (() => {
-    const MIN = 180, maxW = () => Math.max(MIN, window.innerWidth * 0.6);
+    const MIN = 140, maxW = () => Math.max(MIN, window.innerWidth * 0.6);
     let on = false, sx = 0, sw = 0;
     $('sidebar-resizer').addEventListener('mousedown', (e) => { e.preventDefault(); on = true; sx = e.clientX; sw = el.sidebar.offsetWidth; $('sidebar-resizer').classList.add('active'); document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'; });
     document.addEventListener('mousemove', (e) => { if (!on) return; document.documentElement.style.setProperty('--sidebar-width', Math.max(MIN, Math.min(maxW(), sw + e.clientX - sx)) + 'px'); });
@@ -1408,8 +1578,8 @@ function toggleCheck(t, l) {
         else if (l.id === activeListId) { renderTasks(); updateStats(); }
     }, 10000);
 }
-async function deleteTask(t, l) {
-    if (!(await appConfirm('Удалить эту задачу?'))) return;
+function deleteTask(t, l) {
+    if (!confirm('Удалить эту задачу?')) return;
     clearTimeout(pendingTimers[t.id]); delete pendingTimers[t.id];
     if (ed && ed.taskId === t.id) { ed = null; hideEditorUI(); }
     l.tasks.splice(l.tasks.indexOf(t), 1);
@@ -1426,7 +1596,7 @@ function updateStats() {
     const n = statFilter === 'all' ? c.all : c[statFilter];
     $('total-count').textContent = n;
     const labels = { all: ['задача','задачи','задач'], danger: ['критичная','критичных','критичных'], warning: ['скоро','скоро','скоро'], success: ['в плане','в плане','в плане'], none: ['без даты','без даты','без даты'] };
-    $('total-label').textContent = plural(n, labels[statFilter]);
+    const lbl = plural(n, labels[statFilter]); $('total-label').textContent = lbl.charAt(0).toUpperCase() + lbl.slice(1);
     const ind = $('filter-indicator');
     ind.style.display = statFilter === 'all' ? 'none' : 'block';
     ind.style.backgroundColor = { danger: 'var(--danger)', warning: 'var(--warning)', success: 'var(--success)', none: 'var(--text-muted)' }[statFilter] || '';
@@ -1472,7 +1642,7 @@ function switchView(mode) {
 try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (e) {}
 let ed = null;            // { taskId, listId }
 let edDirty = false, edTimer = null, savedRange = null, selectedImage = null, savedFlashTimer = null;
-const DEFAULT_HINT = isMobile() ? 'Сохраняется автоматически' : 'Сохраняется само · Enter — готово · Shift+Enter — новая строка';
+const DEFAULT_HINT = isMobile() ? 'Сохраняется автоматически' : 'Сохраняется само · Enter / Ctrl+Enter — готово · Shift+Enter — новая строка';
 $('autosave-text').textContent = DEFAULT_HINT;
 
 const isEditorEmpty = () => !el.rte.textContent.trim() && !el.rte.querySelector('img,hr');
@@ -1527,6 +1697,7 @@ function hideEditorUI() {
 }
 function closeEditor() {
     if (!ed) return;
+    if (dictationOn) setDictation(false);
     stopVoice(); commitEditor();
     const { l, t } = findTask(ed.taskId, ed.listId);
     ed = null;
@@ -1538,18 +1709,65 @@ function flashSaved() {
     el.autosave.classList.add('saved'); $('autosave-text').textContent = 'Сохранено';
     clearTimeout(savedFlashTimer); savedFlashTimer = setTimeout(() => { el.autosave.classList.remove('saved'); $('autosave-text').textContent = DEFAULT_HINT; }, 1200);
 }
-el.rte.addEventListener('input', () => {
+/* Голосовые команды при диктовке: «новая строка», «новый абзац» и т.п. превращаются в перенос строки */
+const VOICE_NL = /(^|[\s.,!?;:…])\s*(нова[яю] строк[аиу]|с новой строки|следующая строка|перенос строки|новый абзац|новая строчка|с новой строчки)[\s.,!?;:…]*$/i;
+function applyVoiceCommands() {
+    if (settings.voiceEnabled === false) return false;
+    const sel = getSelection(); if (!sel.rangeCount || !sel.isCollapsed) return false;
+    const node = sel.anchorNode, off = sel.anchorOffset;
+    if (!node || node.nodeType !== 3 || !el.rte.contains(node)) return false;
+    const before = node.textContent.slice(0, off), m = before.match(VOICE_NL);
+    if (!m) return false;
+    let start = m.index + m[1].length;
+    while (start > 0 && /\s/.test(before[start - 1])) start--;   // убрать пробел перед командой
+    const r = document.createRange(); r.setStart(node, start); r.setEnd(node, off);
+    sel.removeAllRanges(); sel.addRange(r);
+    document.execCommand('delete');
+    document.execCommand('insertParagraph');
+    capNextLine = true;
+    return true;
+}
+// после «новой строки» следующая фраза начинается с заглавной буквы
+let capNextLine = false;
+function capitalizeLineStart() {
+    if (!capNextLine) return;
+    const blk = currentBlock(); if (!blk) return;
+    const walker = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT);
+    let n; while ((n = walker.nextNode())) {
+        const i = n.data.search(/\S/); if (i < 0) continue;
+        capNextLine = false;
+        const ch = n.data[i]; if (ch !== ch.toUpperCase()) n.replaceData(i, 1, ch.toUpperCase());
+        return;
+    }
+}
+let voiceCmdTimer = null;
+el.rte.addEventListener('compositionend', () => { clearTimeout(voiceCmdTimer); voiceCmdTimer = setTimeout(() => { if (!applyVoiceCommands()) capitalizeLineStart(); }, 0); });
+el.rte.addEventListener('input', (e) => {
     if (!ed) return;
+    if (!e.isComposing && (e.inputType === 'insertText' || e.inputType === 'insertCompositionText' || e.inputType === 'insertReplacementText')) { clearTimeout(voiceCmdTimer); voiceCmdTimer = setTimeout(() => { if (!applyVoiceCommands()) capitalizeLineStart(); }, 0); }
     // первая строка всегда должна быть блоком <p>, иначе стиль заголовка не применится
     if ([...el.rte.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) { try { document.execCommand('formatBlock', false, 'p'); } catch (e) {} }
     edDirty = true;
     el.rte.classList.toggle('is-empty', isEditorEmpty());
     clearTimeout(edTimer); edTimer = setTimeout(commitEditor, 400);
 });
+// Пока идёт диктовка Windows, её Enter («следующая строка») = перенос строки, а не «сохранить»
+let dictationOn = false;
+function setDictation(on) {
+    dictationOn = on;
+    micBtn.classList.toggle('dict', on);
+    voiceLive.classList.toggle('on', on);
+    voiceLive.textContent = on ? 'Диктовка: «следующая строка» — перенос · сохранить — Ctrl+Enter или клик мимо' : '';
+}
 el.rte.addEventListener('keydown', (e) => {
+    const typing = !e.isComposing && e.key.length === 1 && e.key !== 'Process';
+    if (typing) capNextLine = false;   // печатает руками — не трогаем
+    if (typing && dictationOn && !e.ctrlKey && !e.altKey) setDictation(false);   // вернулись к клавиатуре
+    if (e.key === 'Escape' && dictationOn) setDictation(false);
     if (e.key === 'Enter' && !e.isComposing) {
         e.preventDefault();
-        if (e.shiftKey) { document.execCommand('insertParagraph'); }
+        if (e.ctrlKey || e.metaKey) { closeEditor(); return; }
+        if (e.shiftKey || dictationOn) { document.execCommand('insertParagraph'); capNextLine = dictationOn; }
         else { closeEditor(); }
     }
 });
@@ -1709,8 +1927,67 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, recWanted = false;
 const micBtn = $('mic-btn'), voiceLive = $('voice-live');
 micBtn.addEventListener('mousedown', (e) => e.preventDefault());
-micBtn.addEventListener('click', () => { recWanted ? stopVoice() : startVoice(); });
+micBtn.addEventListener('click', () => { if (wBusy) return; recWanted ? stopVoice() : startVoice(); });
+
+/* --- программа на Windows: Whisper офлайн или диктовка Windows --- */
+function winDictation() {
+    if (!window.nativeVoice || !ed) return;
+    el.rte.focus(); restoreRange();
+    if (dictationOn) { setDictation(false); window.nativeVoice.winDictation(); return; }   // повторный клик — выключить
+    setDictation(true);
+    window.nativeVoice.winDictation().then(r => { if (r && r.error) toast('Не удалось открыть диктовку Windows: ' + r.error + '. Нажмите Win+H вручную.', 7000); });
+}
+
+const NV = window.nativeVoice || null;
+let wRec = null, wStream = null, wChunks = [], wBusy = false, wTimer = null, wProgOff = null;
+async function startWhisper() {
+    const st = await NV.status();
+    if (!st.installed) { toast('Модуль распознавания ещё не установлен: закройте программу и запустите «Установить голосовой ввод.bat» в папке программы.', 9000); return; }
+    el.rte.focus(); restoreRange();
+    try { wStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+    catch (e) { toast('Нет доступа к микрофону. Windows: Параметры → Конфиденциальность → Микрофон → разрешите классическим приложениям.', 8000); return; }
+    wChunks = [];
+    wRec = new MediaRecorder(wStream);
+    wRec.ondataavailable = (e) => { if (e.data && e.data.size) wChunks.push(e.data); };
+    wRec.onstop = onWhisperStop;
+    wRec.start(250);
+    recWanted = true; setVoiceUI(true, 'Говорите… нажмите микрофон ещё раз, чтобы закончить');
+    clearTimeout(wTimer); wTimer = setTimeout(() => { if (recWanted) stopVoice(); }, 120000);
+    if (!wProgOff) wProgOff = NV.onProgress((p) => {
+        if (!wBusy && !recWanted) return;
+        if (p.percent != null && p.percent < 100) voiceLive.textContent = `Загрузка модели распознавания (один раз): ${p.percent}%${p.totalMB ? ` · ${p.loadedMB} из ${p.totalMB} МБ` : ''}`;
+    });
+    NV.prepare(settings.voiceModel || 'small');   // модель грузится, пока вы говорите
+}
+async function toPCM16k(blob) {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const audio = await ac.decodeAudioData(await blob.arrayBuffer()); ac.close();
+    const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(audio.duration * 16000)), 16000);
+    const src = off.createBufferSource(); src.buffer = audio; src.connect(off.destination); src.start();
+    return (await off.startRendering()).getChannelData(0);
+}
+async function onWhisperStop() {
+    if (wStream) { wStream.getTracks().forEach(t => t.stop()); wStream = null; }
+    const blob = new Blob(wChunks, { type: (wRec && wRec.mimeType) || 'audio/webm' }); wChunks = [];
+    if (blob.size < 1500) { setVoiceUI(false); return; }
+    wBusy = true; setVoiceUI('busy', 'Распознаю речь…');
+    try {
+        const pcm = await toPCM16k(blob);
+        const r = await NV.transcribe(pcm, settings.voiceModel || 'small');
+        if (r.error) toast(r.error, 9000);
+        else if (r.text) {
+            if (ed) insertDictated(r.text);
+            else { try { await navigator.clipboard.writeText(r.text); } catch (e) {} toast('Редактор был закрыт — распознанный текст скопирован в буфер обмена', 6000); }
+        } else toast('Речь не распознана — попробуйте говорить ближе к микрофону');
+    } catch (e) { toast('Ошибка распознавания: ' + e.message, 8000); }
+    finally { wBusy = false; setVoiceUI(false); }
+}
 function startVoice() {
+    if (NV) {
+        if (!ed) return;
+        if (settings.voiceMode !== 'whisper') { winDictation(); return; }
+        startWhisper(); return;
+    }
     if (!SR) { toast('Голосовой ввод здесь не поддерживается. Работает в Chrome, Edge и Safari (iPhone). На iPhone также можно нажать микрофон на клавиатуре.', 6000); return; }
     if (!ed) return;
     el.rte.focus(); restoreRange();
@@ -1732,8 +2009,8 @@ function startVoice() {
     rec.onend = () => { if (recWanted && ed) { try { rec.start(); } catch (e) { setVoiceUI(false); } } else setVoiceUI(false); };
     try { rec.start(); recWanted = true; setVoiceUI(true); } catch (e) { toast('Не удалось включить микрофон'); }
 }
-function stopVoice() { recWanted = false; if (rec) { try { rec.stop(); } catch (e) {} } setVoiceUI(false); }
-function setVoiceUI(on) { micBtn.classList.toggle('on', on); voiceLive.classList.toggle('on', on); voiceLive.textContent = on ? 'Говорите…' : ''; micBtn.title = on ? 'Остановить запись' : 'Голосовой ввод'; }
+function stopVoice() { recWanted = false; clearTimeout(wTimer); if (wRec && wRec.state === 'recording') { try { wRec.stop(); } catch (e) {} return; } if (rec) { try { rec.stop(); } catch (e) {} } if (!wBusy) setVoiceUI(false); }
+function setVoiceUI(on, text) { micBtn.classList.toggle('on', on === true); micBtn.classList.toggle('busy', on === 'busy'); voiceLive.classList.toggle('on', !!on); voiceLive.textContent = on ? (text || 'Говорите…') : ''; micBtn.title = on === true ? 'Остановить запись' : 'Голосовой ввод'; }
 function insertDictated(text) {
     text = text.trim(); if (!text || !ed) return;
     el.rte.focus(); restoreRange();
@@ -1886,41 +2163,160 @@ const WX = {
     wait: '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/></svg>',
     err: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>',
 };
-function weatherIcon(c) { if (typeof c === 'string') return WX[{ Clear: 'sun', Clouds: 'cloud', Rain: 'rain', Drizzle: 'rain', Snow: 'snow', Thunderstorm: 'storm', Mist: 'fog', Fog: 'fog', Haze: 'fog' }[c] || 'cloud']; if (c === 0) return WX.sun; if (c === 1 || c === 2) return WX.part; if (c === 3) return WX.cloud; if (c === 45 || c === 48) return WX.fog; if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return WX.rain; if ((c >= 71 && c <= 77) || c === 85 || c === 86) return WX.snow; if (c >= 95) return WX.storm; return WX.cloud; }
+const YA_WX = (c) => /thunder/.test(c) ? 'storm' : /snow|hail/.test(c) ? 'snow' : /rain|shower|drizzle/.test(c) ? 'rain' : c === 'clear' ? 'sun' : c === 'partly-cloudy' ? 'part' : /fog|mist/.test(c) ? 'fog' : 'cloud';
+function weatherIcon(c) { if (typeof c === 'string' && c.startsWith('wx:')) return WX[c.slice(3)] || WX.cloud; if (typeof c === 'string' && /^[a-z-]+$/.test(c)) return WX[YA_WX(c)]; if (typeof c === 'string') return WX[{ Clear: 'sun', Clouds: 'cloud', Rain: 'rain', Drizzle: 'rain', Snow: 'snow', Thunderstorm: 'storm', Mist: 'fog', Fog: 'fog', Haze: 'fog' }[c] || 'cloud']; if (c === 0) return WX.sun; if (c === 1 || c === 2) return WX.part; if (c === 3) return WX.cloud; if (c === 45 || c === 48) return WX.fog; if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return WX.rain; if ((c >= 71 && c <= 77) || c === 85 || c === 86) return WX.snow; if (c >= 95) return WX.storm; return WX.cloud; }
 let weatherErr = '';
-function fetchWeather(manual) {
-    if (!settings.topbarWeather) return;
-    const url = (settings.weatherUrl || '').trim() || 'https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current_weather=true';
-    $('weather-icon').innerHTML = WX.wait; $('weather-city').textContent = settings.weatherCity || 'Москва';
+/* Сетевые запросы: в программе (Electron) идут через главный процесс — так их не режут ограничения file:// */
+async function httpText(url, timeoutMs = 10000, headers = {}) {
+    url = String(url).trim().replace(/^webcal:\/\//i, 'https://');
+    const httpErr = (st) => new Error('Сервер ответил ошибкой HTTP ' + st + (st === 401 || st === 403 ? ' (неверный или отсутствующий ключ API)' : st === 404 ? ' (адрес не найден)' : ''));
+    if (window.nativeNet && window.nativeNet.get) {
+        const r = await window.nativeNet.get(url, timeoutMs, headers);
+        if (r.error) { const e = new Error(r.error); e.native = true; throw e; }
+        if (r.status < 200 || r.status >= 300) throw httpErr(r.status);
+        return r.body;
+    }
     const ctrl = window.AbortController ? new AbortController() : null;
-    const to = setTimeout(() => ctrl && ctrl.abort(), 10000);
-    fetch(url, ctrl ? { signal: ctrl.signal } : {})
-        .then(r => { if (!r.ok) throw new Error('Сервер ответил ошибкой HTTP ' + r.status + (r.status === 401 ? ' (неверный ключ API)' : '')); return r.json(); })
-        .then(d => {
-            let temp = null, code = null, city = settings.weatherCity || 'Москва';
-            if (d.current_weather) { temp = d.current_weather.temperature; code = d.current_weather.weathercode; }
-            else if (d.current && d.current.temperature_2m !== undefined) { temp = d.current.temperature_2m; code = d.current.weather_code; }
-            else if (d.main) { temp = d.main.temp; code = d.weather && d.weather[0] && d.weather[0].main; if (d.name) city = d.name; }
-            if (temp === null || temp === undefined) throw new Error('Ответ получен, но в нём нет температуры — проверьте ссылку (нужен параметр current_weather=true)');
-            weatherErr = ''; weatherData = { temp: Math.round(temp), code, city }; updateWeather();
-            $('widget-weather').title = 'Обновлено ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) + ' · клик — обновить';
-            if (manual) toast('Погода обновлена');
-        })
-        .catch((e) => {
-            let msg = e && e.name === 'AbortError' ? 'Сервер не ответил за 10 секунд'
-                : (e instanceof TypeError || /fetch|network|load/i.test(e && e.message)) ? 'Запрос заблокирован: нет интернета или программа-оболочка не пускает приложение в сеть (' + (e.message || e) + ')'
-                : (e && e.message) || String(e);
-            if (!navigator.onLine) msg = 'Нет подключения к интернету';
-            weatherErr = msg;
-            $('weather-icon').innerHTML = WX.err; $('weather-temp').textContent = '--°'; $('weather-city').textContent = 'Ошибка';
-            $('widget-weather').title = msg + ' · клик — повторить';
-            if (manual) toast(msg, 7000);
-        })
-        .finally(() => clearTimeout(to));
+    const to = setTimeout(() => ctrl && ctrl.abort(), timeoutMs);
+    try {
+        const r = await fetch(url, Object.assign({ headers }, ctrl ? { signal: ctrl.signal } : {}));
+        if (!r.ok) throw httpErr(r.status);
+        return await r.text();
+    } finally { clearTimeout(to); }
 }
-$('widget-weather').addEventListener('click', () => { if (weatherErr) toast(weatherErr, 7000); fetchWeather(true); });
-function updateWeather() { if (!weatherData) return; $('weather-icon').innerHTML = weatherIcon(weatherData.code); $('weather-temp').textContent = (weatherData.temp > 0 ? '+' : '') + weatherData.temp + '°'; $('weather-city').textContent = settings.weatherCity || weatherData.city; }
-setInterval(fetchWeather, 15 * 60 * 1000);
+async function httpJSON(url, timeoutMs = 10000, headers = {}) {
+    const t = await httpText(url, timeoutMs, headers);
+    try { return JSON.parse(t); } catch (e) { throw new Error('Сервер вернул не JSON — проверьте ссылку'); }
+}
+// wttr.in → наши иконки
+const WTTR = (c) => { c = +c; if (c === 113) return 'sun'; if (c === 116) return 'part'; if (c === 119 || c === 122) return 'cloud'; if ([143, 248, 260].includes(c)) return 'fog'; if ([200, 386, 389, 392, 395].includes(c)) return 'storm'; if ([179, 182, 185, 227, 230, 317, 320, 323, 326, 329, 332, 335, 338, 350, 362, 365, 368, 371, 374, 377].includes(c)) return 'snow'; return 'rain'; };
+async function cityGeo() {
+    const city = (settings.weatherCity || 'Москва').trim();
+    if (settings.weatherGeo && settings.weatherGeo.q === city) return settings.weatherGeo;
+    const r = await httpJSON(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=ru&format=json`, 12000);
+    if (!r.results || !r.results.length) throw new Error(`город «${city}» не найден — проверьте название`);
+    const x = r.results[0]; settings.weatherGeo = { q: city, lat: x.latitude, lon: x.longitude, name: x.name }; saveSettings();
+    return settings.weatherGeo;
+}
+function parseWeather(d) {
+    if (d.current_weather) return { temp: d.current_weather.temperature, code: d.current_weather.weathercode };
+    if (d.current && d.current.temperature_2m !== undefined) return { temp: d.current.temperature_2m, code: d.current.weather_code };
+    if (d.fact && d.fact.temp !== undefined) return { temp: d.fact.temp, code: d.fact.condition };
+    if (d.main) return { temp: d.main.temp, code: d.weather && d.weather[0] && d.weather[0].main };
+    if (d.current_condition && d.current_condition[0]) return { temp: +d.current_condition[0].temp_C, code: 'wx:' + WTTR(d.current_condition[0].weatherCode) };
+    throw new Error('в ответе нет температуры');
+}
+// Источники по очереди: своя ссылка → Open-Meteo → wttr.in. Первый ответивший побеждает.
+function weatherSources() {
+    const out = [], custom = (settings.weatherUrl || '').trim().replace(/['"\s]+$/g, '');
+    if (custom && !(/weather\.yandex/i.test(custom) && !settings.weatherKey)) out.push({ name: /yandex/i.test(custom) ? 'Яндекс Погода' : 'своя ссылка', url: async () => custom,
+        headers: /weather\.yandex/i.test(custom) ? { 'X-Yandex-Weather-Key': settings.weatherKey, 'X-Yandex-API-Key': settings.weatherKey } : {} });
+    out.push({ name: 'Open-Meteo', url: async () => { const g = await cityGeo(); return `https://api.open-meteo.com/v1/forecast?latitude=${g.lat}&longitude=${g.lon}&current_weather=true`; } });
+    out.push({ name: 'wttr.in', url: async () => `https://wttr.in/${encodeURIComponent(settings.weatherCity || 'Москва')}?format=j1&lang=ru` });
+    return out;
+}
+const WMO_RU = (c) => { if (typeof c === 'string') { const k = c.startsWith('wx:') ? c.slice(3) : ({ clear: 'sun', 'partly-cloudy': 'part' }[c] || ''); return { sun: 'Ясно', part: 'Переменная облачность', cloud: 'Облачно', rain: 'Дождь', snow: 'Снег', storm: 'Гроза', fog: 'Туман' }[k] || ''; }
+    if (c === 0) return 'Ясно'; if (c === 1) return 'Преимущественно ясно'; if (c === 2) return 'Переменная облачность'; if (c === 3) return 'Пасмурно';
+    if (c === 45 || c === 48) return 'Туман'; if (c >= 51 && c <= 57) return 'Морось'; if (c >= 61 && c <= 67) return 'Дождь'; if (c >= 71 && c <= 77) return 'Снег';
+    if (c >= 80 && c <= 82) return 'Ливень'; if (c === 85 || c === 86) return 'Снегопад'; if (c >= 95) return 'Гроза'; return ''; };
+const DROP = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-3.5 4.6-6 8-6 11a6 6 0 0 0 12 0c0-3-2.5-6.4-6-11z"/></svg>';
+const fmtT = (t) => (t > 0 ? '+' : '') + Math.round(t) + '°';
+const hhmm = (ts) => new Date(ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+const agoText = (ts) => { const m = Math.round((Date.now() - ts) / 60000); if (m < 1) return 'только что'; if (m < 60) return `${m} мин назад`; const h = Math.round(m / 60); if (h < 24) return `${h} ч назад`; return new Date(ts).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) + ' в ' + hhmm(ts); };
+let weatherFails = 0;
+// последние полученные данные храним, чтобы показать их, если сеть пропала
+function updateWeather() {
+    if (!weatherData) return;
+    $('weather-icon').innerHTML = weatherIcon(weatherData.code); $('weather-temp').textContent = fmtT(weatherData.temp); $('weather-city').textContent = settings.weatherCity || weatherData.city;
+    const stale = weatherFails > 2;
+    $('widget-weather').querySelector('.w-chip').classList.toggle('stale', stale);
+    const every = settings.weatherEvery || 15;
+    $('widget-weather').title = stale ? `Не удаётся обновить погоду (попыток: ${weatherFails}). Показаны данные от ${agoText(weatherData.at)} · клик — прогноз`
+        : `${weatherData.src || ''} · обновлено ${hhmm(weatherData.at || Date.now())} · каждые ${every} мин · клик — прогноз на 7 дней`;
+    $('weather-warn').title = stale ? $('widget-weather').title : '';
+    if ($('wx-pop').classList.contains('visible')) renderWxPop();
+}
+let weatherTimer = null, weatherSrc = '', weatherAt = 0, weatherBusy = false;
+function scheduleWeather(ms) { clearTimeout(weatherTimer); weatherTimer = setTimeout(() => fetchWeather(false), ms); }
+/* прогноз на 7 дней: Open-Meteo (7 дней), запасной — wttr.in (3 дня) */
+function parseForecast(d) {
+    if (d.daily && d.daily.time) return d.daily.time.map((t, i) => ({ date: t, code: d.daily.weathercode ? d.daily.weathercode[i] : d.daily.weather_code[i], max: d.daily.temperature_2m_max[i], min: d.daily.temperature_2m_min[i], pop: d.daily.precipitation_probability_max ? d.daily.precipitation_probability_max[i] : null }));
+    if (Array.isArray(d.weather)) return d.weather.map(w => ({ date: w.date, code: 'wx:' + WTTR((w.hourly && (w.hourly[4] || w.hourly[0]) || {}).weatherCode), max: +w.maxtempC, min: +w.mintempC, pop: w.hourly ? Math.max(...w.hourly.map(h => +h.chanceofrain || 0)) : null }));
+    return null;
+}
+async function fetchForecast() {
+    try { const g = await cityGeo(); const days = parseForecast(await httpJSON(`https://api.open-meteo.com/v1/forecast?latitude=${g.lat}&longitude=${g.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`, 12000)); if (days && days.length) return { days, src: 'Open-Meteo' }; } catch (e) {}
+    try { const days = parseForecast(await httpJSON(`https://wttr.in/${encodeURIComponent(settings.weatherCity || 'Москва')}?format=j1&lang=ru`, 12000)); if (days && days.length) return { days, src: 'wttr.in' }; } catch (e) {}
+    return null;
+}
+async function fetchWeather(manual) {
+    if (!settings.topbarWeather || weatherBusy) return;
+    weatherBusy = true;
+    if (!weatherData) { $('weather-icon').innerHTML = WX.wait; $('weather-city').textContent = settings.weatherCity || 'Москва'; }
+    if ($('wx-pop').classList.contains('visible')) $('wx-refresh').textContent = 'Обновляю…';
+    const errs = [];
+    try {
+        for (const src of weatherSources()) {
+            try {
+                const d = parseWeather(await httpJSON(await src.url(), 12000, src.headers || {}));
+                if (d.temp == null || isNaN(d.temp)) throw new Error('нет температуры');
+                weatherErr = ''; weatherFails = 0; weatherSrc = src.name; weatherAt = Date.now();
+                weatherData = { temp: Math.round(d.temp), code: d.code, city: settings.weatherCity || 'Москва', at: weatherAt, src: src.name };
+                settings.weatherLast = weatherData;
+                const fc = await fetchForecast(); if (fc) settings.weatherForecast = { at: Date.now(), days: fc.days, src: fc.src, city: settings.weatherCity || 'Москва' };
+                saveSettings(); updateWeather();
+                if (manual) toast(`Погода обновлена (${src.name})`);
+                scheduleWeather((settings.weatherEvery || 15) * 60000);
+                return;
+            } catch (e) { errs.push(`${src.name}: ${e.message || e}`); }
+        }
+        weatherFails++;
+        weatherErr = navigator.onLine === false ? 'Нет подключения к интернету' : 'Не удалось получить погоду. ' + errs.join(' · ');
+        if (weatherData) updateWeather();   // оставляем последние сведения; «!» появится после 3-й неудачной попытки
+        else { $('weather-icon').innerHTML = WX.err; $('weather-temp').textContent = '--°'; $('weather-city').textContent = 'Нет данных'; $('widget-weather').title = weatherErr + ' · клик — повторить'; }
+        if (manual) toast(weatherErr, 9000);
+        scheduleWeather(2 * 60000);
+    } finally { weatherBusy = false; if ($('wx-pop').classList.contains('visible')) { $('wx-refresh').textContent = 'Обновить'; renderWxPop(); } }
+}
+function renderWxPop() {
+    const w = weatherData, fc = settings.weatherForecast;
+    $('wx-now-ico').innerHTML = w ? weatherIcon(w.code) : WX.err;
+    $('wx-now-temp').textContent = w ? fmtT(w.temp) : '--°';
+    $('wx-now-desc').textContent = (w ? [WMO_RU(w.code), settings.weatherCity || w.city].filter(Boolean).join(' · ') : 'Нет данных');
+    const meta = $('wx-meta');
+    if (weatherFails > 2 && w) { meta.className = 'wx-meta warn'; meta.textContent = `⚠ Не удаётся обновить (попыток: ${weatherFails}). Данные от ${agoText(w.at)}.`; }
+    else if (!w) { meta.className = 'wx-meta warn'; meta.textContent = weatherErr || 'Погода ещё не загружена'; }
+    else { meta.className = 'wx-meta'; meta.textContent = `Обновлено ${agoText(w.at)} · каждые ${settings.weatherEvery || 15} мин`; }
+    const today = isoDate(new Date());
+    if (fc && fc.days && fc.days.length) {
+        const days = fc.days.filter(d => d.date >= today).slice(0, 7);
+        const lo = Math.min(...days.map(d => d.min)), hi = Math.max(...days.map(d => d.max)), span = Math.max(1, hi - lo);
+        const head = `<div class="wx-day wx-head"><span></span><span></span><span class="rng"><span class="lo">мин</span><span class="bar" style="background:none"></span><span class="hi">макс</span></span><span class="pop" style="color:var(--text-muted)">осадки</span></div>`;
+        $('wx-days').innerHTML = head + days.map(d => {
+            const dt = new Date(d.date + 'T12:00:00'), isT = d.date === today;
+            const name = isT ? 'Сегодня' : dt.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' }).replace('.', '');
+            return `<div class="wx-day" title="${esc(WMO_RU(d.code))}"><span class="d${isT ? ' today' : ''}">${esc(name)}</span><span class="ic">${weatherIcon(d.code)}</span><span class="rng"><span class="lo">${fmtT(d.min)}</span><span class="bar"><i style="left:${(d.min - lo) / span * 100}%;right:${(hi - d.max) / span * 100}%"></i></span><span class="hi">${fmtT(d.max)}</span></span><span class="pop${d.pop != null && d.pop < 20 ? ' low' : ''}" title="Вероятность осадков">${d.pop != null ? DROP + d.pop + '%' : ''}</span></div>`;
+        }).join('') || '<div class="wx-empty">Прогноз устарел — нажмите «Обновить»</div>';
+        $('wx-src').textContent = `Прогноз: ${fc.src}${fc.days.length < 7 ? ` (${fc.days.length} дн.)` : ''}`;
+    } else { $('wx-days').innerHTML = '<div class="wx-empty">Прогноза пока нет — он загрузится вместе с погодой</div>'; $('wx-src').textContent = ''; }
+}
+$('widget-weather').addEventListener('click', () => {
+    if (!togglePop($('wx-pop'), $('widget-weather'))) return;
+    renderWxPop();
+    const fc = settings.weatherForecast;
+    if (!weatherData || !fc || (settings.weatherForecast.city !== (settings.weatherCity || 'Москва')) || Date.now() - (weatherData.at || 0) > 10 * 60000) fetchWeather(false);
+});
+$('wx-refresh').addEventListener('click', () => fetchWeather(true));
+window.addEventListener('online', () => { if (weatherErr) fetchWeather(false); });
+async function weatherDiagnose() {
+    const box = $('weather-diag'); box.style.display = ''; box.innerHTML = 'Проверяю…';
+    const rows = [];
+    const tryOne = async (name, fn) => { const t0 = performance.now(); try { const v = await fn(); rows.push(`✓ <b>${name}</b> — ${Math.round(performance.now() - t0)} мс${v ? ' · ' + esc(v) : ''}`); } catch (e) { rows.push(`✗ <b>${name}</b> — ${esc(e.message || String(e))}`); } box.innerHTML = rows.join('<br>'); };
+    await tryOne('Поиск города (Open-Meteo)', async () => { delete settings.weatherGeo; const g = await cityGeo(); return `${g.name}: ${g.lat.toFixed(2)}, ${g.lon.toFixed(2)}`; });
+    for (const src of weatherSources()) await tryOne(src.name, async () => { const d = parseWeather(await httpJSON(await src.url(), 12000, src.headers || {})); return `${Math.round(d.temp)}°`; });
+    rows.push(`<span style="opacity:.8">Программа: ${window.nativeNet ? 'запросы идут через программу' : 'браузерный режим'}</span>`); box.innerHTML = rows.join('<br>');
+    fetchWeather(false);
+}
 
 /* ----- всплывающие окна виджетов ----- */
 function closePops(except) { document.querySelectorAll('.w-pop.visible').forEach(p => { if (p !== except) { p.classList.remove('visible'); const a = p._anchor; if (a) a.querySelector('.w-chip').classList.remove('open'); } }); }
@@ -1930,15 +2326,44 @@ function togglePop(pop, anchor) {
     if (!isMobile()) { const r = anchor.getBoundingClientRect(), w = pop.offsetWidth; pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px'; pop.style.top = (r.bottom + 8) + 'px'; }
     return true;
 }
-document.addEventListener('pointerdown', (e) => { if (!e.target.closest('.w-pop, #widget-clock, #widget-calc')) closePops(); }, true);
+document.addEventListener('pointerdown', (e) => { if (!e.target.closest('.w-pop, #widget-clock, #widget-calc, #widget-weather')) closePops(); }, true);
 
 /* ----- календарь по клику на часы: задачи, праздники, встречи ----- */
 let cp = { month: new Date(), sel: fmtDate(new Date()) };
 const LS_HOL = 'planner_holidays', LS_EV = 'planner_cal_events';
+let calNewColor = '#0a84ff';
+const CAL_COLORS = ['#0a84ff', '#30d158', '#ff9f0a', '#bf5af2', '#ff375f', '#64d2ff', '#ffd60a', '#8e8e93'];
 let holCache = {}, holPending = {};
 let calEvents = { google: {}, ics: [] }, gEvPending = {}, gEvState = '';
 try { holCache = JSON.parse(localStorage.getItem(LS_HOL) || '{}') || {}; } catch (e) {}
-try { calEvents = Object.assign({ google: {}, ics: [] }, JSON.parse(localStorage.getItem(LS_EV) || '{}')); } catch (e) {}
+try { calEvents = Object.assign({ google: {}, ics: [], src: {} }, JSON.parse(localStorage.getItem(LS_EV) || '{}')); } catch (e) {}
+if (!calEvents.src) calEvents.src = {};
+function calInit() {
+    if (settings.voiceMode === 'whisper') settings.voiceMode = 'windows';
+    if (!Array.isArray(settings.calendars)) settings.calendars = [];
+    if (!settings.calOn || typeof settings.calOn !== 'object') settings.calOn = {};
+    calNewColor = CAL_COLORS[settings.calendars.length % CAL_COLORS.length];
+    // перенос старого импорта .ics в отдельный календарь
+    if ((calEvents.ics || []).length && !settings.calendars.some(c => c.id === 'ics_import')) { settings.calendars.push({ id: 'ics_import', name: 'Импорт .ics', color: '#0a84ff', url: '' }); calEvents.src.ics_import = { at: Date.now(), items: calEvents.ics }; calEvents.ics = []; saveSettings(); saveCalEvents(); }
+}
+const calLayerOn = (id) => settings.calOn[id] !== false;
+const calPending = {};
+async function ensureCalendar(cal, force) {
+    if (!cal.url || calPending[cal.id]) return;
+    const c = calEvents.src[cal.id];
+    if (!force && c && Date.now() - c.at < 30 * 60 * 1000) return;
+    calPending[cal.id] = true;
+    try {
+        const items = parseICSChecked(await httpText(cal.url, 20000));
+        calEvents.src[cal.id] = { at: Date.now(), items, error: '' };
+    } catch (e) {
+        calEvents.src[cal.id] = Object.assign({ items: [] }, c || {}, { at: Date.now(), error: e.native ? e.message : (e instanceof TypeError ? 'сервис не отдаёт календарь браузеру — откройте в программе' : e.message) });
+    } finally {
+        delete calPending[cal.id]; saveCalEvents();
+        if ($('clock-pop').classList.contains('visible')) renderClockPop(true);
+        if ($('settings-overlay').classList.contains('visible')) renderCalSources();
+    }
+}
 function saveCalEvents() { try { localStorage.setItem(LS_EV, JSON.stringify(calEvents)); } catch (e) { toast('Не хватает места для встреч'); } }
 const ICON_STAR = '<svg class="i" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>';
 
@@ -1952,8 +2377,7 @@ function ensureHolidays(y, force) {
     const key = holKey(y), cc = key.slice(0, 2);
     if ((holCache[key] && !force) || holPending[key]) return;
     holPending[key] = true;
-    fetch(`https://date.nager.at/api/v3/PublicHolidays/${y}/${cc}`)
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    httpJSON(`https://date.nager.at/api/v3/PublicHolidays/${y}/${cc}`)
         .then(arr => { holCache[key] = arr.map(h => { const [Y, M, D] = h.date.split('-'); return { date: `${D}.${M}.${Y}`, name: h.localName || h.name }; }); })
         .catch(() => { if (cc === 'RU' && !holCache[key]) holCache[key] = builtinRU(y); })
         .finally(() => { delete holPending[key]; try { localStorage.setItem(LS_HOL, JSON.stringify(holCache)); } catch (e) {} if ($('clock-pop').classList.contains('visible')) renderClockPop(); });
@@ -1965,18 +2389,27 @@ function mapGoogleEvent(e) {
     const allDay = !!(e.start && e.start.date);
     const st = allDay ? new Date(e.start.date + 'T00:00:00') : new Date(e.start.dateTime);
     const en = allDay ? new Date(e.end.date + 'T00:00:00') : new Date(e.end.dateTime);
-    return { id: e.id, title: e.summary || '(без названия)', start: st.toISOString(), end: en.toISOString(), allDay, location: e.location || '', link: e.htmlLink || '', src: 'google' };
+    return { id: e.id, title: e.summary || '(без названия)', start: st.toISOString(), end: en.toISOString(), allDay, location: e.location || '', description: e.description || '', link: e.htmlLink || '', src: 'google' };
 }
 async function ensureGoogleEvents(force) {
-    if (!settings.gcalClientId || settings.calGoogleEvents === false || !settings.calShowEvents) { gEvState = ''; return; }
+    if (!settings.gcalClientId || !calLayerOn('google')) { gEvState = ''; return; }
     const key = cp.month.getFullYear() + '-' + cp.month.getMonth(), cached = calEvents.google[key];
     if (!force && cached && Date.now() - cached.at < 10 * 60 * 1000) return;
-    if (!gcalReady()) { gEvState = 'auth'; return; }
+    if (!(await gcalEnsure(false))) { gEvState = 'auth'; return; }
     if (gEvPending[key]) return; gEvPending[key] = true; gEvState = 'loading';
     try {
         const { start, end } = gridRange(), cal = encodeURIComponent(settings.gcalCalendarId || 'primary');
         const r = await gapi('GET', `/calendars/${cal}/events?singleEvents=true&orderBy=startTime&maxResults=250&timeMin=${encodeURIComponent(start.toISOString())}&timeMax=${encodeURIComponent(end.toISOString())}`);
-        const items = (r.items || []).filter(e => e.status !== 'cancelled' && !(e.extendedProperties && e.extendedProperties.private && e.extendedProperties.private.plannerTaskId)).map(mapGoogleEvent);
+        const own = (e) => e.extendedProperties && e.extendedProperties.private && e.extendedProperties.private.plannerTaskId;
+        // события, созданные из задач: если в Google перенесли дату — переносим дедлайн задачи
+        let moved = 0;
+        (r.items || []).filter(own).forEach(e => {
+            if (e.status === 'cancelled' || !e.start || !e.start.date) return;
+            const id = Number(own(e));
+            for (const l of lists) { const t = (l.tasks || []).find(x => x.id === id && x.gcalEventId === e.id); if (t) { const [Y, M, D] = e.start.date.split('-'); const nd = `${D}.${M}.${Y}`; if (t.deadline && t.deadline !== nd && !t.completedFinal) { t.deadline = nd; t.updatedAt = nowStr(); moved++; } break; } }
+        });
+        if (moved) { scheduleSave(); if (!ed) renderTasks(); updateStats(); toast(`Из Google обновлены дедлайны: ${moved}`); }
+        const items = (r.items || []).filter(e => e.status !== 'cancelled' && !own(e)).map(mapGoogleEvent);
         calEvents.google[key] = { at: Date.now(), items };
         const keys = Object.keys(calEvents.google); if (keys.length > 12) keys.sort((a, b) => calEvents.google[a].at - calEvents.google[b].at).slice(0, keys.length - 12).forEach(k => delete calEvents.google[k]);
         saveCalEvents(); gEvState = '';
@@ -1984,6 +2417,21 @@ async function ensureGoogleEvents(force) {
     finally { delete gEvPending[key]; if ($('clock-pop').classList.contains('visible')) renderClockPop(true); }
 }
 
+/* проверка ответа календаря: понятная причина, если пришёл не календарь */
+function parseICSChecked(text) {
+    const t = String(text || '');
+    if (!/BEGIN:VCALENDAR/i.test(t)) {
+        const plain = t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        if (/^forbidden$/i.test(plain)) throw new Error('скрипт ответил «forbidden» — работает старая версия развёртывания (создайте «Новую версию») или неверный ?key=');
+        if (/accounts\.google\.com|ServiceLogin|Sign in|Войдите|Вход/i.test(t)) throw new Error('Google просит войти — в развёртывании скрипта выберите доступ «Все» (или его запретил администратор)');
+        if (/Script function not found|doGet/i.test(t)) throw new Error('в скрипте нет функции doGet — проверьте, что код вставлен целиком и создано новое развёртывание');
+        if (/<html/i.test(t)) throw new Error('пришла веб-страница, а не календарь: «' + plain.slice(0, 90) + '…»');
+        throw new Error('ответ не похож на календарь: «' + plain.slice(0, 90) + '»');
+    }
+    const items = parseICS(t);
+    items.__total = (t.match(/BEGIN:VEVENT/g) || []).length;
+    return items;
+}
 /* импорт .ics */
 function parseICS(text) {
     const lines = text.replace(/\r?\n[ \t]/g, '').split(/\r?\n/);
@@ -2047,21 +2495,22 @@ function expandICS(ev) {
         }
     }
     const uid = ev.UID || Math.random().toString(36).slice(2);
-    return occ.filter(d => d >= minD && !ex.has(ymd(d))).slice(0, 800).map(d => ({ id: uid + '_' + d.getTime(), title: icsText(ev.SUMMARY) || '(без названия)', start: d.toISOString(), end: new Date(d.getTime() + dur).toISOString(), allDay: s.allDay, location: icsText(ev.LOCATION), link: '', src: 'ics' }));
+    return occ.filter(d => d >= minD && !ex.has(ymd(d))).slice(0, 800).map(d => ({ id: uid + '_' + d.getTime(), title: icsText(ev.SUMMARY) || '(без названия)', start: d.toISOString(), end: new Date(d.getTime() + dur).toISOString(), allDay: s.allDay, location: icsText(ev.LOCATION), description: icsText(ev.DESCRIPTION), link: icsText(ev.URL) || '', src: 'ics' }));
 }
 
 /* сборка данных по дням */
 function eventsByDay() {
     const m = {};
-    const add = (ev) => {
+    const add = (ev0, color, srcName) => {
+        const ev = Object.assign({}, ev0, { color, srcName });
         const st = new Date(ev.start), en = new Date(ev.end);
         const d = new Date(st); d.setHours(0, 0, 0, 0);
         let lastDay = new Date(en); if (ev.allDay || (en.getHours() === 0 && en.getMinutes() === 0 && en > st)) lastDay.setTime(en.getTime() - 1); lastDay.setHours(0, 0, 0, 0);
         for (let i = 0; d <= lastDay && i < 62; i++) { (m[fmtDate(d)] = m[fmtDate(d)] || []).push(ev); d.setDate(d.getDate() + 1); }
     };
     const gk = cp.month.getFullYear() + '-' + cp.month.getMonth();
-    if (calEvents.google[gk] && settings.calGoogleEvents !== false) calEvents.google[gk].items.forEach(add);
-    (calEvents.ics || []).forEach(add);
+    if (settings.gcalClientId && calLayerOn('google') && calEvents.google[gk]) calEvents.google[gk].items.forEach(x => add(x, '#0a84ff', 'Google'));
+    settings.calendars.forEach(c => { if (calLayerOn(c.id) && calEvents.src[c.id]) calEvents.src[c.id].items.forEach(x => add(x, c.color, c.name)); });
     Object.values(m).forEach(arr => arr.sort((a, b) => (b.allDay - a.allDay) || (new Date(a.start) - new Date(b.start))));
     return m;
 }
@@ -2076,13 +2525,34 @@ function deadlinesMap() {
     return m;
 }
 const fmtTime = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+let cpDayEvents = [], cpOpenEv = null;
+const eventKey = (x) => x.id + '|' + x.start;
+const URL_RE = /\b(https?:\/\/[^\s<>"')]+)/gi;
+// в строке списка — только смысл: без ссылок и хвостов-разделителей
+function cleanTitle(t) { const c = String(t || '').replace(URL_RE, '').replace(/\s{2,}/g, ' ').replace(/[\s\-–—|:·,]+$/, '').trim(); return c || String(t || '').trim() || '(без названия)'; }
+function linkify(text) {
+    return esc(text).replace(/(https?:\/\/[^\s<>&"')]+(?:&amp;[^\s<>&"')]+)*)/gi, (u) => { const raw = u.replace(/&amp;/g, '&'); let host = raw; try { host = new URL(raw).hostname.replace(/^www\./, ''); } catch (e) {} return `<a href="#" data-url="${esc(raw)}" title="${esc(raw)}">${esc(host)}</a>`; }).replace(/\n/g, '<br>');
+}
+function eventDetailsHTML(x) {
+    const st = new Date(x.start), en = new Date(x.end);
+    const when = x.allDay ? 'Весь день' : `${st.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'long' })}, ${fmtTime(st)}–${fmtTime(en)}`;
+    const desc = String(x.description || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+    return `<div class="ev-details">
+        <div class="ev-row">${ICON.cal}<span>${esc(when)}</span></div>
+        ${(String(x.title || '').match(URL_RE) || []).map(u => `<div class="ev-row"><svg class="i" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>${linkify(u)}</span></div>`).join('')}
+        ${x.location ? `<div class="ev-row"><svg class="i" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span>${linkify(x.location)}</span></div>` : ''}
+        ${desc ? `<div class="ev-desc">${linkify(desc)}</div>` : ''}
+        <div class="ev-row ev-src"><span class="stat-dot" style="background:${esc(x.color || 'var(--ev)')}"></span><span>${esc(x.srcName || 'Календарь')}</span>${x.link ? `<a href="#" data-url="${esc(x.link)}">Открыть в календаре</a>` : ''}</div>
+    </div>`;
+}
 function renderClockPop(skipFetch) {
     const y = cp.month.getFullYear(), mo = cp.month.getMonth(), todayS = fmtDate(new Date());
     if (!skipFetch) {
         if (settings.calShowHolidays) { ensureHolidays(y); if (mo === 0) ensureHolidays(y - 1); if (mo === 11) ensureHolidays(y + 1); }
-        if (settings.calShowEvents) ensureGoogleEvents(false);
+        ensureGoogleEvents(false);
+        settings.calendars.forEach(c => { if (calLayerOn(c.id)) ensureCalendar(c, false); });
     }
-    const tasksM = settings.calShowTasks ? deadlinesMap() : {}, holM = settings.calShowHolidays ? holidaysByDay() : {}, evM = settings.calShowEvents ? eventsByDay() : {};
+    const tasksM = settings.calShowTasks ? deadlinesMap() : {}, holM = settings.calShowHolidays ? holidaysByDay() : {}, evM = eventsByDay();
     $('cp-title').textContent = `${MONTHS[mo]} ${y}`;
     let h = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d => `<div class="cal-dn">${d}</div>`).join('');
     const { start } = gridRange();
@@ -2093,7 +2563,7 @@ function renderClockPop(skipFetch) {
         const wk = settings.calShowWeekends && (d.getDay() === 0 || d.getDay() === 6);
         let dots = '';
         if (tk) { const cats = tk.map(x => category(x.t)); dots += `<i style="background:${cats.includes('danger') ? 'var(--danger)' : cats.includes('warning') ? 'var(--warning)' : 'var(--success)'}"></i>`; }
-        if (ev) dots += '<i style="background:var(--ev)"></i>';
+        if (ev) [...new Set(ev.map(x => x.color))].slice(0, 3).forEach(c => { dots += `<i style="background:${esc(c)}"></i>`; });
         const tip = [hl && hl.map(x => x.name).join(', '), ev && `${ev.length} ${plural(ev.length, ['встреча','встречи','встреч'])}`, tk && `${tk.length} ${plural(tk.length, ['дедлайн','дедлайна','дедлайнов'])}`].filter(Boolean).join(' · ');
         h += `<div class="cal-d${d.getMonth() !== mo ? ' out' : ''}${s === todayS ? ' today' : ''}${s === cp.sel ? ' sel' : ''}${hl ? ' hol' : ''}${wk ? ' wkend' : ''}" data-date="${s}" title="${esc(tip)}">${d.getDate()}${dots ? `<span class="dots">${dots}</span>` : ''}</div>`;
     }
@@ -2103,76 +2573,167 @@ function renderClockPop(skipFetch) {
     $('cp-day-title').textContent = (cp.sel === todayS ? 'Сегодня, ' : '') + sd.toLocaleDateString('ru-RU', { weekday: cp.sel === todayS ? undefined : 'short', day: 'numeric', month: 'long' });
     let list = '';
     (holM[cp.sel] || []).forEach(x => { list += `<div class="day-item hol static"><span class="ico" style="color:var(--danger)">${ICON_STAR}</span><span class="t">${esc(x.name)}</span></div>`; });
-    (evM[cp.sel] || []).forEach(x => {
+    cpDayEvents = evM[cp.sel] || [];
+    cpDayEvents.forEach((x, i) => {
         const st = new Date(x.start), en = new Date(x.end);
         const tm = x.allDay ? 'весь день' : (fmtDate(st) === cp.sel ? fmtTime(st) : '…') + (fmtDate(en) === cp.sel && !x.allDay ? '–' + fmtTime(en) : '');
-        list += `<div class="day-item${x.link ? '' : ' static'}" ${x.link ? `data-link="${esc(x.link)}" title="Открыть в Google Календаре"` : ''}><span class="stat-dot" style="background:var(--ev)"></span><span class="tm">${tm}</span><span class="t">${esc(x.title)}</span>${x.location ? `<span class="l">${esc(x.location)}</span>` : ''}</div>`;
+        const open = cpOpenEv === eventKey(x);
+        list += `<div class="day-item ev${open ? ' open' : ''}" data-ev="${i}"><span class="stat-dot" style="background:${esc(x.color || 'var(--ev)')}"></span><span class="tm">${tm}</span><span class="t">${esc(cleanTitle(x.title))}</span></div>${open ? eventDetailsHTML(x) : ''}`;
     });
     (tasksM[cp.sel] || []).forEach(({ t, l }) => { list += `<div class="day-item" data-task="${t.id}" data-list="${esc(l.id)}"><span class="stat-dot ${category(t)}"></span><span class="t">${esc(t.title || '(без названия)')}</span><span class="l">${esc(l.name)}</span></div>`; });
     $('cp-day-list').innerHTML = list || '<div class="day-empty">Ничего не запланировано</div>';
-    // ползунки и статус
-    $('cp-layers').querySelectorAll('.layer').forEach(x => x.classList.toggle('on', settings[x.dataset.layer] !== false));
+    // ползунки: стандартные + Google + мои календари
+    const layers = [{ key: 'calShowTasks', name: 'Задачи', c: 'var(--w-clock)', on: settings.calShowTasks !== false },
+        { key: 'calShowHolidays', name: (settings.holCountry || 'RU') === 'RU' ? 'Праздники РФ' : 'Праздники', c: 'var(--danger)', on: settings.calShowHolidays !== false },
+        { key: 'calShowWeekends', name: 'Выходные', c: 'var(--danger)', on: settings.calShowWeekends !== false }];
+    if (settings.gcalClientId) layers.push({ cal: 'google', name: 'Google', c: '#0a84ff', on: calLayerOn('google') });
+    settings.calendars.forEach(c => layers.push({ cal: c.id, name: c.name, c: c.color, on: calLayerOn(c.id) }));
+    $('cp-layer-list').innerHTML = layers.map(l => `<label class="layer${l.on ? ' on' : ''}" ${l.key ? `data-layer="${l.key}"` : `data-cal="${esc(l.cal)}"`} style="--lc:${esc(l.c)}" title="${esc(l.name)}"><span class="mini-toggle"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.name)}</span></label>`).join('')
+        + `<label class="layer" data-addcal="1" style="color:var(--wc)"><span style="width:28px;text-align:center;font-size:1rem">+</span>Календарь</label>`;
     let st = '';
-    if (settings.calShowEvents) {
-        if (!settings.gcalClientId && !(calEvents.ics || []).length) st = 'Встречи: подключите Google или импортируйте .ics — открыть настройки';
-        else if (gEvState === 'auth') st = 'Встречи Google: нужен вход — нажмите ⟳';
+    if (settings.gcalClientId && calLayerOn('google')) {
+        if (gEvState === 'auth') st = 'Google: нужен вход — нажмите ⟳';
         else if (gEvState === 'loading') st = 'Загружаю встречи…';
         else if (gEvState === 'error') st = 'Не удалось загрузить встречи Google — нажмите ⟳';
     }
+    const errs = settings.calendars.filter(c => calLayerOn(c.id) && calEvents.src[c.id] && calEvents.src[c.id].error);
+    if (errs.length) st = `«${errs[0].name}»: ${calEvents.src[errs[0].id].error}`;
     $('cp-status').textContent = st;
 }
 $('widget-clock').addEventListener('click', () => { if (togglePop($('clock-pop'), $('widget-clock'))) { cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); renderClockPop(); } });
 $('cp-prev').addEventListener('click', () => { cp.month.setMonth(cp.month.getMonth() - 1); renderClockPop(); });
 $('cp-next').addEventListener('click', () => { cp.month.setMonth(cp.month.getMonth() + 1); renderClockPop(); });
 $('cp-today').addEventListener('click', () => { cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); renderClockPop(); });
-$('cp-grid').addEventListener('click', (e) => { const d = e.target.closest('[data-date]'); if (!d) return; cp.sel = d.dataset.date; const pd = parseDate(cp.sel); if (pd.getMonth() !== cp.month.getMonth()) { cp.month = new Date(pd.getFullYear(), pd.getMonth(), 1); } renderClockPop(); });
+$('cp-grid').addEventListener('click', (e) => { const d = e.target.closest('[data-date]'); if (!d) return; cp.sel = d.dataset.date; cpOpenEv = null; const pd = parseDate(cp.sel); if (pd.getMonth() !== cp.month.getMonth()) { cp.month = new Date(pd.getFullYear(), pd.getMonth(), 1); } renderClockPop(); });
 $('cp-layers').addEventListener('click', (e) => {
-    if (e.target.closest('#cp-status')) { closePops(); openSettings(); setTimeout(() => $('hol-country').scrollIntoView({ block: 'center' }), 50); return; }
+    if (e.target.closest('#cp-status') || e.target.closest('[data-addcal]')) { e.preventDefault(); closePops(); openSettings(); $('cal-add-fold').open = true; setTimeout(() => { $('cal-new-name').scrollIntoView({ block: 'center' }); $('cal-new-name').focus(); }, 60); return; }
     const l = e.target.closest('.layer'); if (!l) return; e.preventDefault();
-    settings[l.dataset.layer] = settings[l.dataset.layer] === false; saveSettings(); renderClockPop();
+    if (l.dataset.cal) settings.calOn[l.dataset.cal] = !calLayerOn(l.dataset.cal);
+    else settings[l.dataset.layer] = settings[l.dataset.layer] === false;
+    saveSettings(); renderClockPop();
 });
 async function calSyncNow() {
     const btn = $('cp-sync'); btn.classList.add('spin');
     const y = cp.month.getFullYear();
     if (settings.calShowHolidays) { delete holCache[holKey(y)]; ensureHolidays(y, true); }
-    if (settings.gcalClientId && settings.calGoogleEvents !== false) {
-        if (!gcalReady()) await gcalConnect();
-        if (gcalReady()) { settings.calShowEvents = true; saveSettings(); await ensureGoogleEvents(true); }
+    const jobs = settings.calendars.filter(c => c.url && calLayerOn(c.id)).map(c => ensureCalendar(c, true));
+    if (settings.gcalClientId && calLayerOn('google')) {
+        if (await gcalEnsure(true)) await ensureGoogleEvents(true);
     }
-    btn.classList.remove('spin'); renderClockPop(true); updateCalInfo();
+    await Promise.all(jobs);
+    btn.classList.remove('spin'); renderClockPop(true);
 }
 $('cp-sync').addEventListener('click', calSyncNow);
 $('cp-day-list').addEventListener('click', (e) => {
-    const lk = e.target.closest('[data-link]'); if (lk) { window.open(lk.dataset.link, '_blank', 'noopener'); return; }
+    const a = e.target.closest('[data-url]'); if (a) { e.preventDefault(); window.open(a.dataset.url, '_blank', 'noopener'); return; }
+    const ev = e.target.closest('.day-item[data-ev]');
+    if (ev) { const x = cpDayEvents[+ev.dataset.ev]; if (x) { cpOpenEv = cpOpenEv === eventKey(x) ? null : eventKey(x); renderClockPop(true); } return; }
+    if (e.target.closest('.ev-details')) return;
     const it = e.target.closest('.day-item[data-task]'); if (!it) return;
     closePops();
     if (viewMode !== 'active') switchView('active');
     if (activeListId !== it.dataset.list) setActiveList(it.dataset.list);
     const { t } = findTask(Number(it.dataset.task), it.dataset.list); if (t) openEditor(t);
 });
-/* настройки календаря */
-function updateCalInfo() {
-    const n = (calEvents.ics || []).length, g = Object.values(calEvents.google).reduce((a, x) => a + x.items.length, 0);
-    $('cal-info').textContent = `Импортировано из .ics: ${n} ${plural(n, ['событие','события','событий'])} · из Google (в кэше): ${g}`;
+/* настройки календаря: мои календари */
+function renderCalSources() {
+    const rows = [];
+    rows.push(`<div class="cal-src builtin"><span class="sw" style="background:var(--danger)"></span><input class="nm" value="Праздники и выходные (${esc(settings.holCountry || 'RU')})" readonly><span class="meta">встроенный</span></div>`);
+    if (settings.gcalClientId) rows.push(`<div class="cal-src builtin"><span class="sw" style="background:#0a84ff"></span><input class="nm" value="Google (через вход в аккаунт)" readonly><span class="meta">${gcalReady() ? 'подключено' : 'нужен вход'}</span></div>`);
+    settings.calendars.forEach(c => {
+        const d = calEvents.src[c.id] || {}, n = (d.items || []).length;
+        const busyOnly = n > 0 && (d.items || []).every(x => /^(busy|занят[оа]?|free|свободн\S*)$/i.test((x.title || '').trim()));
+        const isPublicG = /calendar\.google\.com\/calendar\/ical\/[^/]+\/public\//i.test(c.url || '');
+        const meta = d.error ? `ошибка: ${d.error}` : busyOnly ? (isPublicG ? 'только «занято» — это публичная ссылка, нужна секретная (private-…)' : 'только «занято» — календарь отдаёт без названий')
+            : (c.url ? `${n} ${plural(n, ['событие','события','событий'])} · по ссылке` : `${n} ${plural(n, ['событие','события','событий'])} · из файла`);
+        if (calEditId === c.id) {
+            rows.push(`<div class="cal-src cal-edit" data-cal="${esc(c.id)}">
+                <div class="settings-row column" style="margin:0"><div class="settings-label">Название</div><input class="text-input" data-f="name" value="${esc(c.name)}"></div>
+                <div class="settings-row column" style="margin:0"><div class="settings-label">Ссылка${c.url ? '' : ' (сейчас календарь из файла — можно указать ссылку)'}</div><input class="text-input" data-f="url" value="${esc(c.url || '')}" placeholder="https://…" spellcheck="false"></div>
+                <div class="settings-row" style="min-height:30px"><div class="settings-label">Цвет</div><div class="swatches">${CAL_COLORS.map(x => `<button style="background:${x}" data-ecolor="${x}" class="${x === (calEditColor || c.color) ? 'on' : ''}"></button>`).join('')}</div></div>
+                <div class="settings-hint" data-f="err" style="color:var(--danger);display:none;margin:0"></div>
+                <div class="btn-row"><button class="settings-btn" data-act="save">Сохранить</button><button class="settings-btn" data-act="cancel">Отмена</button></div>
+            </div>`);
+            return;
+        }
+        rows.push(`<div class="cal-src" data-cal="${esc(c.id)}"><span class="sw" style="background:${esc(c.color)}" data-act="color" title="Сменить цвет"></span><span class="nm" title="${esc(c.name)}">${esc(c.name)}</span><span class="meta${d.error || busyOnly ? ' err' : ''}" title="${esc(c.url || '')}">${esc(meta)}</span>${c.url ? `<button class="row-btn" data-act="refresh" title="Обновить"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><polyline points="4 3.5 4 8 8.5 8"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><polyline points="20 20.5 20 16 15.5 16"/></svg></button>` : ''}<button class="row-btn" data-act="edit" title="Изменить название и ссылку">${ICON.edit}</button><button class="row-btn danger" data-act="del" title="Удалить календарь">${ICON.x}</button></div>`);
+    });
+    $('cal-src-list').innerHTML = rows.join('');
+    $('cal-new-color').innerHTML = CAL_COLORS.map(c => `<button style="background:${c}" data-color="${c}" class="${c === calNewColor ? 'on' : ''}"></button>`).join('');
 }
-$('hol-country').addEventListener('change', (e) => { settings.holCountry = (e.target.value.trim() || 'RU').toUpperCase().slice(0, 2); e.target.value = settings.holCountry; saveSettings(); toast('Праздники: ' + settings.holCountry); });
-$('cal-google-toggle').addEventListener('click', () => { settings.calGoogleEvents = settings.calGoogleEvents === false; saveSettings(); $('cal-google-toggle').classList.toggle('on', settings.calGoogleEvents); });
-$('cal-sync-btn').addEventListener('click', async () => {
-    cp.month = new Date(); cp.month.setDate(1);
-    if (!settings.gcalClientId && settings.calGoogleEvents !== false) toast('Для встреч из Google сначала укажите Client ID в разделе «Google Календарь». Праздники обновлены.', 6000);
-    await calSyncNow(); if (settings.gcalClientId && gcalReady()) toast('Календарь синхронизирован');
+function updateCalInfo() { renderCalSources(); }
+function calAddError(m) { const e = $('cal-add-error'); e.textContent = m || ''; e.style.display = m ? '' : 'none'; }
+function addCalendar(name, url, items) {
+    const id = 'cal_' + Date.now().toString(36);
+    const cal = { id, name, color: calNewColor, url: url || '' };
+    settings.calendars.push(cal); settings.calOn[id] = true; saveSettings();
+    if (items) { calEvents.src[id] = { at: Date.now(), items, error: '' }; saveCalEvents(); }
+    calNewColor = CAL_COLORS[settings.calendars.length % CAL_COLORS.length];
+    $('cal-new-name').value = ''; $('cal-new-url').value = ''; calAddError('');
+    renderCalSources();
+    return cal;
+}
+$('cal-new-color').addEventListener('click', (e) => { const b = e.target.closest('[data-color]'); if (b) { calNewColor = b.dataset.color; renderCalSources(); } });
+$('cal-add-url-btn').addEventListener('click', async () => {
+    const name = $('cal-new-name').value.trim(), url = $('cal-new-url').value.trim();
+    if (!name) return calAddError('Введите название календаря');
+    if (!/^(https?|webcal):\/\//i.test(url)) return calAddError('Вставьте ссылку, начинающуюся с https:// или webcal://');
+    calAddError('');
+    const btn = $('cal-add-url-btn'); btn.disabled = true; btn.textContent = 'Загружаю…';
+    try {
+        const items = parseICSChecked(await httpText(url, 20000));
+        addCalendar(name, url, items); toast(`Календарь «${name}» добавлен: ${items.length} ${plural(items.length, ['событие','события','событий'])}`);
+    } catch (e) {
+        calAddError('Не удалось загрузить: ' + (e instanceof TypeError ? 'сервис не отдаёт календарь браузеру. В программе «Задачи» ссылка сработает; в браузере используйте «Загрузить файл .ics».' : e.message));
+    } finally { btn.disabled = false; btn.textContent = 'Добавить по ссылке'; }
 });
-$('ics-import-btn').addEventListener('click', () => $('ics-file').click());
+$('cal-add-file-btn').addEventListener('click', () => { if (!$('cal-new-name').value.trim()) { calAddError('Сначала введите название календаря'); $('cal-new-name').focus(); return; } $('ics-file').click(); });
 $('ics-file').addEventListener('change', (e) => {
     const f = e.target.files[0]; if (!f) return;
     const r = new FileReader();
     r.onload = () => {
-        try { const items = parseICS(String(r.result)); if (!items.length) throw new Error('пусто'); calEvents.ics = items; saveCalEvents(); settings.calShowEvents = true; saveSettings(); updateCalInfo(); toast(`Импортировано событий: ${items.length}`); }
-        catch (err) { appAlert('Не удалось прочитать файл .ics — в нём нет событий или формат не поддерживается.'); }
+        const items = parseICS(String(r.result));
+        if (!items.length) { calAddError('В файле не найдено событий'); return; }
+        const name = $('cal-new-name').value.trim() || f.name.replace(/\.ics$/i, '');
+        addCalendar(name, '', items); toast(`Календарь «${name}» добавлен: ${items.length} ${plural(items.length, ['событие','события','событий'])}`);
     };
     r.readAsText(f); e.target.value = '';
 });
-$('ics-clear-btn').addEventListener('click', async () => { if (!(calEvents.ics || []).length) return; if (!(await appConfirm('Удалить импортированные встречи?'))) return; calEvents.ics = []; saveCalEvents(); updateCalInfo(); });
+let calEditId = null, calEditColor = null;
+async function saveCalEdit(row, c) {
+    const name = row.querySelector('[data-f="name"]').value.trim(), url = row.querySelector('[data-f="url"]').value.trim();
+    const err = row.querySelector('[data-f="err"]'), btn = row.querySelector('[data-act="save"]');
+    const fail = (m) => { err.textContent = m; err.style.display = ''; };
+    if (!name) return fail('Введите название');
+    if (url && !/^(https?|webcal):\/\//i.test(url)) return fail('Ссылка должна начинаться с https:// или webcal://');
+    if (!url && c.url) return fail('Ссылку нельзя оставить пустой — удалите календарь, если он больше не нужен');
+    if (url && url !== c.url) {
+        btn.disabled = true; btn.textContent = 'Проверяю ссылку…';
+        try { const items = parseICSChecked(await httpText(url, 20000)); calEvents.src[c.id] = { at: Date.now(), items, error: '' }; saveCalEvents(); }
+        catch (e) { btn.disabled = false; btn.textContent = 'Сохранить'; return fail('Не удалось загрузить: ' + (e instanceof TypeError ? 'сервис не отдаёт календарь' : e.message)); }
+    }
+    c.name = name; c.url = url; if (calEditColor) c.color = calEditColor;
+    saveSettings(); calEditId = null; calEditColor = null; renderCalSources(); toast('Календарь сохранён');
+}
+$('cal-src-list').addEventListener('keydown', (e) => {
+    const row = e.target.closest('.cal-edit'); if (!row) return;
+    if (e.key === 'Enter') { e.preventDefault(); row.querySelector('[data-act="save"]').click(); }
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); calEditId = null; renderCalSources(); }
+});
+$('cal-src-list').addEventListener('click', (e) => {
+    const row = e.target.closest('.cal-src[data-cal]'); if (!row) return;
+    const sw = e.target.closest('[data-ecolor]');
+    if (sw) { calEditColor = sw.dataset.ecolor; row.querySelectorAll('[data-ecolor]').forEach(b => b.classList.toggle('on', b === sw)); return; }
+    const act = e.target.closest('[data-act]'); if (!act) return;
+    const c = settings.calendars.find(x => x.id === row.dataset.cal); if (!c) return;
+    if (act.dataset.act === 'edit') { calEditId = c.id; calEditColor = null; renderCalSources(); const f = $('cal-src-list').querySelector('.cal-edit [data-f="name"]'); if (f) f.focus(); return; }
+    if (act.dataset.act === 'cancel') { calEditId = null; calEditColor = null; renderCalSources(); return; }
+    if (act.dataset.act === 'save') { saveCalEdit(row, c); return; }
+    if (act.dataset.act === 'color') { c.color = CAL_COLORS[(CAL_COLORS.indexOf(c.color) + 1) % CAL_COLORS.length]; saveSettings(); renderCalSources(); }
+    if (act.dataset.act === 'refresh') { act.classList.add('spin'); ensureCalendar(c, true); }
+    if (act.dataset.act === 'del') { if (!confirm(`Удалить календарь «${c.name}»?`)) return; settings.calendars = settings.calendars.filter(x => x !== c); delete calEvents.src[c.id]; delete settings.calOn[c.id]; saveSettings(); saveCalEvents(); renderCalSources(); }
+});
+$('hol-country').addEventListener('change', (e) => { settings.holCountry = (e.target.value.trim() || 'RU').toUpperCase().slice(0, 2); e.target.value = settings.holCountry; saveSettings(); renderCalSources(); toast('Праздники: ' + settings.holCountry); });
 
 /* ----- калькулятор ----- */
 const calc = { cur: '0', acc: null, op: null, fresh: true, expr: '' };
@@ -2274,11 +2835,23 @@ let gToken = null, gExp = 0, gisPromise = null;
 const gcalQueueMap = new Map(); let gcalTimer = null, gcalBusy = false;
 try { const tk = JSON.parse(localStorage.getItem(LS_GTOKEN) || 'null'); if (tk && tk.exp > Date.now() + 60000) { gToken = tk.token; gExp = tk.exp; } } catch (e) {}
 const gcalReady = () => !!gToken && Date.now() < gExp - 60000;
+const isApp = !!(window.nativeGoogle && window.nativeNet);
+if (isApp) document.body.classList.add('is-app');
+function setGToken(r) {
+    gToken = r.access_token; gExp = Date.now() + (Number(r.expires_in) || 3600) * 1000;
+    if (!isApp) { try { localStorage.setItem(LS_GTOKEN, JSON.stringify({ token: gToken, exp: gExp })); } catch (e) {} }
+}
+// Получить действующий доступ: в программе — тихое продление; interactive — открыть вход, если нужно
+async function gcalEnsure(interactive) {
+    if (gcalReady()) return true;
+    if (isApp) { try { const r = await window.nativeGoogle.token(); if (r && r.access_token) { setGToken(r); refreshGcalStatus(); return true; } } catch (e) {} }
+    return interactive ? gcalConnect() : false;
+}
 function setGcalStatus(text, cls) { const s = $('gcal-status'); s.textContent = text; s.className = 'gcal-status' + (cls ? ' ' + cls : ''); }
 function refreshGcalStatus() {
     if (!settings.gcalClientId) return setGcalStatus('Не настроено');
     if (gcalReady()) return setGcalStatus(gcalQueueMap.size ? `Подключено · в очереди ${gcalQueueMap.size}` : 'Подключено', 'ok');
-    setGcalStatus(gcalQueueMap.size ? `Нужен вход · ждут отправки: ${gcalQueueMap.size}` : 'Нужен вход в Google', 'warn');
+    setGcalStatus(gcalQueueMap.size ? `Нажмите «Подключить» · ждут отправки: ${gcalQueueMap.size}` : (isApp ? 'Не подключено — нажмите «Подключить»' : 'Нужен вход в Google'), 'warn');
 }
 function loadGis() {
     if (window.google && google.accounts && google.accounts.oauth2) return Promise.resolve();
@@ -2287,6 +2860,15 @@ function loadGis() {
     return gisPromise;
 }
 async function gcalConnect() {
+    if (isApp) {
+        if (!settings.gcalClientId) { setGcalStatus('Укажите Client ID', 'err'); $('gcal-client-id').focus(); return false; }
+        if (!settings.gcalClientSecret) { setGcalStatus('Укажите Client secret', 'err'); $('gcal-client-secret').focus(); return false; }
+        setGcalStatus('Откройте браузер и разрешите доступ…', 'warn');
+        toast('В браузере открылось окно Google — выберите аккаунт и разрешите доступ к календарю', 6000);
+        const r = await window.nativeGoogle.login(settings.gcalClientId, settings.gcalClientSecret);
+        if (!r || r.error) { setGcalStatus('Ошибка входа: ' + ((r && r.error) || 'неизвестно'), 'err'); return false; }
+        setGToken(r); refreshGcalStatus(); toast('Google Календарь подключён'); flushGcal(); return true;
+    }
     if (location.protocol === 'file:') { setGcalStatus('Вход в Google недоступен для file://', 'err'); toast('Google не разрешает вход со страницы, открытой как файл. Откройте приложение по адресу http(s):// (см. инструкцию ниже). Пока можно пользоваться кнопкой «В Google» и экспортом .ics.', 8000); return false; }
     if (!settings.gcalClientId) { setGcalStatus('Укажите Client ID', 'err'); $('gcal-client-id').focus(); return false; }
     try { await loadGis(); } catch (e) { setGcalStatus(e.message, 'err'); return false; }
@@ -2295,8 +2877,7 @@ async function gcalConnect() {
             client_id: settings.gcalClientId, scope: GCAL_SCOPE,
             callback: (r) => {
                 if (r.error) { setGcalStatus('Ошибка входа: ' + r.error, 'err'); return resolve(false); }
-                gToken = r.access_token; gExp = Date.now() + (Number(r.expires_in) || 3600) * 1000;
-                try { localStorage.setItem(LS_GTOKEN, JSON.stringify({ token: gToken, exp: gExp })); } catch (e) {}
+                setGToken(r);
                 refreshGcalStatus(); resolve(true); flushGcal();
             },
             error_callback: (err) => { setGcalStatus('Вход отменён' + (err && err.type ? ` (${err.type})` : ''), 'err'); resolve(false); },
@@ -2305,11 +2886,22 @@ async function gcalConnect() {
     });
 }
 async function gapi(method, path, body) {
-    const r = await fetch('https://www.googleapis.com/calendar/v3' + path, { method, headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
-    if (r.status === 401) { gToken = null; throw new Error('auth'); }
-    if (r.status === 404 || r.status === 410) return { notFound: true };
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.status === 204 ? {} : r.json();
+    const url = 'https://www.googleapis.com/calendar/v3' + path;
+    const headers = { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' };
+    let status, text;
+    if (window.nativeNet && window.nativeNet.request) {
+        const r = await window.nativeNet.request({ url, method, headers, body: body ? JSON.stringify(body) : undefined });
+        if (r.error) throw new Error(r.error);
+        status = r.status; text = r.body;
+    } else {
+        const r = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+        status = r.status; text = await r.text();
+    }
+    if (status === 401) { gToken = null; gExp = 0; throw new Error('auth'); }
+    if (status === 404 || status === 410) return { notFound: true };
+    if (status === 403) { let m = ''; try { m = JSON.parse(text).error.message; } catch (e) {} throw new Error('доступ запрещён' + (m ? ': ' + m : ' — проверьте, что Google Calendar API включён')); }
+    if (status < 200 || status >= 300) throw new Error('HTTP ' + status);
+    return status === 204 || !text ? {} : JSON.parse(text);
 }
 function eventBody(t, l) {
     const d = parseDate(t.deadline), e = new Date(d); e.setDate(e.getDate() + 1);
@@ -2334,7 +2926,7 @@ function gcalQueue(t, l, delay = 1500) {
 function gcalRemoved(t) { if (t.gcalEventId) gcalQueue({ id: t.id, gcalEventId: t.gcalEventId, removed: true }, null, 300); }
 async function flushGcal() {
     if (gcalBusy || !gcalQueueMap.size) return refreshGcalStatus();
-    if (!gcalReady()) return refreshGcalStatus();
+    if (!(await gcalEnsure(false))) return refreshGcalStatus();
     gcalBusy = true;
     try {
         for (const [id, job] of [...gcalQueueMap]) {
@@ -2353,16 +2945,18 @@ function gcalTemplateUrl(t) {
 $('gcal-client-id').addEventListener('change', (e) => { settings.gcalClientId = e.target.value.trim(); saveSettings(); refreshGcalStatus(); });
 $('gcal-calendar-id').addEventListener('change', (e) => { settings.gcalCalendarId = e.target.value.trim() || 'primary'; saveSettings(); });
 $('gcal-auto-toggle').addEventListener('click', () => { settings.gcalAuto = settings.gcalAuto === false; saveSettings(); $('gcal-auto-toggle').classList.toggle('on', settings.gcalAuto); });
-$('gcal-connect-btn').addEventListener('click', () => { settings.gcalClientId = $('gcal-client-id').value.trim(); saveSettings(); gcalConnect(); });
+$('gcal-connect-btn').addEventListener('click', () => { settings.gcalClientId = $('gcal-client-id').value.trim(); settings.gcalClientSecret = $('gcal-client-secret').value.trim(); saveSettings(); gcalConnect(); });
+$('gcal-client-secret').addEventListener('change', (e) => { settings.gcalClientSecret = e.target.value.trim(); saveSettings(); });
 $('gcal-sync-btn').addEventListener('click', async () => {
     settings.gcalClientId = $('gcal-client-id').value.trim(); saveSettings();
-    if (!gcalReady() && !(await gcalConnect())) return;
+    if (!(await gcalEnsure(true))) return;
     const auto = settings.gcalAuto; settings.gcalAuto = true;
     lists.forEach(l => (l.tasks || []).forEach(t => { if (t.deadline || t.gcalEventId) gcalQueueMap.set(t.id, { t, listId: l.id }); }));
     settings.gcalAuto = auto;
     await flushGcal(); toast('Синхронизация с Google Календарём завершена');
 });
-$('gcal-disconnect-btn').addEventListener('click', () => {
+$('gcal-disconnect-btn').addEventListener('click', async () => {
+    if (isApp) { await window.nativeGoogle.logout(); gToken = null; gExp = 0; refreshGcalStatus(); toast('Google Календарь отключён'); return; }
     if (gToken && window.google && google.accounts && google.accounts.oauth2) { try { google.accounts.oauth2.revoke(gToken); } catch (e) {} }
     gToken = null; gExp = 0; try { localStorage.removeItem(LS_GTOKEN); } catch (e) {}
     refreshGcalStatus();
@@ -2383,35 +2977,30 @@ $('ics-btn').addEventListener('click', () => {
     download(['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Planner//RU', 'CALSCALE:GREGORIAN', ...ev, 'END:VCALENDAR'].join('\r\n'), `zadachi-${isoDate(new Date())}.ics`, 'text/calendar');
     toast(`Экспортировано событий: ${ev.length}`);
 });
-async function download(text, name, type) {
-    try {
-        const dl = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads') : null;
-        if (dl) {
-            let fname = name; if (/\.ics$/i.test(fname)) fname = fname.replace(/\.ics$/i, '.ics.txt');
-            try { await dl.save({ filename: fname, data: text }); } catch (e) { if (e && e.code !== 'declined') toast('Не удалось сохранить файл: ' + (e.message || e.code)); }
-            return;
-        }
-    } catch (e) {}
-    legacyDownload(text, name, type);
-}
-function legacyDownload(text, name, type) { const url = URL.createObjectURL(new Blob([text], { type })); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+function download(text, name, type) { const url = URL.createObjectURL(new Blob([text], { type })); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
 
 /* ===================== ОКНО НАСТРОЕК ===================== */
+async function updateVoiceStatus(extra) {
+    if (!NV || !$('voice-status')) return;
+    const st = await NV.status(), m = settings.voiceModel || 'small';
+    $('voice-status').textContent = extra || (!st.installed ? 'Модуль распознавания не установлен — запустите «Установить голосовой ввод.bat» в папке программы.' : st.models[m] ? 'Модель скачана — голосовой ввод работает без интернета.' : 'Модель ещё не скачана — скачается при первом использовании или кнопкой выше.');
+}
 const toggles = { 'topbar-clock-toggle': 'topbarClock', 'topbar-stopwatch-toggle': 'topbarStopwatch', 'topbar-search-toggle': 'topbarSearch', 'topbar-weather-toggle': 'topbarWeather', 'topbar-calc-toggle': 'topbarCalc' };
 function syncSettingsUI() {
     renderThemeSelect();
     $('dark-mode-toggle').classList.toggle('on', settings.mode === 'dark');
     Object.entries(toggles).forEach(([id, k]) => $(id).classList.toggle('on', !!settings[k]));
-    $('weather-extra').style.display = settings.topbarWeather ? '' : 'none';
-    $('weather-url-input').value = settings.weatherUrl || ''; $('weather-city-input').value = settings.weatherCity || '';
-    $('show-hidden-toggle').classList.toggle('on', !!settings.showHidden);
+    $('weather-extra').style.display = settings.topbarWeather ? '' : 'none'; $('weather-every').value = String(settings.weatherEvery || 15);
+    $('weather-url-input').value = settings.weatherUrl || ''; $('weather-city-input2').value = settings.weatherCity || ''; $('weather-key-input').value = settings.weatherKey || '';
     $('show-counts-toggle').classList.toggle('on', settings.showCounts !== false);
     $('ui-scale-slider').value = settings.uiScale || 100; $('ui-scale-value').textContent = (settings.uiScale || 100) + '%';
     document.querySelectorAll('.scale-preset-btn').forEach(b => b.classList.toggle('active', +b.dataset.scale === (settings.uiScale || 100)));
-    $('gcal-client-id').value = settings.gcalClientId || ''; $('gcal-calendar-id').value = settings.gcalCalendarId || 'primary';
+    $('gcal-adv').open = !!settings.gcalClientId;
+    $('voice-toggle').classList.toggle('on', settings.voiceEnabled !== false);
+    $('gcal-client-id').value = settings.gcalClientId || ''; $('gcal-client-secret').value = settings.gcalClientSecret || ''; $('gcal-calendar-id').value = settings.gcalCalendarId || 'primary';
     $('gcal-auto-toggle').classList.toggle('on', settings.gcalAuto !== false);
     refreshGcalStatus();
-    $('hol-country').value = settings.holCountry || 'RU'; $('cal-google-toggle').classList.toggle('on', settings.calGoogleEvents !== false); updateCalInfo();
+    $('hol-country').value = settings.holCountry || 'RU'; calAddError(''); renderCalSources();
 }
 function openSettings() { closeEditor(); syncSettingsUI(); $('settings-overlay').classList.add('visible'); }
 function closeSettings() { $('settings-overlay').classList.remove('visible'); }
@@ -2425,8 +3014,10 @@ Object.entries(toggles).forEach(([id, k]) => $(id).addEventListener('click', () 
     if (k === 'topbarClock') tick();
 }));
 $('weather-url-input').addEventListener('change', (e) => { settings.weatherUrl = e.target.value.trim(); saveSettings(); fetchWeather(true); });
-$('weather-city-input').addEventListener('input', (e) => { settings.weatherCity = e.target.value.trim(); saveSettings(); $('weather-city').textContent = settings.weatherCity || 'Москва'; });
-$('show-hidden-toggle').addEventListener('click', () => setShowHidden(!settings.showHidden));
+$('weather-every').addEventListener('change', (e) => { settings.weatherEvery = +e.target.value; saveSettings(); fetchWeather(false); });
+$('weather-diag-btn').addEventListener('click', weatherDiagnose);
+$('voice-toggle').addEventListener('click', () => { settings.voiceEnabled = settings.voiceEnabled === false; if (!settings.voiceEnabled) { stopVoice(); if (dictationOn) setDictation(false); } saveSettings(); applySettings(); $('voice-toggle').classList.toggle('on', settings.voiceEnabled); });
+$('weather-city-input2').addEventListener('change', (e) => { settings.weatherCity = e.target.value.trim() || 'Москва'; settings.weatherForecast = null; saveSettings(); fetchWeather(true); }); $('weather-key-input').addEventListener('change', (e) => { settings.weatherKey = e.target.value.trim(); saveSettings(); fetchWeather(true); });
 $('show-counts-toggle').addEventListener('click', () => { settings.showCounts = settings.showCounts === false; saveSettings(); syncSettingsUI(); renderSidebar(); });
 $('dark-mode-toggle').addEventListener('click', () => { settings.mode = settings.mode === 'dark' ? 'light' : 'dark'; saveSettings(); applySettings(); syncSettingsUI(); });
 $('theme-select').addEventListener('change', (e) => { settings.theme = e.target.value; saveSettings(); applySettings(); syncSettingsUI(); });
@@ -2446,8 +3037,8 @@ $('add-theme-btn').addEventListener('click', () => {
     settings.theme = id; saveSettings(); applySettings(); syncSettingsUI();
     $('new-theme-name').value = ''; $('new-theme-css').value = '';
 });
-$('delete-theme-btn').addEventListener('click', async () => {
-    const t = customThemes.find(x => x.id === settings.theme); if (!t || !(await appConfirm(`Удалить тему «${t.name}»?`))) return;
+$('delete-theme-btn').addEventListener('click', () => {
+    const t = customThemes.find(x => x.id === settings.theme); if (!t || !confirm(`Удалить тему «${t.name}»?`)) return;
     customThemes = customThemes.filter(x => x !== t); saveCustomThemes(); injectCustomThemes();
     settings.theme = BASE_THEME; saveSettings(); applySettings(); syncSettingsUI();
 });
@@ -2468,27 +3059,27 @@ $('import-btn').addEventListener('click', () => $('import-file').click());
 $('import-file').addEventListener('change', (e) => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = async () => {
+    reader.onload = () => {
         try {
             const d = JSON.parse(reader.result);
             if (!Array.isArray(d.lists)) throw new Error('нет списков');
-            if (!(await appConfirm('Импорт заменит текущие данные на всех устройствах. Продолжить?', 'Импортировать'))) return;
+            if (!confirm('Импорт заменит текущие данные. Продолжить?')) return;
             closeEditor();
             Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
             folders = d.folders || []; lists = d.lists; listIdCounter = d.listIdCounter || 100; folderIdCounter = d.folderIdCounter || 100;
             normalizeData();
             if (Array.isArray(d.customThemes)) { customThemes = d.customThemes; saveCustomThemes(); injectCustomThemes(); }
-            if (d.settings) { const keepG = { gcalClientId: settings.gcalClientId }; settings = { ...DEFAULT_SETTINGS, ...d.settings }; if (!settings.gcalClientId) settings.gcalClientId = keepG.gcalClientId; saveSettings(); applySettings(); }
+            if (d.settings) { const keepG = { gcalClientId: settings.gcalClientId }; settings = { ...DEFAULT_SETTINGS, ...d.settings }; calInit(); if (!settings.gcalClientId) settings.gcalClientId = keepG.gcalClientId; saveSettings(); applySettings(); }
             flushSave(); syncSettingsUI();
             const v = lists.find(l => !l.hidden); setActiveList(v ? v.id : null);
             toast('Импорт завершён');
-        } catch (err) { appAlert('Ошибка импорта: неверный формат файла.'); console.error(err); }
+        } catch (err) { alert('Ошибка импорта: неверный формат файла.'); console.error(err); }
     };
     reader.readAsText(file); e.target.value = '';
 });
-$('wipe-all-btn').addEventListener('click', async () => {
-    if (!(await appConfirm('Стереть ВСЕ папки, списки и задачи?\nЭто действие необратимо и сотрёт их на всех устройствах.', 'Стереть'))) return;
-    if (!(await appConfirm('Точно стереть? Восстановить будет невозможно (если нет экспорта).', 'Стереть'))) return;
+$('wipe-all-btn').addEventListener('click', () => {
+    if (!confirm('Стереть ВСЕ папки, списки и задачи?\nЭто действие необратимо.')) return;
+    if (!confirm('Точно стереть? Восстановить будет невозможно (если нет экспорта).')) return;
     closeEditor(); Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
     folders = []; lists = []; listIdCounter = 100; folderIdCounter = 100; activeFolderId = null;
     flushSave(); setActiveList(null); closeSettings(); toast('Все данные стёрты');
@@ -2500,305 +3091,15 @@ function showCreateListHint() {
     document.querySelectorAll('.hint-pop').forEach(x => x.remove());
     const r = $('add-list-btn').getBoundingClientRect();
     const h = document.createElement('div'); h.className = 'hint-pop';
-    h.innerHTML = '<b>Сначала создайте список</b><br>Нажмите <b>+</b> в левой панели';
-    h.style.left = Math.min(r.left, window.innerWidth - 290) + 'px'; h.style.top = (r.bottom + 10) + 'px';
-    document.body.appendChild(h); $('add-list-btn').classList.add('active');
+    h.innerHTML = '<b>Сначала создайте список</b><br>Нажмите <b>«+ Новый список»</b> внизу левой панели';
+    h.style.left = Math.min(r.left, window.innerWidth - 290) + 'px';
+    document.body.appendChild(h); h.style.top = Math.max(8, r.top - h.offsetHeight - 10) + 'px'; $('add-list-btn').classList.add('active');
     setTimeout(() => { h.remove(); $('add-list-btn').classList.remove('active'); }, 3500);
 }
 
-/* ===================== ОБЛАКО: синхронизация между устройствами ===================== */
-// Задачи лежат в 128 «корзинах» (документах) по хешу id: правка одной задачи — одна маленькая запись.
-// Список папок и списков — отдельный документ planner/meta. Настройки и темы остаются на каждом устройстве свои.
-var Cloud = (() => {
-    const NB = 128, DERIVED = ['title', 'body', 'text', 'hasImg'];
-    let db = null, metaRef = null, bucketCol = null;
-    let ready = false, dead = false;
-    const last = new Map();          // id -> {listId, ord, j}: что сейчас в облаке (по нашим сведениям)
-    let lastMetaJ = null;
-    const ordOf = new Map();         // id -> порядковый вес задачи внутри списка (больше = выше)
-    const orphans = new Map();       // id -> {t, listId}: задачи, чей список ещё не пришёл
-    let existingBuckets = new Set();
-    const pend = new Map();          // bucket -> {id: body}
-    const inflightBuckets = new Set();
-    let pendMeta = null, metaInflight = false, inflight = 0, errStreak = 0, sizeWarned = false;
-    let remoteBuckets = new Map(), remoteMeta, gotBuckets = false, applyTimer = null;
-
-    const pill = document.createElement('div');
-    pill.id = 'cloud-pill';
-    document.body.appendChild(pill);
-    function setPill(text, cls) { pill.textContent = text; pill.className = cls || ''; }
-    function pendingCount() { let n = 0; pend.forEach(p => { n += Object.keys(p).length; }); return n + (pendMeta ? 1 : 0); }
-    function refreshPill() {
-        if (dead) return;
-        if (!db) { setPill('Только на этом устройстве', 'warn'); return; }
-        if (!ready) { setPill('Загрузка из облака…', 'busy'); return; }
-        const n = pendingCount() + inflight;
-        if (errStreak) setPill('Нет связи · изменения сохранятся позже', 'warn');
-        else if (n > 20) setPill('Выгрузка в облако… осталось ' + n, 'busy');
-        else if (n) setPill('Синхронизация…', 'busy');
-        else setPill('Синхронизировано', 'ok');
-    }
-
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-    function bucketOf(id) { let h = 5381; const s = String(id); for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return 'b' + (h % NB); }
-    function taskJ(t) { const o = {}; for (const k in t) if (!DERIVED.includes(k)) o[k] = t[k]; return JSON.stringify(o); }
-    function canon(v) {
-        if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';
-        if (v && typeof v === 'object') return '{' + Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}';
-        return JSON.stringify(v === undefined ? null : v);
-    }
-    function metaObj() { return { folders, lists: lists.map(({ tasks, ...rest }) => rest), listIdCounter, folderIdCounter }; }
-    function localHasData() { return lists.some(l => (l.tasks || []).length) || lists.length > 1 || folders.length > 0; }
-
-    /* ----- порядок задач: веса, которые не надо переписывать у всех при вставке одной ----- */
-    function computeOrds() {
-        for (const l of lists) {
-            const a = l.tasks || [], n = a.length; if (!n) continue;
-            const ids = a.map(t => String(t.id));
-            // самая длинная уже упорядоченная (по убыванию веса) подпоследовательность — её не трогаем
-            const tails = [], tailIdx = [], prev = new Array(n).fill(-1), keep = new Array(n).fill(false);
-            for (let i = 0; i < n; i++) {
-                const o = ordOf.get(ids[i]); if (o === undefined) continue;
-                const v = -o; let lo = 0, hi = tails.length;
-                while (lo < hi) { const m = (lo + hi) >> 1; if (tails[m] < v) lo = m + 1; else hi = m; }
-                tails[lo] = v; tailIdx[lo] = i; prev[i] = lo ? tailIdx[lo - 1] : -1;
-            }
-            for (let i = tails.length ? tailIdx[tails.length - 1] : -1; i >= 0; i = prev[i]) keep[i] = true;
-            let ok = true;
-            for (let i = 0; i < n && ok;) {
-                if (keep[i]) { i++; continue; }
-                let e = i; while (e + 1 < n && !keep[e + 1]) e++;
-                const k = e - i + 1;
-                const A = i > 0 ? ordOf.get(ids[i - 1]) : undefined, B = e + 1 < n ? ordOf.get(ids[e + 1]) : undefined;
-                for (let j = 0; j < k; j++) {
-                    let o;
-                    if (A !== undefined && B !== undefined) { const step = (A - B) / (k + 1); if (step < 1e-7) { ok = false; break; } o = A - step * (j + 1); }
-                    else if (B !== undefined) o = B + (k - j);
-                    else if (A !== undefined) o = A - (j + 1);
-                    else o = k - j;
-                    ordOf.set(ids[i + j], o);
-                }
-                i = e + 1;
-            }
-            if (!ok) ids.forEach((id, i) => ordOf.set(id, n - i)); // веса слишком сблизились — пересчитать список целиком
-        }
-    }
-
-    /* ----- отправка изменений ----- */
-    function push() {
-        if (!ready || dead) return;
-        computeOrds();
-        const seen = new Set();
-        for (const l of lists) for (const t of (l.tasks || [])) {
-            const id = String(t.id); seen.add(id);
-            const body = { listId: l.id, ord: ordOf.get(id), j: taskJ(t) };
-            const p = last.get(id);
-            if (!p || p.listId !== body.listId || p.ord !== body.ord || p.j !== body.j) enqueue(id, body);
-        }
-        orphans.forEach((_, id) => seen.add(id));
-        for (const id of last.keys()) if (!seen.has(id)) enqueue(id, { del: 1 });
-        const m = metaObj(), mj = canon(m);
-        if (mj !== lastMetaJ) pendMeta = { obj: JSON.parse(JSON.stringify(m)), j: mj };
-        pump();
-    }
-    function enqueue(id, body) { const b = bucketOf(id); if (!pend.has(b)) pend.set(b, {}); pend.get(b)[id] = body; }
-    function pump() {
-        refreshPill();
-        while (inflight < 3 && !dead) {
-            if (pendMeta && !metaInflight) { const job = pendMeta; pendMeta = null; metaInflight = true; inflight++; runMeta(job).finally(() => { metaInflight = false; inflight--; pump(); }); continue; }
-            let b = null; for (const k of pend.keys()) if (!inflightBuckets.has(k)) { b = k; break; }
-            if (!b) break;
-            const payload = pend.get(b); pend.delete(b); inflightBuckets.add(b); inflight++;
-            runBucket(b, payload).finally(() => { inflightBuckets.delete(b); inflight--; pump(); });
-        }
-    }
-    async function failed(e, requeue) {
-        const code = e && e.code;
-        if (code === 'revoked' || code === 'not_granted' || code === 'capability_disabled' || code === 'capability_removed') {
-            dead = true; setPill('Синхронизация отключена · обновите страницу', 'warn'); return;
-        }
-        if (code === 'quota_exceeded') { toast('Облако заполнено: удалите старые выполненные задачи или большие картинки.', 6000); }
-        requeue();
-        errStreak++; refreshPill();
-        await sleep(Math.min(30000, 1000 * Math.pow(2, Math.min(errStreak, 5))) + Math.random() * 500);
-    }
-    async function runMeta(job) {
-        try { await metaRef.set(job.obj); lastMetaJ = job.j; errStreak = 0; }
-        catch (e) { await failed(e, () => { if (!pendMeta) pendMeta = job; }); }
-    }
-    async function runBucket(b, payload) {
-        const ref = bucketCol.doc(b);
-        try {
-            if (existingBuckets.has(b)) await ref.update({ tasks: payload });
-            else {
-                const s = await ref.get();
-                if (s.exists) await ref.update({ tasks: payload }); else await ref.set({ tasks: payload });
-                existingBuckets.add(b);
-            }
-            for (const id in payload) { if (payload[id].del) last.delete(id); else last.set(id, payload[id]); }
-            errStreak = 0;
-        } catch (e) {
-            if (e && e.code === 'invalid_argument') {
-                // документ-корзина переполнен (обычно из-за больших картинок): такие правки не уходят в облако
-                if (!sizeWarned) { sizeWarned = true; toast('Часть задач не синхронизирована: слишком большие картинки. Уменьшите или удалите их.', 7000); }
-                return;
-            }
-            await failed(e, () => { const cur = pend.get(b) || {}; pend.set(b, Object.assign({}, payload, cur)); });
-        }
-    }
-
-    /* ----- приём изменений с других устройств ----- */
-    function locate(id) {
-        for (const l of lists) { const t = (l.tasks || []).find(x => String(x.id) === id); if (t) return { t, l }; }
-        return null;
-    }
-    function fill(obj, j) {
-        const src = JSON.parse(j);
-        for (const k of Object.keys(obj)) if (!(k in src)) delete obj[k];
-        Object.assign(obj, src);
-        delete obj.title; normalizeTask(obj); deriveTask(obj);
-        return obj;
-    }
-    function place(t, listId) {
-        const l = getList(listId);
-        if (l) { l.tasks = l.tasks || []; l.tasks.push(t); orphans.delete(String(t.id)); } else orphans.set(String(t.id), { t, listId });
-    }
-    function applyMeta(m) {
-        folders = (m.folders || []).map(f => ({ ...f }));
-        const byId = new Map(lists.map(l => [l.id, l]));
-        const next = [];
-        for (const r of (m.lists || [])) {
-            const cur = byId.get(r.id);
-            if (cur) { for (const k of Object.keys(cur)) if (k !== 'tasks' && !(k in r)) delete cur[k]; Object.assign(cur, r); next.push(cur); }
-            else next.push({ ...r, tasks: [] });
-        }
-        for (const l of lists) if (!next.includes(l)) for (const t of (l.tasks || [])) orphans.set(String(t.id), { t, listId: l.id });
-        lists = next;
-        listIdCounter = Math.max(listIdCounter, m.listIdCounter || 0);
-        folderIdCounter = Math.max(folderIdCounter, m.folderIdCounter || 0);
-        normalizeData();
-    }
-    function resortAndAdopt() {
-        orphans.forEach((o, id) => { const l = getList(o.listId); if (l) { l.tasks.push(o.t); orphans.delete(id); } });
-        for (const l of lists) {
-            const key = (t) => { const o = ordOf.get(String(t.id)); return o === undefined ? Infinity : o; };
-            l.tasks.sort((a, b) => key(b) - key(a));
-        }
-    }
-    function remoteTasks() {
-        const r = new Map();
-        remoteBuckets.forEach(m => { for (const id in m) { const v = m[id]; if (v && !v.del && typeof v.j === 'string') r.set(id, v); } });
-        return r;
-    }
-    function rerender() {
-        try { localStorage.setItem(LS_DATA, JSON.stringify({ folders, lists, listIdCounter, folderIdCounter })); } catch (e) {}
-        if (!getList(activeListId)) { const v = lists.find(x => !x.hidden); setActiveList(v ? v.id : null); }
-        else { el.title.textContent = getList(activeListId).name; renderSidebar(); renderTasks(); }
-        updateStats(); updateCounts();
-        if (ed && ed.taskId !== null) { const n = taskEl(ed.taskId); if (n) n.classList.add('editing'); }
-    }
-    function firstApply(remote) {
-        if (remoteMeta === null && remote.size === 0) {
-            // облако пустое: выгрузить то, что есть на этом устройстве
-            ready = true; refreshPill();
-            if (localHasData()) toast('Выгружаю задачи в облако…', 3000);
-            push(); return;
-        }
-        if (ed) { ed = null; hideEditorUI(); }
-        Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
-        const objs = new Map(); lists.forEach(l => (l.tasks || []).forEach(t => objs.set(String(t.id), t)));
-        lists.forEach(l => { l.tasks = []; });
-        if (remoteMeta) { applyMeta(remoteMeta); lastMetaJ = canon(remoteMeta); }
-        orphans.clear(); last.clear(); ordOf.clear();
-        remote.forEach((r, id) => {
-            const t = fill(objs.get(id) || {}, r.j);
-            last.set(id, r); ordOf.set(id, r.ord);
-            place(t, r.listId);
-        });
-        resortAndAdopt();
-        ready = true; rerender(); refreshPill();
-        if (!remoteMeta) push();
-    }
-    function apply() {
-        applyTimer = null;
-        if (dead || remoteMeta === undefined || !gotBuckets) return;
-        const remote = remoteTasks();
-        if (!ready) { firstApply(remote); return; }
-        let changed = false;
-        // сначала списки (чтобы задачам было куда встать)
-        if (remoteMeta) {
-            const rj = canon(remoteMeta);
-            if (rj !== lastMetaJ) {
-                const localDirty = lastMetaJ !== null && canon(metaObj()) !== lastMetaJ;
-                if (!localDirty) { applyMeta(remoteMeta); lastMetaJ = rj; changed = true; }
-            }
-        }
-        const ids = new Set([...remote.keys(), ...last.keys()]);
-        const editingId = ed && ed.taskId !== null ? String(ed.taskId) : null;
-        for (const id of ids) {
-            const r = remote.get(id), p = last.get(id);
-            if (r && p && r.j === p.j && r.listId === p.listId && r.ord === p.ord) continue;
-            if (!r && !p) continue;
-            if (id === editingId) continue;
-            const loc = locate(id), orph = orphans.get(id);
-            const curT = loc ? loc.t : orph ? orph.t : null, curList = loc ? loc.l.id : orph ? orph.listId : null;
-            const localDirty = curT ? (!p || taskJ(curT) !== p.j || curList !== p.listId) : !!p;
-            if (localDirty) continue; // своя несохранённая правка важнее — она уйдёт в облако следом
-            if (pendingTimers[curT && curT.id]) continue;
-            changed = true;
-            if (r) {
-                if (curT) {
-                    fill(curT, r.j);
-                    if (curList !== r.listId) {
-                        if (loc) loc.l.tasks.splice(loc.l.tasks.indexOf(curT), 1); else orphans.delete(id);
-                        place(curT, r.listId);
-                    }
-                } else place(fill({}, r.j), r.listId);
-                last.set(id, r); ordOf.set(id, r.ord);
-            } else {
-                if (loc) loc.l.tasks.splice(loc.l.tasks.indexOf(curT), 1);
-                orphans.delete(id); last.delete(id); ordOf.delete(id);
-            }
-        }
-        if (changed) { resortAndAdopt(); rerender(); }
-        refreshPill();
-    }
-    function schedApply() { if (!applyTimer) applyTimer = setTimeout(apply, 120); }
-    function onErr(e) {
-        const code = e && e.code;
-        dead = true;
-        setPill(code === 'resource_exhausted' ? 'Синхронизация перегружена · обновите страницу' : 'Синхронизация прервалась · обновите страницу', 'warn');
-    }
-
-    async function init() {
-        refreshPill();
-        try {
-            if (window.claude && typeof window.claude.use === 'function') {
-                db = await Promise.race([window.claude.use('db'), sleep(10000).then(() => null)]);
-            }
-        } catch (e) { db = null; }
-        refreshPill();
-        if (!db) return;
-        metaRef = db.doc('planner/meta');
-        bucketCol = db.collection('pbuckets');
-        metaRef.onSnapshot(s => {
-            if (s.metadata && s.metadata.fromCache) return;
-            remoteMeta = s.exists ? s.data() : null; schedApply();
-        }, onErr);
-        bucketCol.onSnapshot(qs => {
-            if (qs.metadata && qs.metadata.fromCache) return;
-            remoteBuckets = new Map(qs.docs.map(d => [d.id, (d.data() || {}).tasks || {}]));
-            existingBuckets = new Set(qs.docs.map(d => d.id));
-            gotBuckets = true; schedApply();
-        }, onErr);
-        window.addEventListener('pagehide', () => { try { flushSave(); } catch (e) {} });
-        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { try { flushSave(); } catch (e) {} } });
-    }
-    return { init, push, get ready() { return ready; } };
-})();
-
 /* ===================== СТАРТ ===================== */
 loadSettings();
+calInit();
 loadData();
 loadCustomThemes();
 applySettings();
@@ -2806,11 +3107,13 @@ setSidebarCollapsed(settings.sidebarCollapsed);
 syncDateFilterUI();
 const first = lists.find(l => !l.hidden);
 setActiveList(first ? first.id : null);
-if (settings.topbarWeather) fetchWeather();
+if (settings.weatherLast && settings.weatherLast.temp != null) weatherData = settings.weatherLast;
+if (settings.topbarWeather) { if (weatherData) updateWeather(); fetchWeather(); }
 tick();
 refreshGcalStatus();
+if (isApp && settings.gcalClientId) gcalEnsure(false).then(ok => { refreshGcalStatus(); if (ok) flushGcal(); });
 flushSave(); // сохранить нормализованные данные (например, задачи, «зависшие» в выполнении)
-Cloud.init();
 });
 </script>
-
+</body>
+</html>
