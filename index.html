@@ -3341,10 +3341,13 @@ async function syncNow(manual) {
                     try { Object.assign(items, JSON.parse(txt).items || {}); } catch (e) {}
                 }
                 // первое подключение «чистого» устройства (телефона) — берём всё с сервера, своё пустое не отправляем
+                let adopt = false;
                 if (!syncSt.commit && isPristine() && Object.keys(items).some(k => k.startsWith('l:') && !items[k].deleted)) {
-                    folders = []; lists = []; syncSt.fp = {}; syncSt.u = {}; syncSt.tomb = {}; syncSt.init = true;
+                    folders = []; lists = []; syncSt.fp = {}; syncSt.u = {}; syncSt.tomb = {}; syncSt.init = true; adopt = true;
                 }
                 syncMarkLocal();
+                // всё «своё» на чистом устройстве считаем самым старым — чтобы пустые списки и календари не затёрли данные с сервера
+                if (adopt) { for (const k in syncSt.u) syncSt.u[k] = 0; }
                 if (applyRemote(items)) refreshAfterSync();
                 // отложенные (были открыты в редакторе)
                 for (const k in syncSt.deferred) { if (!(ed && String(ed.taskId) === k.slice(2))) { const one = {}; one[k] = syncSt.deferred[k]; delete syncSt.deferred[k]; if (applyRemote(one)) refreshAfterSync(); } }
