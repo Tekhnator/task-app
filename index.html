@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru" data-theme="tasks" data-mode="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Задачи</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -10,10 +6,9 @@
 <meta name="theme-color" content="#05353d">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAADpElEQVR42u3dTVLcMBAGUKOCI7EkZ8hROQPXYpMFVSkWqTCesaT+ed+WDW69aUkzsv308vp2iPwrQwkEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOKRanlP8l5/vH/VK//L7V/D/8CnsIxhKgsgFJSKOViwiEwmEo62JsEoGGabUuJ0Di7AtZJChhUTEQUbwKg0y+IiFg4wUFduwIL3vOuN/n1ivCKtxnC1KMRO5CrIUx6lClGcRvzLrcNx+/a1YRC5RuJ/s28o42v62cstnojOLmOUaZCRtIQs2t06CSWwc2kbMmkzH8WP3I+PuysyeWUwrsgmHtpG6eegcEhKHthG8SjqH7MDh0MaazKvzts5hTolfK9OKwCFwCBwCh8AhcAgcAofAIQ8l9W8IcEyXkdcHHCt6RlIfcCyaTT7fP9IRgcMSBI4wAhL5gGNDb8jiA449s0aKJQgcO9cTwX3AsXOlGfysJBxkwBEsKc5Xw7GnbditkJG4bcBBBhxkwEEGHGTAQQYc5ZP3lnE4preNvIHDhFIdx+zPdM93xIwyMub5aPv2oFFDxrz+0fm9UqOMjBk+mr9xbFSSEWFPUelZZ6OYjAt9eBriqCfjkqH1CsuUOE6d8CajEY6zw7bsRHjJx6omw3HHGJwabDJyTyvzfJBRYUE6u3+QkXsre7kPG9c6OK71YUKphuMqH2TUxPG4DzIq43jEBxn1cazcv7R6h1CdY4ILhq3b26VKnSGdOngN3ztW7YCxV8fBsdpHT3M1b024dizbdqOy961cNaKd56nKNzU9Pq7NVzDF73h7ZHStbevfDnnfGJNxNLlX1kjDcZkPmHrhuH3IyeiI4/8D//UnMr7nudsFfw3/959k/4IgozsODkwrAofAIXAIHMdxuIkoQ60m4rAjyL7zMq1ISBxmluBV0jlkE44fp0PN48H6TF3Y6RyyD4fmkbRtROkcfMSsiWlFtuK4pftpHmerseA7xqeX17dQfbL596qhqjSSVsc6Y0HWdY6zF9+qhcSszFIcd3w4yhOJXJDVOA7PW8pThA047E3mbfoqLEgd9UhRsdHqaslIs5XlI3iVRtsrJyPogtQSNcXHZqgFGdE7hy4S8BMSEUdDIjEbZ1wc5aHEn0lz4JDWC1KBQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUPgEIFDzuYPMCCQRIDm650AAAAASUVORK5CYII=">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAADpElEQVR42u3dTVLcMBAGUKOCI7EkZ8hROQPXYpMFVSkWqTCesaT+ed+WDW69aUkzsv308vp2iPwrQwkEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOKRanlP8l5/vH/VK//L7V/D/8CnsIxhKgsgFJSKOViwiEwmEo62JsEoGGabUuJ0Di7AtZJChhUTEQUbwKg0y+IiFg4wUFduwIL3vOuN/n1ivCKtxnC1KMRO5CrIUx6lClGcRvzLrcNx+/a1YRC5RuJ/s28o42v62cstnojOLmOUaZCRtIQs2t06CSWwc2kbMmkzH8WP3I+PuysyeWUwrsgmHtpG6eegcEhKHthG8SjqH7MDh0MaazKvzts5hTolfK9OKwCFwCBwCh8AhcAgcAofAIQ8l9W8IcEyXkdcHHCt6RlIfcCyaTT7fP9IRgcMSBI4wAhL5gGNDb8jiA449s0aKJQgcO9cTwX3AsXOlGfysJBxkwBEsKc5Xw7GnbditkJG4bcBBBhxkwEEGHGTAQQYc5ZP3lnE4preNvIHDhFIdx+zPdM93xIwyMub5aPv2oFFDxrz+0fm9UqOMjBk+mr9xbFSSEWFPUelZZ6OYjAt9eBriqCfjkqH1CsuUOE6d8CajEY6zw7bsRHjJx6omw3HHGJwabDJyTyvzfJBRYUE6u3+QkXsre7kPG9c6OK71YUKphuMqH2TUxPG4DzIq43jEBxn1cazcv7R6h1CdY4ILhq3b26VKnSGdOngN3ztW7YCxV8fBsdpHT3M1b024dizbdqOy961cNaKd56nKNzU9Pq7NVzDF73h7ZHStbevfDnnfGJNxNLlX1kjDcZkPmHrhuH3IyeiI4/8D//UnMr7nudsFfw3/959k/4IgozsODkwrAofAIXAIHMdxuIkoQ60m4rAjyL7zMq1ISBxmluBV0jlkE44fp0PN48H6TF3Y6RyyD4fmkbRtROkcfMSsiWlFtuK4pftpHmerseA7xqeX17dQfbL596qhqjSSVsc6Y0HWdY6zF9+qhcSszFIcd3w4yhOJXJDVOA7PW8pThA047E3mbfoqLEgd9UhRsdHqaslIs5XlI3iVRtsrJyPogtQSNcXHZqgFGdE7hy4S8BMSEUdDIjEbZ1wc5aHEn0lz4JDWC1KBQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUMEDoFD4BA4BA6BQ+AQOAQOgUPgEIFDzuYPMCCQRIDm650AAAAASUVORK5CYII=">
-<title>Задачи</title>
 <style>
 /* ============ ТОКЕНЫ ============ */
-:root, [data-theme="tasks"] {
+:root, [data-app-theme="tasks"] {
     --bg-sidebar: #06323a; --bg-main: #05353d;
     --border-color: #1a525d; --text-white: #ffffff; --text-muted: #7eaeb6;
     --accent-cyan: #00e5ff;
@@ -44,7 +39,7 @@
     --radius: 10px;
     --w-clock: #00e5ff; --w-sw: #ff9f43; --w-weather: #8ea8ff; --w-search: #8fb8c0; --w-calc: #c084fc;
 }
-[data-theme="tasks"][data-mode="light"] {
+[data-app-theme="tasks"][data-mode="light"] {
     --bg-sidebar:#e8f0f2; --bg-main:#f5f9fa;
     --border-color:#c6d5d9; --text-white:#14262a; --text-muted:#5a7a82;
     --accent-cyan:#0088a8; --danger:#d32f2f; --warning:#e08600; --success:#388e3c;
@@ -68,7 +63,7 @@
 }
 
 /* ====== Тема iPhone (в стиле «Заметок») ====== */
-[data-theme="iphone"] {
+[data-app-theme="iphone"] {
     --bg-sidebar: #1c1c1e; --bg-main: #000000;
     --left-bg: #1c1c1e; --left-text: #ffffff; --right-bg: #000000; --right-text: #ffffff;
     --top-bg: #1c1c1e; --topbar-border: #2c2c2e; --topbar-text: #ffffff; --topbar-text-dim: #8e8e93; --topbar-accent: #ffd60a;
@@ -85,7 +80,7 @@
     --shadow-pop: 0 16px 40px rgba(0,0,0,0.6);
     --w-clock: #ff453a; --w-sw: #30d158; --w-weather: #0a84ff; --w-search: #8e8e93; --w-calc: #ff9f0a;
 }
-[data-theme="iphone"][data-mode="light"] {
+[data-app-theme="iphone"][data-mode="light"] {
     --bg-sidebar: #f2f2f7; --bg-main: #ffffff;
     --left-bg: #f2f2f7; --left-text: #000000; --right-bg: #ffffff; --right-text: #000000;
     --top-bg: #f9f9f9; --topbar-border: #e5e5ea; --topbar-text: #000000; --topbar-text-dim: #8a8a8e; --topbar-accent: #c99a00;
@@ -103,23 +98,23 @@
     --w-clock: #ff3b30; --w-sw: #34c759; --w-weather: #007aff; --w-search: #8a8a8e; --w-calc: #ff9500;
 }
 /* iPhone: виджеты как в iOS — нейтральная плашка, цветная иконка */
-[data-theme="iphone"] .w-chip { background: var(--seg-bg); border-color: transparent; border-radius: 12px; }
-[data-theme="iphone"] .w-sw.running { background: color-mix(in srgb, var(--wc) 20%, transparent); }
-[data-theme="iphone"] .w-search:focus-within { border-color: transparent; box-shadow: 0 0 0 2px color-mix(in srgb, var(--topbar-accent) 50%, transparent); }
-[data-theme="iphone"] .w-sep { background: var(--line); }
-[data-theme="iphone"] .folder-row { text-transform: none; letter-spacing: 0; font-size: .95rem; font-weight: 700; color: var(--text-white); }
-[data-theme="iphone"] .list-row.active { color: var(--text-white); }
-[data-theme="iphone"] .list-row.active .count { background: var(--accent-cyan); color: #000; }
-[data-theme="iphone"] .rte-editor:focus { box-shadow: none; }
-[data-theme="iphone"] .task-item.editing { box-shadow: none; background: var(--input-bg); }
-[data-theme="iphone"] .checkbox svg { stroke: #000; }
-[data-theme="iphone"] .editor-head { color: var(--text-muted); }
-[data-theme="iphone"] .tb-mic { color: var(--accent-cyan); }
-[data-theme="iphone"] .sidebar, [data-theme="iphone"] .panel-header { border-color: var(--line); }
-[data-theme="iphone"] .settings-section-title { color: var(--text-muted); }
-[data-theme="iphone"] .add-task-btn .plus { background: var(--accent-cyan); color: #000; }
+[data-app-theme="iphone"] .w-chip { background: var(--seg-bg); border-color: transparent; border-radius: 12px; }
+[data-app-theme="iphone"] .w-sw.running { background: color-mix(in srgb, var(--wc) 20%, transparent); }
+[data-app-theme="iphone"] .w-search:focus-within { border-color: transparent; box-shadow: 0 0 0 2px color-mix(in srgb, var(--topbar-accent) 50%, transparent); }
+[data-app-theme="iphone"] .w-sep { background: var(--line); }
+[data-app-theme="iphone"] .folder-row { text-transform: none; letter-spacing: 0; font-size: .95rem; font-weight: 700; color: var(--text-white); }
+[data-app-theme="iphone"] .list-row.active { color: var(--text-white); }
+[data-app-theme="iphone"] .list-row.active .count { background: var(--accent-cyan); color: #000; }
+[data-app-theme="iphone"] .rte-editor:focus { box-shadow: none; }
+[data-app-theme="iphone"] .task-item.editing { box-shadow: none; background: var(--input-bg); }
+[data-app-theme="iphone"] .checkbox svg { stroke: #000; }
+[data-app-theme="iphone"] .editor-head { color: var(--text-muted); }
+[data-app-theme="iphone"] .tb-mic { color: var(--accent-cyan); }
+[data-app-theme="iphone"] .sidebar, [data-app-theme="iphone"] .panel-header { border-color: var(--line); }
+[data-app-theme="iphone"] .settings-section-title { color: var(--text-muted); }
+[data-app-theme="iphone"] .add-task-btn .plus { background: var(--accent-cyan); color: #000; }
 /* TRON: лёгкое неоновое свечение виджетов */
-[data-theme="tasks"]:not([data-mode="light"]) .w-chip { box-shadow: 0 0 14px color-mix(in srgb, var(--wc) 10%, transparent); }
+[data-app-theme="tasks"]:not([data-mode="light"]) .w-chip { box-shadow: 0 0 14px color-mix(in srgb, var(--wc) 10%, transparent); }
 
 /* ============ БАЗА ============ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -129,7 +124,7 @@ html { font-size: calc(var(--font-size-base) * var(--ui-scale)); -webkit-text-si
 body {
     font-family: var(--font-family); font-size: 1rem; line-height: 1.4;
     background: var(--bg-main); color: var(--text-white);
-    height: 100vh; height: 100dvh; overflow: hidden;
+    height: 100%; overflow: hidden;
     display: flex; flex-direction: column;
     padding-top: env(safe-area-inset-top);
     -webkit-font-smoothing: antialiased;
@@ -181,7 +176,7 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .w-pop.visible { display: block; }
 .clock-pop { width: 312px; --wc: var(--w-clock); --ev: #0a84ff; }
 .clock-pop .cal-d.today { background: var(--wc); color: #fff; font-weight: 700; }
-[data-theme="tasks"]:not([data-mode="light"]) .clock-pop .cal-d.today { color: #001a1f; }
+[data-app-theme="tasks"]:not([data-mode="light"]) .clock-pop .cal-d.today { color: #001a1f; }
 .clock-pop .cal-d.sel:not(.today) { box-shadow: inset 0 0 0 1.5px var(--wc); }
 .clock-pop .cal-d { position: relative; flex-direction: column; }
 .clock-pop .dots { position: absolute; bottom: 3px; left: 0; right: 0; display: flex; justify-content: center; gap: 2px; }
@@ -233,10 +228,10 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .calc-keys .op.on { background: var(--wc); color: #fff; }
 .calc-keys .eq { background: var(--wc); color: #fff; font-size: 1.35rem; }
 .calc-keys .zero { grid-column: span 2; text-align: left; padding-left: 22px; }
-[data-theme="iphone"] .calc-keys .op { background: var(--wc); color: #fff; }
-[data-theme="iphone"] .calc-keys .op.on { background: #fff; color: var(--wc); }
-[data-theme="iphone"] .calc-keys .fn { background: #a5a5a5; color: #000; }
-[data-theme="iphone"][data-mode="light"] .calc-keys .fn { background: #d4d4d2; }
+[data-app-theme="iphone"] .calc-keys .op { background: var(--wc); color: #fff; }
+[data-app-theme="iphone"] .calc-keys .op.on { background: #fff; color: var(--wc); }
+[data-app-theme="iphone"] .calc-keys .fn { background: #a5a5a5; color: #000; }
+[data-app-theme="iphone"][data-mode="light"] .calc-keys .fn { background: #d4d4d2; }
 @media (max-width: 760px) { .w-pop { left: 12px !important; right: 12px; width: auto; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom)); } }
 .w-clock { --wc: var(--w-clock); } .w-sw { --wc: var(--w-sw); padding-right: 6px; } .w-weather { --wc: var(--w-weather); } .w-search { --wc: var(--w-search); }
 .w-sw.running { background: color-mix(in srgb, var(--wc) 18%, transparent); border-color: color-mix(in srgb, var(--wc) 50%, transparent); }
@@ -624,9 +619,25 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
     .dropdown { position: fixed; left: 16px !important; right: 16px; top: auto; margin-top: 8px; }
     .status-dropdown { flex-wrap: wrap; }
 }
+
+html { height: 100%; box-sizing: border-box; }
+html[data-mode="dark"] { color-scheme: dark; }
+#cloud-pill { position: fixed; right: calc(10px + env(safe-area-inset-right, 0px)); bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 9000;
+  font: 500 11px/1.2 var(--font-family); padding: 4px 9px; border-radius: 999px; pointer-events: none;
+  background: color-mix(in srgb, var(--bg-sidebar) 88%, transparent); color: var(--text-muted); border: 1px solid var(--border-color);
+  opacity: .85; transition: opacity .3s; }
+#cloud-pill.ok { opacity: .55; }
+#cloud-pill.busy { color: var(--accent-cyan); }
+#cloud-pill.warn { color: var(--warning); opacity: 1; }
+#cloud-pill::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+.app-dialog-back { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.45); display: grid; place-items: center; padding: 16px; }
+.app-dialog { background: var(--bg-sidebar); color: var(--text-white); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px 18px 14px; width: min(420px, 100%); box-shadow: 0 18px 50px rgba(0,0,0,.4); font-family: var(--font-family); }
+.app-dialog p { margin: 0 0 16px; white-space: pre-line; line-height: 1.45; }
+.app-dialog .row { display: flex; gap: 8px; justify-content: flex-end; }
+.app-dialog button { font: inherit; font-weight: 600; border-radius: 9px; padding: 9px 16px; cursor: pointer; border: 1px solid var(--border-color); background: transparent; color: var(--text-white); }
+.app-dialog button.yes { background: var(--accent-cyan); border-color: transparent; color: #001a1f; }
+.app-dialog button.yes.danger { background: var(--danger); color: #fff; }
 </style>
-</head>
-<body>
 <!-- ТОПБАР -->
 <div class="topbar" id="topbar">
     <div class="topbar-resizer" id="topbar-resizer"></div>
@@ -943,6 +954,24 @@ const ICON = {
     google: '<svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 15 11 17 15 13"/></svg>',
 };
 
+
+/* ----- свои окна подтверждения (системные confirm/alert в приложении по ссылке не работают) ----- */
+function appConfirm(msg, yes = 'Удалить') {
+    return new Promise(res => {
+        const back = document.createElement('div'); back.className = 'app-dialog-back';
+        back.innerHTML = '<div class="app-dialog" role="dialog" aria-modal="true"><p></p><div class="row"><button type="button" class="no">Отмена</button><button type="button" class="yes"></button></div></div>';
+        back.querySelector('p').textContent = msg;
+        const y = back.querySelector('.yes'); y.textContent = yes; if (/Удал|Стереть/.test(yes)) y.classList.add('danger');
+        const done = (v) => { back.remove(); document.removeEventListener('keydown', key, true); res(v); };
+        const key = (e) => { if (e.key === 'Escape') { e.stopPropagation(); done(false); } else if (e.key === 'Enter') { e.stopPropagation(); e.preventDefault(); done(true); } };
+        back.addEventListener('click', (e) => { if (e.target === back) done(false); });
+        back.querySelector('.no').addEventListener('click', () => done(false));
+        y.addEventListener('click', () => done(true));
+        document.addEventListener('keydown', key, true);
+        document.body.appendChild(back); y.focus();
+    });
+}
+function appAlert(msg) { toast(msg, 5000); }
 let toastTimer = null;
 function toast(msg, ms = 2400) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms); }
 
@@ -1003,7 +1032,8 @@ function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(flushS
 function flushSave() {
     clearTimeout(saveTimer); saveTimer = null;
     try { localStorage.setItem(LS_DATA, JSON.stringify({ folders, lists, listIdCounter, folderIdCounter })); }
-    catch (e) { toast('Не удалось сохранить: память заполнена. Удалите большие картинки или сделайте экспорт.', 5000); }
+    catch (e) { if (!(typeof Cloud !== 'undefined' && Cloud.ready)) toast('Не удалось сохранить: память заполнена. Удалите большие картинки или сделайте экспорт.', 5000); }
+    if (typeof Cloud !== 'undefined') Cloud.push();
 }
 const getList = (id) => lists.find(l => l.id === id);
 const getFolder = (id) => folders.find(f => f.id === id);
@@ -1032,7 +1062,7 @@ const el = {
 let customThemes = [];
 function applySettings() {
     const root = document.documentElement, scale = (settings.uiScale || 100) / 100;
-    root.setAttribute('data-theme', settings.theme || BASE_THEME);
+    root.setAttribute('data-app-theme', settings.theme || BASE_THEME);
     root.setAttribute('data-mode', settings.mode || 'dark');
     root.style.setProperty('--ui-scale', scale);
     root.style.setProperty('--font-size-base', settings.fontSize + 'px');
@@ -1058,7 +1088,7 @@ function injectCustomThemes() {
     let st = $('custom-themes-style'); if (st) st.remove();
     if (!customThemes.length) return;
     st = document.createElement('style'); st.id = 'custom-themes-style';
-    st.textContent = customThemes.map(t => `[data-theme="${t.id}"] { ${t.css.replace(/:root\s*\{|\}/g, '')} }`).join('\n');
+    st.textContent = customThemes.map(t => `[data-app-theme="${t.id}"] { ${t.css.replace(/:root\s*\{|\}/g, '')} }`).join('\n');
     document.head.appendChild(st);
 }
 function renderThemeSelect() {
@@ -1191,19 +1221,19 @@ function setActiveList(id) {
     renderTasks(); updateStats(); renderSidebar();
     el.scroll.scrollTop = 0;
 }
-function deleteList(id) {
+async function deleteList(id) {
     const l = getList(id); if (!l) return;
-    if (!confirm(`Удалить список «${l.name}» и все его задачи?`)) return;
+    if (!(await appConfirm(`Удалить список «${l.name}» и все его задачи?`))) return;
     if (ed && ed.listId === id) closeEditor();
     (l.tasks || []).forEach(t => { clearTimeout(pendingTimers[t.id]); delete pendingTimers[t.id]; gcalRemoved(t); });
     lists.splice(lists.indexOf(l), 1);
     if (activeListId === id) { const v = lists.find(x => !x.hidden); setActiveList(v ? v.id : null); } else renderSidebar();
     scheduleSave();
 }
-function deleteFolder(id) {
+async function deleteFolder(id) {
     const f = getFolder(id); if (!f) return;
     const sub = lists.filter(l => l.folderId === id);
-    if (!confirm(sub.length ? `Удалить папку «${f.name}»? Внутри ${sub.length} ${plural(sub.length, ['список','списка','списков'])} — они тоже удалятся.` : `Удалить папку «${f.name}»?`)) return;
+    if (!(await appConfirm(sub.length ? `Удалить папку «${f.name}»? Внутри ${sub.length} ${plural(sub.length, ['список','списка','списков'])} — они тоже удалятся.` : `Удалить папку «${f.name}»?`))) return;
     sub.forEach(l => { if (ed && ed.listId === l.id) closeEditor(); (l.tasks || []).forEach(t => { clearTimeout(pendingTimers[t.id]); gcalRemoved(t); }); });
     lists = lists.filter(l => l.folderId !== id); folders.splice(folders.indexOf(f), 1);
     if (activeFolderId === id) activeFolderId = null;
@@ -1378,8 +1408,8 @@ function toggleCheck(t, l) {
         else if (l.id === activeListId) { renderTasks(); updateStats(); }
     }, 10000);
 }
-function deleteTask(t, l) {
-    if (!confirm('Удалить эту задачу?')) return;
+async function deleteTask(t, l) {
+    if (!(await appConfirm('Удалить эту задачу?'))) return;
     clearTimeout(pendingTimers[t.id]); delete pendingTimers[t.id];
     if (ed && ed.taskId === t.id) { ed = null; hideEditorUI(); }
     l.tasks.splice(l.tasks.indexOf(t), 1);
@@ -2138,11 +2168,11 @@ $('ics-file').addEventListener('change', (e) => {
     const r = new FileReader();
     r.onload = () => {
         try { const items = parseICS(String(r.result)); if (!items.length) throw new Error('пусто'); calEvents.ics = items; saveCalEvents(); settings.calShowEvents = true; saveSettings(); updateCalInfo(); toast(`Импортировано событий: ${items.length}`); }
-        catch (err) { alert('Не удалось прочитать файл .ics — в нём нет событий или формат не поддерживается.'); }
+        catch (err) { appAlert('Не удалось прочитать файл .ics — в нём нет событий или формат не поддерживается.'); }
     };
     r.readAsText(f); e.target.value = '';
 });
-$('ics-clear-btn').addEventListener('click', () => { if (!(calEvents.ics || []).length) return; if (!confirm('Удалить импортированные встречи?')) return; calEvents.ics = []; saveCalEvents(); updateCalInfo(); });
+$('ics-clear-btn').addEventListener('click', async () => { if (!(calEvents.ics || []).length) return; if (!(await appConfirm('Удалить импортированные встречи?'))) return; calEvents.ics = []; saveCalEvents(); updateCalInfo(); });
 
 /* ----- калькулятор ----- */
 const calc = { cur: '0', acc: null, op: null, fresh: true, expr: '' };
@@ -2353,7 +2383,18 @@ $('ics-btn').addEventListener('click', () => {
     download(['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Planner//RU', 'CALSCALE:GREGORIAN', ...ev, 'END:VCALENDAR'].join('\r\n'), `zadachi-${isoDate(new Date())}.ics`, 'text/calendar');
     toast(`Экспортировано событий: ${ev.length}`);
 });
-function download(text, name, type) { const url = URL.createObjectURL(new Blob([text], { type })); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+async function download(text, name, type) {
+    try {
+        const dl = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads') : null;
+        if (dl) {
+            let fname = name; if (/\.ics$/i.test(fname)) fname = fname.replace(/\.ics$/i, '.ics.txt');
+            try { await dl.save({ filename: fname, data: text }); } catch (e) { if (e && e.code !== 'declined') toast('Не удалось сохранить файл: ' + (e.message || e.code)); }
+            return;
+        }
+    } catch (e) {}
+    legacyDownload(text, name, type);
+}
+function legacyDownload(text, name, type) { const url = URL.createObjectURL(new Blob([text], { type })); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
 
 /* ===================== ОКНО НАСТРОЕК ===================== */
 const toggles = { 'topbar-clock-toggle': 'topbarClock', 'topbar-stopwatch-toggle': 'topbarStopwatch', 'topbar-search-toggle': 'topbarSearch', 'topbar-weather-toggle': 'topbarWeather', 'topbar-calc-toggle': 'topbarCalc' };
@@ -2405,8 +2446,8 @@ $('add-theme-btn').addEventListener('click', () => {
     settings.theme = id; saveSettings(); applySettings(); syncSettingsUI();
     $('new-theme-name').value = ''; $('new-theme-css').value = '';
 });
-$('delete-theme-btn').addEventListener('click', () => {
-    const t = customThemes.find(x => x.id === settings.theme); if (!t || !confirm(`Удалить тему «${t.name}»?`)) return;
+$('delete-theme-btn').addEventListener('click', async () => {
+    const t = customThemes.find(x => x.id === settings.theme); if (!t || !(await appConfirm(`Удалить тему «${t.name}»?`))) return;
     customThemes = customThemes.filter(x => x !== t); saveCustomThemes(); injectCustomThemes();
     settings.theme = BASE_THEME; saveSettings(); applySettings(); syncSettingsUI();
 });
@@ -2427,11 +2468,11 @@ $('import-btn').addEventListener('click', () => $('import-file').click());
 $('import-file').addEventListener('change', (e) => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
         try {
             const d = JSON.parse(reader.result);
             if (!Array.isArray(d.lists)) throw new Error('нет списков');
-            if (!confirm('Импорт заменит текущие данные. Продолжить?')) return;
+            if (!(await appConfirm('Импорт заменит текущие данные на всех устройствах. Продолжить?', 'Импортировать'))) return;
             closeEditor();
             Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
             folders = d.folders || []; lists = d.lists; listIdCounter = d.listIdCounter || 100; folderIdCounter = d.folderIdCounter || 100;
@@ -2441,13 +2482,13 @@ $('import-file').addEventListener('change', (e) => {
             flushSave(); syncSettingsUI();
             const v = lists.find(l => !l.hidden); setActiveList(v ? v.id : null);
             toast('Импорт завершён');
-        } catch (err) { alert('Ошибка импорта: неверный формат файла.'); console.error(err); }
+        } catch (err) { appAlert('Ошибка импорта: неверный формат файла.'); console.error(err); }
     };
     reader.readAsText(file); e.target.value = '';
 });
-$('wipe-all-btn').addEventListener('click', () => {
-    if (!confirm('Стереть ВСЕ папки, списки и задачи?\nЭто действие необратимо.')) return;
-    if (!confirm('Точно стереть? Восстановить будет невозможно (если нет экспорта).')) return;
+$('wipe-all-btn').addEventListener('click', async () => {
+    if (!(await appConfirm('Стереть ВСЕ папки, списки и задачи?\nЭто действие необратимо и сотрёт их на всех устройствах.', 'Стереть'))) return;
+    if (!(await appConfirm('Точно стереть? Восстановить будет невозможно (если нет экспорта).', 'Стереть'))) return;
     closeEditor(); Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
     folders = []; lists = []; listIdCounter = 100; folderIdCounter = 100; activeFolderId = null;
     flushSave(); setActiveList(null); closeSettings(); toast('Все данные стёрты');
@@ -2465,6 +2506,297 @@ function showCreateListHint() {
     setTimeout(() => { h.remove(); $('add-list-btn').classList.remove('active'); }, 3500);
 }
 
+/* ===================== ОБЛАКО: синхронизация между устройствами ===================== */
+// Задачи лежат в 128 «корзинах» (документах) по хешу id: правка одной задачи — одна маленькая запись.
+// Список папок и списков — отдельный документ planner/meta. Настройки и темы остаются на каждом устройстве свои.
+var Cloud = (() => {
+    const NB = 128, DERIVED = ['title', 'body', 'text', 'hasImg'];
+    let db = null, metaRef = null, bucketCol = null;
+    let ready = false, dead = false;
+    const last = new Map();          // id -> {listId, ord, j}: что сейчас в облаке (по нашим сведениям)
+    let lastMetaJ = null;
+    const ordOf = new Map();         // id -> порядковый вес задачи внутри списка (больше = выше)
+    const orphans = new Map();       // id -> {t, listId}: задачи, чей список ещё не пришёл
+    let existingBuckets = new Set();
+    const pend = new Map();          // bucket -> {id: body}
+    const inflightBuckets = new Set();
+    let pendMeta = null, metaInflight = false, inflight = 0, errStreak = 0, sizeWarned = false;
+    let remoteBuckets = new Map(), remoteMeta, gotBuckets = false, applyTimer = null;
+
+    const pill = document.createElement('div');
+    pill.id = 'cloud-pill';
+    document.body.appendChild(pill);
+    function setPill(text, cls) { pill.textContent = text; pill.className = cls || ''; }
+    function pendingCount() { let n = 0; pend.forEach(p => { n += Object.keys(p).length; }); return n + (pendMeta ? 1 : 0); }
+    function refreshPill() {
+        if (dead) return;
+        if (!db) { setPill('Только на этом устройстве', 'warn'); return; }
+        if (!ready) { setPill('Загрузка из облака…', 'busy'); return; }
+        const n = pendingCount() + inflight;
+        if (errStreak) setPill('Нет связи · изменения сохранятся позже', 'warn');
+        else if (n > 20) setPill('Выгрузка в облако… осталось ' + n, 'busy');
+        else if (n) setPill('Синхронизация…', 'busy');
+        else setPill('Синхронизировано', 'ok');
+    }
+
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    function bucketOf(id) { let h = 5381; const s = String(id); for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return 'b' + (h % NB); }
+    function taskJ(t) { const o = {}; for (const k in t) if (!DERIVED.includes(k)) o[k] = t[k]; return JSON.stringify(o); }
+    function canon(v) {
+        if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';
+        if (v && typeof v === 'object') return '{' + Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}';
+        return JSON.stringify(v === undefined ? null : v);
+    }
+    function metaObj() { return { folders, lists: lists.map(({ tasks, ...rest }) => rest), listIdCounter, folderIdCounter }; }
+    function localHasData() { return lists.some(l => (l.tasks || []).length) || lists.length > 1 || folders.length > 0; }
+
+    /* ----- порядок задач: веса, которые не надо переписывать у всех при вставке одной ----- */
+    function computeOrds() {
+        for (const l of lists) {
+            const a = l.tasks || [], n = a.length; if (!n) continue;
+            const ids = a.map(t => String(t.id));
+            // самая длинная уже упорядоченная (по убыванию веса) подпоследовательность — её не трогаем
+            const tails = [], tailIdx = [], prev = new Array(n).fill(-1), keep = new Array(n).fill(false);
+            for (let i = 0; i < n; i++) {
+                const o = ordOf.get(ids[i]); if (o === undefined) continue;
+                const v = -o; let lo = 0, hi = tails.length;
+                while (lo < hi) { const m = (lo + hi) >> 1; if (tails[m] < v) lo = m + 1; else hi = m; }
+                tails[lo] = v; tailIdx[lo] = i; prev[i] = lo ? tailIdx[lo - 1] : -1;
+            }
+            for (let i = tails.length ? tailIdx[tails.length - 1] : -1; i >= 0; i = prev[i]) keep[i] = true;
+            let ok = true;
+            for (let i = 0; i < n && ok;) {
+                if (keep[i]) { i++; continue; }
+                let e = i; while (e + 1 < n && !keep[e + 1]) e++;
+                const k = e - i + 1;
+                const A = i > 0 ? ordOf.get(ids[i - 1]) : undefined, B = e + 1 < n ? ordOf.get(ids[e + 1]) : undefined;
+                for (let j = 0; j < k; j++) {
+                    let o;
+                    if (A !== undefined && B !== undefined) { const step = (A - B) / (k + 1); if (step < 1e-7) { ok = false; break; } o = A - step * (j + 1); }
+                    else if (B !== undefined) o = B + (k - j);
+                    else if (A !== undefined) o = A - (j + 1);
+                    else o = k - j;
+                    ordOf.set(ids[i + j], o);
+                }
+                i = e + 1;
+            }
+            if (!ok) ids.forEach((id, i) => ordOf.set(id, n - i)); // веса слишком сблизились — пересчитать список целиком
+        }
+    }
+
+    /* ----- отправка изменений ----- */
+    function push() {
+        if (!ready || dead) return;
+        computeOrds();
+        const seen = new Set();
+        for (const l of lists) for (const t of (l.tasks || [])) {
+            const id = String(t.id); seen.add(id);
+            const body = { listId: l.id, ord: ordOf.get(id), j: taskJ(t) };
+            const p = last.get(id);
+            if (!p || p.listId !== body.listId || p.ord !== body.ord || p.j !== body.j) enqueue(id, body);
+        }
+        orphans.forEach((_, id) => seen.add(id));
+        for (const id of last.keys()) if (!seen.has(id)) enqueue(id, { del: 1 });
+        const m = metaObj(), mj = canon(m);
+        if (mj !== lastMetaJ) pendMeta = { obj: JSON.parse(JSON.stringify(m)), j: mj };
+        pump();
+    }
+    function enqueue(id, body) { const b = bucketOf(id); if (!pend.has(b)) pend.set(b, {}); pend.get(b)[id] = body; }
+    function pump() {
+        refreshPill();
+        while (inflight < 3 && !dead) {
+            if (pendMeta && !metaInflight) { const job = pendMeta; pendMeta = null; metaInflight = true; inflight++; runMeta(job).finally(() => { metaInflight = false; inflight--; pump(); }); continue; }
+            let b = null; for (const k of pend.keys()) if (!inflightBuckets.has(k)) { b = k; break; }
+            if (!b) break;
+            const payload = pend.get(b); pend.delete(b); inflightBuckets.add(b); inflight++;
+            runBucket(b, payload).finally(() => { inflightBuckets.delete(b); inflight--; pump(); });
+        }
+    }
+    async function failed(e, requeue) {
+        const code = e && e.code;
+        if (code === 'revoked' || code === 'not_granted' || code === 'capability_disabled' || code === 'capability_removed') {
+            dead = true; setPill('Синхронизация отключена · обновите страницу', 'warn'); return;
+        }
+        if (code === 'quota_exceeded') { toast('Облако заполнено: удалите старые выполненные задачи или большие картинки.', 6000); }
+        requeue();
+        errStreak++; refreshPill();
+        await sleep(Math.min(30000, 1000 * Math.pow(2, Math.min(errStreak, 5))) + Math.random() * 500);
+    }
+    async function runMeta(job) {
+        try { await metaRef.set(job.obj); lastMetaJ = job.j; errStreak = 0; }
+        catch (e) { await failed(e, () => { if (!pendMeta) pendMeta = job; }); }
+    }
+    async function runBucket(b, payload) {
+        const ref = bucketCol.doc(b);
+        try {
+            if (existingBuckets.has(b)) await ref.update({ tasks: payload });
+            else {
+                const s = await ref.get();
+                if (s.exists) await ref.update({ tasks: payload }); else await ref.set({ tasks: payload });
+                existingBuckets.add(b);
+            }
+            for (const id in payload) { if (payload[id].del) last.delete(id); else last.set(id, payload[id]); }
+            errStreak = 0;
+        } catch (e) {
+            if (e && e.code === 'invalid_argument') {
+                // документ-корзина переполнен (обычно из-за больших картинок): такие правки не уходят в облако
+                if (!sizeWarned) { sizeWarned = true; toast('Часть задач не синхронизирована: слишком большие картинки. Уменьшите или удалите их.', 7000); }
+                return;
+            }
+            await failed(e, () => { const cur = pend.get(b) || {}; pend.set(b, Object.assign({}, payload, cur)); });
+        }
+    }
+
+    /* ----- приём изменений с других устройств ----- */
+    function locate(id) {
+        for (const l of lists) { const t = (l.tasks || []).find(x => String(x.id) === id); if (t) return { t, l }; }
+        return null;
+    }
+    function fill(obj, j) {
+        const src = JSON.parse(j);
+        for (const k of Object.keys(obj)) if (!(k in src)) delete obj[k];
+        Object.assign(obj, src);
+        delete obj.title; normalizeTask(obj); deriveTask(obj);
+        return obj;
+    }
+    function place(t, listId) {
+        const l = getList(listId);
+        if (l) { l.tasks = l.tasks || []; l.tasks.push(t); orphans.delete(String(t.id)); } else orphans.set(String(t.id), { t, listId });
+    }
+    function applyMeta(m) {
+        folders = (m.folders || []).map(f => ({ ...f }));
+        const byId = new Map(lists.map(l => [l.id, l]));
+        const next = [];
+        for (const r of (m.lists || [])) {
+            const cur = byId.get(r.id);
+            if (cur) { for (const k of Object.keys(cur)) if (k !== 'tasks' && !(k in r)) delete cur[k]; Object.assign(cur, r); next.push(cur); }
+            else next.push({ ...r, tasks: [] });
+        }
+        for (const l of lists) if (!next.includes(l)) for (const t of (l.tasks || [])) orphans.set(String(t.id), { t, listId: l.id });
+        lists = next;
+        listIdCounter = Math.max(listIdCounter, m.listIdCounter || 0);
+        folderIdCounter = Math.max(folderIdCounter, m.folderIdCounter || 0);
+        normalizeData();
+    }
+    function resortAndAdopt() {
+        orphans.forEach((o, id) => { const l = getList(o.listId); if (l) { l.tasks.push(o.t); orphans.delete(id); } });
+        for (const l of lists) {
+            const key = (t) => { const o = ordOf.get(String(t.id)); return o === undefined ? Infinity : o; };
+            l.tasks.sort((a, b) => key(b) - key(a));
+        }
+    }
+    function remoteTasks() {
+        const r = new Map();
+        remoteBuckets.forEach(m => { for (const id in m) { const v = m[id]; if (v && !v.del && typeof v.j === 'string') r.set(id, v); } });
+        return r;
+    }
+    function rerender() {
+        try { localStorage.setItem(LS_DATA, JSON.stringify({ folders, lists, listIdCounter, folderIdCounter })); } catch (e) {}
+        if (!getList(activeListId)) { const v = lists.find(x => !x.hidden); setActiveList(v ? v.id : null); }
+        else { el.title.textContent = getList(activeListId).name; renderSidebar(); renderTasks(); }
+        updateStats(); updateCounts();
+        if (ed && ed.taskId !== null) { const n = taskEl(ed.taskId); if (n) n.classList.add('editing'); }
+    }
+    function firstApply(remote) {
+        if (remoteMeta === null && remote.size === 0) {
+            // облако пустое: выгрузить то, что есть на этом устройстве
+            ready = true; refreshPill();
+            if (localHasData()) toast('Выгружаю задачи в облако…', 3000);
+            push(); return;
+        }
+        if (ed) { ed = null; hideEditorUI(); }
+        Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
+        const objs = new Map(); lists.forEach(l => (l.tasks || []).forEach(t => objs.set(String(t.id), t)));
+        lists.forEach(l => { l.tasks = []; });
+        if (remoteMeta) { applyMeta(remoteMeta); lastMetaJ = canon(remoteMeta); }
+        orphans.clear(); last.clear(); ordOf.clear();
+        remote.forEach((r, id) => {
+            const t = fill(objs.get(id) || {}, r.j);
+            last.set(id, r); ordOf.set(id, r.ord);
+            place(t, r.listId);
+        });
+        resortAndAdopt();
+        ready = true; rerender(); refreshPill();
+        if (!remoteMeta) push();
+    }
+    function apply() {
+        applyTimer = null;
+        if (dead || remoteMeta === undefined || !gotBuckets) return;
+        const remote = remoteTasks();
+        if (!ready) { firstApply(remote); return; }
+        let changed = false;
+        // сначала списки (чтобы задачам было куда встать)
+        if (remoteMeta) {
+            const rj = canon(remoteMeta);
+            if (rj !== lastMetaJ) {
+                const localDirty = lastMetaJ !== null && canon(metaObj()) !== lastMetaJ;
+                if (!localDirty) { applyMeta(remoteMeta); lastMetaJ = rj; changed = true; }
+            }
+        }
+        const ids = new Set([...remote.keys(), ...last.keys()]);
+        const editingId = ed && ed.taskId !== null ? String(ed.taskId) : null;
+        for (const id of ids) {
+            const r = remote.get(id), p = last.get(id);
+            if (r && p && r.j === p.j && r.listId === p.listId && r.ord === p.ord) continue;
+            if (!r && !p) continue;
+            if (id === editingId) continue;
+            const loc = locate(id), orph = orphans.get(id);
+            const curT = loc ? loc.t : orph ? orph.t : null, curList = loc ? loc.l.id : orph ? orph.listId : null;
+            const localDirty = curT ? (!p || taskJ(curT) !== p.j || curList !== p.listId) : !!p;
+            if (localDirty) continue; // своя несохранённая правка важнее — она уйдёт в облако следом
+            if (pendingTimers[curT && curT.id]) continue;
+            changed = true;
+            if (r) {
+                if (curT) {
+                    fill(curT, r.j);
+                    if (curList !== r.listId) {
+                        if (loc) loc.l.tasks.splice(loc.l.tasks.indexOf(curT), 1); else orphans.delete(id);
+                        place(curT, r.listId);
+                    }
+                } else place(fill({}, r.j), r.listId);
+                last.set(id, r); ordOf.set(id, r.ord);
+            } else {
+                if (loc) loc.l.tasks.splice(loc.l.tasks.indexOf(curT), 1);
+                orphans.delete(id); last.delete(id); ordOf.delete(id);
+            }
+        }
+        if (changed) { resortAndAdopt(); rerender(); }
+        refreshPill();
+    }
+    function schedApply() { if (!applyTimer) applyTimer = setTimeout(apply, 120); }
+    function onErr(e) {
+        const code = e && e.code;
+        dead = true;
+        setPill(code === 'resource_exhausted' ? 'Синхронизация перегружена · обновите страницу' : 'Синхронизация прервалась · обновите страницу', 'warn');
+    }
+
+    async function init() {
+        refreshPill();
+        try {
+            if (window.claude && typeof window.claude.use === 'function') {
+                db = await Promise.race([window.claude.use('db'), sleep(10000).then(() => null)]);
+            }
+        } catch (e) { db = null; }
+        refreshPill();
+        if (!db) return;
+        metaRef = db.doc('planner/meta');
+        bucketCol = db.collection('pbuckets');
+        metaRef.onSnapshot(s => {
+            if (s.metadata && s.metadata.fromCache) return;
+            remoteMeta = s.exists ? s.data() : null; schedApply();
+        }, onErr);
+        bucketCol.onSnapshot(qs => {
+            if (qs.metadata && qs.metadata.fromCache) return;
+            remoteBuckets = new Map(qs.docs.map(d => [d.id, (d.data() || {}).tasks || {}]));
+            existingBuckets = new Set(qs.docs.map(d => d.id));
+            gotBuckets = true; schedApply();
+        }, onErr);
+        window.addEventListener('pagehide', () => { try { flushSave(); } catch (e) {} });
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { try { flushSave(); } catch (e) {} } });
+    }
+    return { init, push, get ready() { return ready; } };
+})();
+
 /* ===================== СТАРТ ===================== */
 loadSettings();
 loadData();
@@ -2478,7 +2810,7 @@ if (settings.topbarWeather) fetchWeather();
 tick();
 refreshGcalStatus();
 flushSave(); // сохранить нормализованные данные (например, задачи, «зависшие» в выполнении)
+Cloud.init();
 });
 </script>
-</body>
-</html>
+
