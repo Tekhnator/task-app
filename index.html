@@ -167,8 +167,8 @@ li.done .text { color: var(--done); text-decoration: line-through; }
       async remove(id) { write(read().filter((x) => x.id !== id)); },
     };
   }
-  function cloudStore(db, uid) {
-    const col = db.collection("data/users/" + uid);
+  function cloudStore(db) {
+    const col = db.collection("tasks");
     return {
       kind: "cloud",
       subscribe(fn, onErr) {
@@ -179,32 +179,67 @@ li.done .text { color: var(--done); text-decoration: line-through; }
       async remove(id) { await col.doc(id).delete(); },
     };
   }
+  // Changes show on screen at once; the server copy replaces them when it confirms.
+  let serverTasks = [];
+  const overrides = new Map(); // id -> task, or null for a deletion
+  function merge() {
+    const byId = new Map(serverTasks.map((t) => [t.id, t]));
+    for (const [id, t] of overrides) { if (t === null) byId.delete(id); else byId.set(id, t); }
+    tasks = Array.from(byId.values());
+    render();
+  }
+  function onServer(arr) {
+    serverTasks = arr;
+    const byId = new Map(arr.map((t) => [t.id, t]));
+    for (const [id, t] of overrides) {
+      const s = byId.get(id);
+      if ((t === null && !s) || (t && s && s.done === t.done && s.text === t.text)) overrides.delete(id);
+    }
+    merge();
+  }
   function useLocal() {
     store = localStore();
     $("sync").textContent = "Сохраняется только на этом устройстве";
-    store.subscribe((arr) => { tasks = arr; render(); });
+    store.subscribe(onServer);
+    pendingOps.splice(0).forEach((op) => op());
+  }
+  function withTimeout(p, ms) {
+    return Promise.race([p, new Promise((r) => setTimeout(() => r(null), ms))]);
   }
   async function init() {
-    let db = null, uid = null;
+    let db = null;
     try {
-      if (window.claude && typeof window.claude.use === "function") {
-        const [d, u] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
-        db = d; uid = u ? await u.id() : null;
-      }
+      if (window.claude && typeof window.claude.use === "function") db = await withTimeout(window.claude.use("db"), 8000);
     } catch (e) { db = null; }
-    if (!db || !uid) { useLocal(); return; }
-    store = cloudStore(db, uid);
+    if (!db) { useLocal(); return; }
+    store = cloudStore(db);
     $("sync").textContent = "Синхронизируется между устройствами";
-    store.subscribe((arr) => { tasks = arr; render(); }, () => { useLocal(); });
+    store.subscribe(onServer, (e) => {
+      $("sync").textContent = "Синхронизация прервалась (" + ((e && e.code) || "ошибка") + "). Обновите страницу.";
+    });
+    pendingOps.splice(0).forEach((op) => op());
   }
 
+  // Actions taken before storage is ready wait here instead of being lost.
+  const pendingOps = [];
+  function act(op) { if (store) op(); else pendingOps.push(op); }
+
   async function safe(fn) {
-    try { await fn(); }
-    catch (e) {
-      const code = e && e.code;
-      $("sync").textContent = code === "quota_exceeded" ? "Хранилище заполнено: удалите выполненные задачи" : "Не удалось сохранить. Проверьте интернет и повторите.";
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { await fn(); return; }
+      catch (e) {
+        const code = e && e.code;
+        if (code === "unavailable" && attempt === 0) { await new Promise((r) => setTimeout(r, 800 + Math.random() * 800)); continue; }
+        $("sync").textContent = code === "quota_exceeded"
+          ? "Хранилище заполнено: удалите выполненные задачи"
+          : "Не удалось сохранить (" + (code || "нет связи") + "). Проверьте интернет и повторите.";
+        return;
+      }
     }
   }
+  function putTask(t) { overrides.set(t.id, t); merge(); act(() => safe(() => store.put(t))); }
+  function patchTask(t, p) { const n = Object.assign({}, t, p); overrides.set(t.id, n); merge(); act(() => safe(() => store.patch(t.id, p))); }
+  function removeTask(t) { overrides.set(t.id, null); merge(); act(() => safe(() => store.remove(t.id))); }
 
   // ---------- render ----------
   function sortTasks(arr) {
@@ -233,7 +268,7 @@ li.done .text { color: var(--done); text-decoration: line-through; }
       const chk = document.createElement("button");
       chk.className = "check"; chk.type = "button"; chk.innerHTML = CHECK;
       chk.setAttribute("aria-label", t.done ? "Вернуть в работу" : "Отметить выполненной");
-      chk.addEventListener("click", () => safe(() => store.patch(t.id, { done: !t.done })));
+      chk.addEventListener("click", () => patchTask(t, { done: !t.done }));
       const body = document.createElement("div"); body.className = "body";
       const txt = document.createElement("span"); txt.className = "text"; txt.textContent = t.text;
       body.appendChild(txt);
@@ -260,14 +295,14 @@ li.done .text { color: var(--done); text-decoration: line-through; }
   let toastTimer = null, lastRemoved = [];
   function removeWithUndo(arr) {
     lastRemoved = arr.map((t) => Object.assign({}, t));
-    arr.forEach((t) => safe(() => store.remove(t.id)));
+    arr.forEach((t) => removeTask(t));
     $("toast-text").textContent = arr.length === 1 ? "Задача удалена" : "Удалено задач: " + arr.length;
     $("toast").hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { $("toast").hidden = true; }, 5000);
   }
   $("toast-undo").addEventListener("click", () => {
-    lastRemoved.forEach((t) => safe(() => store.put(t)));
+    lastRemoved.forEach((t) => putTask(t));
     lastRemoved = []; $("toast").hidden = true;
   });
   $("clear-done").addEventListener("click", () => removeWithUndo(tasks.filter((t) => t.done)));
@@ -285,10 +320,10 @@ li.done .text { color: var(--done); text-decoration: line-through; }
   $("add-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const text = input.value.trim();
-    if (!text || !store) return;
+    if (!text) return;
     const due = dueChoice === "today" ? todayISO() : dueChoice === "tomorrow" ? tomorrowISO() : dueChoice === "date" ? $("new-date").value : null;
     const id = "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    safe(() => store.put({ id, text, done: false, due, created: Date.now() }));
+    putTask({ id, text, done: false, due, created: Date.now() });
     input.value = ""; $("add-btn").disabled = true; setDue("none");
     if (filter === "done") selectTab("active");
     input.focus();
