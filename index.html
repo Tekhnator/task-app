@@ -1034,6 +1034,20 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
                         <li><b>Outlook</b>: Параметры → Календарь → Общие календари → «Опубликовать календарь» → ссылка ICS.</li>
                         <li><b>Праздники других стран</b>: в Google Календаре добавьте «Праздники» нужной страны и возьмите его ссылку iCal.</li>
                     </ul><p>Ссылочные календари обновляются сами (раз в 30 минут при открытии календаря) и кнопкой ⟳. В программе они работают всегда; в браузере некоторые сервисы ссылку не отдадут.</p></div></details>
+                    <details class="info-details" style="margin-top:8px"><summary>Корпоративный Google (ПОРТАЛ): подключение через скрипт</summary><div class="info-content">
+                    <p>Если администратор запретил публичный и секретный адрес календаря (встречи приходят как «Busy»), календарь отдаёт ваш собственный скрипт Google Apps Script — со всеми названиями, временем, местом и описанием.</p>
+                    <p><b>Если скрипт уже создан</b> (ссылка просто потерялась): script.google.com → ваш проект → <b>«Начать развёртывание» → «Управление развёртываниями»</b> → скопируйте <b>URL веб-приложения</b> (заканчивается на <code>/exec</code>) → вставьте его в «Добавить календарь» выше.</p>
+                    <p><b>Создать с нуля (≈5 минут):</b></p><ol>
+                        <li>Откройте <code>script.google.com</code> под рабочей почтой → <b>«Новый проект»</b>.</li>
+                        <li>Сотрите всё в редакторе, нажмите кнопку ниже и вставьте код (Ctrl+V) → <b>Ctrl+S</b>.<div class="btn-row" style="margin:6px 0"><button class="settings-btn" id="copy-gs-btn">Скопировать код скрипта</button></div></li>
+                        <li>Слева ⚙ «Настройки проекта» → часовой пояс <b>(GMT+03:00) Москва</b>.</li>
+                        <li><b>«Начать развёртывание» → «Новое развёртывание»</b> → ⚙ рядом с «Выберите тип» → <b>«Веб-приложение»</b>; «Запуск от имени»: <b>Я</b>; «У кого есть доступ»: <b>Все</b> → «Начать развёртывание».</li>
+                        <li>Google попросит доступ к календарю → выберите аккаунт → «Дополнительно» → «Перейти к проекту» → <b>«Разрешить»</b>.</li>
+                        <li>Скопируйте <b>URL веб-приложения</b> (<code>…/exec</code>) → здесь: название «Расписание (ПОРТАЛ)», ссылка — этот URL → <b>«Добавить по ссылке»</b>.</li>
+                    </ol>
+                    <p><b>Важно:</b> после любого изменения кода скрипта — «Управление развёртываниями» → ✏ → «Версия: <b>Новая версия</b>» → «Развернуть», иначе работает старая версия (программа покажет «forbidden»). Ссылка при этом не меняется.</p>
+                    <p>Встречи загружает программа на ПК; телефон получает их через синхронизацию. Ссылку никому не публикуйте — по ней видны названия ваших встреч.</p>
+                    </div></details>
                     </div>
                 </details>
             </div>
@@ -2682,6 +2696,12 @@ $('cp-day-list').addEventListener('click', (e) => {
     if (viewMode !== 'active') switchView('active');
     if (activeListId !== it.dataset.list) setActiveList(it.dataset.list);
     const { t } = findTask(Number(it.dataset.task), it.dataset.list); if (t) openEditor(t);
+});
+const CALENDAR_SCRIPT = "const DAYS_BACK = 60, DAYS_AHEAD = 180;   // какой период отдавать в программу\n\nfunction doGet() {\n  const cal = CalendarApp.getDefaultCalendar();\n  const now = Date.now();\n  const evs = cal.getEvents(new Date(now - DAYS_BACK * 864e5), new Date(now + DAYS_AHEAD * 864e5));\n  const pad = n => String(n).padStart(2, '0');\n  const utc = d => d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + '00Z';\n  const day = d => Utilities.formatDate(d, Session.getScriptTimeZone(), 'yyyyMMdd');\n  const esc = s => String(s || '').replace(/\\\\/g, '\\\\\\\\').replace(/\\r?\\n/g, '\\\\n').replace(/[,;]/g, m => '\\\\' + m);\n  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Zadachi//RU', 'X-WR-CALNAME:' + esc(cal.getName())];\n  evs.forEach(ev => {\n    L.push('BEGIN:VEVENT', 'UID:' + ev.getId() + '-' + ev.getStartTime().getTime(), 'DTSTAMP:' + utc(new Date()));\n    if (ev.isAllDayEvent()) L.push('DTSTART;VALUE=DATE:' + day(ev.getAllDayStartDate()), 'DTEND;VALUE=DATE:' + day(ev.getAllDayEndDate()));\n    else L.push('DTSTART:' + utc(ev.getStartTime()), 'DTEND:' + utc(ev.getEndTime()));\n    L.push('SUMMARY:' + esc(ev.getTitle() || '(без названия)'));\n    if (ev.getLocation()) L.push('LOCATION:' + esc(ev.getLocation()));\n    if (ev.getDescription()) L.push('DESCRIPTION:' + esc(ev.getDescription().replace(/<br\\s*\\/?>/gi, '\\n').replace(/<[^>]+>/g, '')));\n    L.push('END:VEVENT');\n  });\n  L.push('END:VCALENDAR');\n  return ContentService.createTextOutput(L.join('\\r\\n')).setMimeType(ContentService.MimeType.ICAL);\n}\n";
+$('copy-gs-btn').addEventListener('click', async () => {
+    const b = $('copy-gs-btn');
+    try { await navigator.clipboard.writeText(CALENDAR_SCRIPT); } catch (e) { const ta = document.createElement('textarea'); ta.value = CALENDAR_SCRIPT; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    b.textContent = 'Скопировано ✓'; setTimeout(() => b.textContent = 'Скопировать код скрипта', 1800);
 });
 /* настройки календаря: мои календари */
 function renderCalSources() {
