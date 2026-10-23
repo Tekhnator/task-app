@@ -1,0 +1,309 @@
+<title>Мои задачи</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow column, like a pocket notebook — header with today's date, quick-add bar, filter tabs, list */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --fg: #172033;
+  --muted: #5d6b82;
+  --line: #dde3ec;
+  --accent: #2f55d4;
+  --accent-ink: #ffffff;
+  --accent-soft: #e6ecfc;
+  --done: #8a96aa;
+  --warn: #c2410c;
+  --warn-soft: #fdeee4;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1420; --surface: #171e2d; --fg: #e8ecf4; --muted: #95a1b8; --line: #283246;
+    --accent: #7b98ff; --accent-ink: #0f1420; --accent-soft: #1f2a48; --done: #66728a;
+    --warn: #ff9a62; --warn-soft: #3a2218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1420; --surface: #171e2d; --fg: #e8ecf4; --muted: #95a1b8; --line: #283246;
+  --accent: #7b98ff; --accent-ink: #0f1420; --accent-soft: #1f2a48; --done: #66728a;
+  --warn: #ff9a62; --warn-soft: #3a2218; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+header { display: flex; flex-direction: column; gap: 4px; }
+.date { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 8vw, 38px); line-height: 1.05; margin: 0; text-wrap: balance; }
+.progress { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.bar { flex: 1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+
+form.add { display: flex; flex-direction: column; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px; }
+.add-row { display: flex; gap: 8px; }
+#new-text { flex: 1; min-width: 0; font: inherit; color: var(--fg); background: transparent; border: 0; padding: 8px 6px; outline: none; }
+#new-text::placeholder { color: var(--muted); }
+.add-btn { font: inherit; font-weight: 600; border: 0; border-radius: 10px; padding: 0 18px; background: var(--accent); color: var(--accent-ink); cursor: pointer; min-height: 44px; }
+.add-btn:disabled { opacity: .45; cursor: default; }
+.due-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding-inline: 4px; }
+.chip { font: inherit; font-size: 13px; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 600; }
+#new-date { font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; min-width: 0; }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
+.tab { font: inherit; font-size: 15px; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 8px 10px; color: var(--muted); cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
+.tab .n { font-size: 12px; color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+
+ul.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+li.task { display: flex; align-items: flex-start; gap: 12px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+.check { flex: none; width: 26px; height: 26px; margin-top: -1px; border-radius: 50%; border: 2px solid var(--muted); background: transparent; cursor: pointer; display: grid; place-items: center; padding: 0; color: var(--accent-ink); }
+.check svg { width: 14px; height: 14px; opacity: 0; }
+li.done .check { background: var(--accent); border-color: var(--accent); }
+li.done .check svg { opacity: 1; }
+.body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.text { overflow-wrap: anywhere; }
+li.done .text { color: var(--done); text-decoration: line-through; }
+.due { font-size: 13px; color: var(--muted); align-self: flex-start; }
+.due.over { color: var(--warn); background: var(--warn-soft); padding: 1px 8px; border-radius: 999px; font-weight: 500; }
+.due.today { color: var(--accent); font-weight: 600; }
+.del { flex: none; width: 36px; height: 36px; margin: -6px -4px 0 0; border: 0; background: none; color: var(--muted); cursor: pointer; border-radius: 8px; font-size: 20px; line-height: 1; }
+.del:hover { background: var(--line); color: var(--fg); }
+
+.empty { text-align: center; color: var(--muted); padding: 36px 12px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.empty strong { color: var(--fg); font-weight: 600; }
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.link-btn { font: inherit; font-size: 13px; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 6px 0; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); border-radius: 12px; padding: 10px 14px; display: flex; gap: 14px; align-items: center; font-size: 14px; max-width: calc(100% - 32px); box-shadow: 0 6px 24px rgb(0 0 0 / .2); }
+.toast button { font: inherit; font-weight: 600; background: none; border: 0; color: var(--accent-soft); cursor: pointer; padding: 4px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="date" id="today"></div>
+    <h1>Мои задачи</h1>
+    <div class="progress"><div class="bar"><i id="bar"></i></div><span id="progress-text">0 из 0</span></div>
+  </header>
+
+  <form class="add" id="add-form" autocomplete="off">
+    <div class="add-row">
+      <input id="new-text" type="text" placeholder="Новая задача…" maxlength="300" aria-label="Текст задачи">
+      <button class="add-btn" id="add-btn" type="submit" disabled>Добавить</button>
+    </div>
+    <div class="due-row" role="group" aria-label="Срок">
+      <button type="button" class="chip" data-due="none" aria-pressed="true">Без срока</button>
+      <button type="button" class="chip" data-due="today" aria-pressed="false">Сегодня</button>
+      <button type="button" class="chip" data-due="tomorrow" aria-pressed="false">Завтра</button>
+      <input id="new-date" type="date" aria-label="Выбрать дату">
+    </div>
+  </form>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-filter="active" aria-selected="true">Активные<span class="n" id="n-active">0</span></button>
+    <button class="tab" role="tab" data-filter="done" aria-selected="false">Готово<span class="n" id="n-done">0</span></button>
+    <button class="tab" role="tab" data-filter="all" aria-selected="false">Все<span class="n" id="n-all">0</span></button>
+  </div>
+
+  <ul class="list" id="list"></ul>
+  <div class="empty" id="empty" hidden></div>
+
+  <div class="foot">
+    <span id="sync">Загрузка…</span>
+    <button class="link-btn" id="clear-done" type="button" hidden>Удалить выполненные</button>
+  </div>
+</div>
+<div class="toast" id="toast" hidden><span id="toast-text"></span><button type="button" id="toast-undo">Вернуть</button></div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const CHECK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+
+  let tasks = [];
+  let filter = "active";
+  let dueChoice = "none";
+  let store = null;
+
+  // ---------- dates ----------
+  const pad = (n) => String(n).padStart(2, "0");
+  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const todayISO = () => iso(new Date());
+  const tomorrowISO = () => { const d = new Date(); d.setDate(d.getDate() + 1); return iso(d); };
+  const fmtDay = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" });
+  function dueLabel(s) {
+    if (!s) return null;
+    const t = todayISO(), tm = tomorrowISO();
+    if (s < t) { const [y, m, d] = s.split("-").map(Number); return { text: "Просрочено · " + fmtDay.format(new Date(y, m - 1, d)), cls: "over" }; }
+    if (s === t) return { text: "Сегодня", cls: "today" };
+    if (s === tm) return { text: "Завтра", cls: "" };
+    const [y, m, d] = s.split("-").map(Number);
+    return { text: fmtDay.format(new Date(y, m - 1, d)), cls: "" };
+  }
+  const head = new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+  $("today").textContent = head;
+
+  // ---------- storage: cloud (db) with local fallback ----------
+  function localStore() {
+    const KEY = "task-app.tasks";
+    let listener = () => {};
+    const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } };
+    const write = (arr) => { try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch (e) {} listener(arr.slice()); };
+    return {
+      kind: "local",
+      subscribe(fn) { listener = fn; fn(read()); },
+      async put(t) { const arr = read().filter((x) => x.id !== t.id); arr.push(t); write(arr); },
+      async patch(id, p) { write(read().map((x) => (x.id === id ? Object.assign({}, x, p) : x))); },
+      async remove(id) { write(read().filter((x) => x.id !== id)); },
+    };
+  }
+  function cloudStore(db, uid) {
+    const col = db.collection("data/users/" + uid);
+    return {
+      kind: "cloud",
+      subscribe(fn, onErr) {
+        col.onSnapshot((snap) => fn(snap.docs.map((d) => Object.assign({ id: d.id }, d.data()))), onErr);
+      },
+      async put(t) { const { id, ...body } = t; await col.doc(id).set(body); },
+      async patch(id, p) { await col.doc(id).update(p); },
+      async remove(id) { await col.doc(id).delete(); },
+    };
+  }
+  function useLocal() {
+    store = localStore();
+    $("sync").textContent = "Сохраняется только на этом устройстве";
+    store.subscribe((arr) => { tasks = arr; render(); });
+  }
+  async function init() {
+    let db = null, uid = null;
+    try {
+      if (window.claude && typeof window.claude.use === "function") {
+        const [d, u] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+        db = d; uid = u ? await u.id() : null;
+      }
+    } catch (e) { db = null; }
+    if (!db || !uid) { useLocal(); return; }
+    store = cloudStore(db, uid);
+    $("sync").textContent = "Синхронизируется между устройствами";
+    store.subscribe((arr) => { tasks = arr; render(); }, () => { useLocal(); });
+  }
+
+  async function safe(fn) {
+    try { await fn(); }
+    catch (e) {
+      const code = e && e.code;
+      $("sync").textContent = code === "quota_exceeded" ? "Хранилище заполнено: удалите выполненные задачи" : "Не удалось сохранить. Проверьте интернет и повторите.";
+    }
+  }
+
+  // ---------- render ----------
+  function sortTasks(arr) {
+    return arr.slice().sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      const ad = a.due || "9999", bd = b.due || "9999";
+      if (ad !== bd) return ad < bd ? -1 : 1;
+      return (b.created || 0) - (a.created || 0);
+    });
+  }
+  function render() {
+    const active = tasks.filter((t) => !t.done), done = tasks.filter((t) => t.done);
+    $("n-active").textContent = active.length;
+    $("n-done").textContent = done.length;
+    $("n-all").textContent = tasks.length;
+    $("progress-text").textContent = done.length + " из " + tasks.length + " выполнено";
+    $("bar").style.width = tasks.length ? (done.length / tasks.length * 100) + "%" : "0";
+    $("clear-done").hidden = done.length === 0;
+
+    const shown = sortTasks(filter === "active" ? active : filter === "done" ? done : tasks);
+    const list = $("list");
+    list.textContent = "";
+    for (const t of shown) {
+      const li = document.createElement("li");
+      li.className = "task" + (t.done ? " done" : "");
+      const chk = document.createElement("button");
+      chk.className = "check"; chk.type = "button"; chk.innerHTML = CHECK;
+      chk.setAttribute("aria-label", t.done ? "Вернуть в работу" : "Отметить выполненной");
+      chk.addEventListener("click", () => safe(() => store.patch(t.id, { done: !t.done })));
+      const body = document.createElement("div"); body.className = "body";
+      const txt = document.createElement("span"); txt.className = "text"; txt.textContent = t.text;
+      body.appendChild(txt);
+      const dl = !t.done && dueLabel(t.due);
+      if (dl) { const s = document.createElement("span"); s.className = "due " + dl.cls; s.textContent = dl.text; body.appendChild(s); }
+      const del = document.createElement("button");
+      del.className = "del"; del.type = "button"; del.textContent = "×"; del.setAttribute("aria-label", "Удалить задачу");
+      del.addEventListener("click", () => removeWithUndo([t]));
+      li.append(chk, body, del);
+      list.appendChild(li);
+    }
+    const empty = $("empty");
+    if (shown.length === 0) {
+      empty.hidden = false;
+      empty.innerHTML = filter === "done"
+        ? "<strong>Пока ничего не выполнено</strong><span>Отмечайте задачи кружком слева.</span>"
+        : tasks.length === 0
+          ? "<strong>Список пуст</strong><span>Напишите первую задачу в поле выше и нажмите «Добавить».</span>"
+          : "<strong>Всё сделано</strong><span>Активных задач не осталось.</span>";
+    } else empty.hidden = true;
+  }
+
+  // ---------- undo toast ----------
+  let toastTimer = null, lastRemoved = [];
+  function removeWithUndo(arr) {
+    lastRemoved = arr.map((t) => Object.assign({}, t));
+    arr.forEach((t) => safe(() => store.remove(t.id)));
+    $("toast-text").textContent = arr.length === 1 ? "Задача удалена" : "Удалено задач: " + arr.length;
+    $("toast").hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { $("toast").hidden = true; }, 5000);
+  }
+  $("toast-undo").addEventListener("click", () => {
+    lastRemoved.forEach((t) => safe(() => store.put(t)));
+    lastRemoved = []; $("toast").hidden = true;
+  });
+  $("clear-done").addEventListener("click", () => removeWithUndo(tasks.filter((t) => t.done)));
+
+  // ---------- add form ----------
+  const input = $("new-text");
+  input.addEventListener("input", () => { $("add-btn").disabled = !input.value.trim(); });
+  function setDue(choice) {
+    dueChoice = choice;
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.due === choice)));
+    if (choice !== "date") $("new-date").value = "";
+  }
+  document.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => setDue(c.dataset.due)));
+  $("new-date").addEventListener("change", (e) => { if (e.target.value) setDue("date"); else setDue("none"); });
+  $("add-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text || !store) return;
+    const due = dueChoice === "today" ? todayISO() : dueChoice === "tomorrow" ? tomorrowISO() : dueChoice === "date" ? $("new-date").value : null;
+    const id = "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    safe(() => store.put({ id, text, done: false, due, created: Date.now() }));
+    input.value = ""; $("add-btn").disabled = true; setDue("none");
+    if (filter === "done") selectTab("active");
+    input.focus();
+  });
+
+  // ---------- tabs ----------
+  function selectTab(f) {
+    filter = f;
+    document.querySelectorAll(".tab").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.filter === f)));
+    render();
+  }
+  document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => selectTab(b.dataset.filter)));
+
+  render();
+  $("empty").innerHTML = "<strong>Загружаю задачи…</strong>";
+  init();
+})();
+</script>
