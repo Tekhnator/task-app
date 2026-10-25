@@ -366,11 +366,12 @@ body.panelon #demo{display:none}
 
   <div class="sec">
    <h2>Музыка и звуки</h2>
-   <label class="chk"><input id="music" type="checkbox"> Тихая музыка, пока никто не разговаривает (днём весёлое пианино, ночью сонное)</label>
+   <label class="chk"><input id="music" type="checkbox"> Тихая музыка, пока никто не разговаривает (днём природа и птицы, ночью космос и колыбельная)</label>
    <label class="chk"><input id="sfx" type="checkbox"> Звуки у картинок на фоне: машинка, ракета, птички, сова</label>
    <label for="vol">Громкость музыки и звуков: <b id="volV"></b></label>
    <input id="vol" type="range" min="0" max="1" step="0.05">
    <div class="note">Во время разговора музыка сама стихает, чтобы не мешать Сане и распознаванию речи.</div>
+   <div class="note">Музыка (CC0, OpenGameArt): ночью — «Outer Space Loop» (wipics), «Baby Song» (Alex McCulloch); днём — «Birds, Wind and Synth» (Spring Spring), «Lost in the Meadows» (Augmentality).</div>
   </div>
 
   <div class="sec">
@@ -814,7 +815,7 @@ let mIdx = 4, mNext = 0, padNext = 0, padI = 0;
 function musicWanted(){ return S.music && state === 'idle' && !document.hidden && !$('panel').classList.contains('on') && !$('scan').classList.contains('on'); }
 setInterval(() => {
   const ctx = AU.ctx; if (!ctx || ctx.state !== 'running') return;
-  const now = ctx.currentTime, want = musicWanted();
+  const now = ctx.currentTime, want = musicWanted() && !MP.ok;
   AU.music.gain.setTargetAtTime(want ? 0.55 : 0, now, want ? 1.8 : 0.35);   // плавно тише, как только начался разговор
   AU.master.gain.setTargetAtTime(S.vol, now, 0.2);
   if (!want){ mNext = Math.max(mNext, now + 1); return; }
@@ -829,6 +830,31 @@ setInterval(() => {
   }
   if (padNext < now){ pad(sc.pads[padI++ % sc.pads.length], now + 0.1, night ? 9 : 7, night ? 0.05 : 0.03); padNext = now + (night ? 8 : 6.5); }
 }, 250);
+
+/* ---- Настоящая музыка (CC0, OpenGameArt), сгенерированное пианино — запасной вариант ---- */
+const TRACKS = { night:['music/n1.ogg', 'music/n2.ogg'], day:['music/d1.ogg', 'music/d2.ogg'] };
+const MP = { el:null, mode:'', vol:0, ok:true, fails:0, last:'' };
+function mpStart(mode){
+  if (MP.el){ try { MP.el.pause(); } catch(e){} }
+  const list = TRACKS[mode], src = list.length > 1 ? pick(list.filter(x => x !== MP.last)) : list[0];
+  const el = new Audio(src); MP.el = el; MP.mode = mode; MP.last = src; el.volume = 0;
+  el.onended = () => { if (MP.el === el) mpStart(MP.mode); };
+  el.onerror = () => { if (MP.el !== el) return; MP.fails++; MP.el = null; if (MP.fails > 2) MP.ok = false; };
+  el.play().catch(() => {});
+}
+setInterval(() => {
+  if (!MP.ok) return;
+  const want = musicWanted(), mode = night ? 'night' : 'day';
+  if (want && !MP.el){ MP.vol = 0; mpStart(mode); }
+  if (!MP.el) return;
+  const target = want && MP.mode === mode ? 1 : 0;
+  MP.vol += (target - MP.vol) * (target > MP.vol ? 0.035 : 0.12);       // вход ~3 с, уход ~1 с
+  try { MP.el.volume = Math.max(0, Math.min(1, MP.vol * S.vol * 0.7)); } catch(e){}
+  if (MP.vol < 0.01){
+    if (want && MP.mode !== mode) mpStart(mode);                         // сменили день/ночь — другая музыка
+    else if (!want && !MP.el.paused) MP.el.pause();
+  } else if (want && MP.el.paused) MP.el.play().catch(() => {});
+}, 100);
 
 const SFX = {
   ok(){ return S.sfx && AU.ctx && AU.ctx.state === 'running' && state === 'idle' && !document.hidden; },
