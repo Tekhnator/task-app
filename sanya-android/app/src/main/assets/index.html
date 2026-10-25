@@ -189,8 +189,53 @@ button.b.pri{background:var(--accent);border-color:var(--accent);color:#fff}
 @keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(-24deg)}15%{opacity:.9}100%{opacity:0;transform:translate(-45vw,20vw) rotate(-24deg)}}
 .rocket{font-size:7vmin;opacity:.6;filter:saturate(.6);animation:rocket var(--d) ease-in-out forwards}
 @keyframes rocket{from{transform:translate(-10vw,105vh)}to{transform:translate(110vw,-15vh)}}
-.astro{font-size:8vmin;opacity:.55;filter:saturate(.5);animation:astro var(--d) linear forwards}
-@keyframes astro{from{transform:translate(105vw,0) rotate(0)}to{transform:translate(-15vw,8vh) rotate(-300deg)}}
+
+/* ===== живой фон 2: дорога, деревья, воробьи, зверьки, космос ===== */
+.road{left:0;right:0;bottom:0;height:16vh}
+.road svg.rd{position:absolute;left:0;bottom:2vh;width:100%;height:8vh;opacity:0;transition:opacity 1.2s}
+.road.on svg.rd{opacity:1}.road.away svg.rd{opacity:0;transition:opacity 1.6s}
+.plant{position:absolute;bottom:8.5vh;transform-origin:50% 100%;transform:scale(0);transition:transform .9s cubic-bezier(.3,1.6,.5,1)}
+.road.on .plant{transform:scale(1)}.road.away .plant{transform:scale(0);transition:transform .7s ease-in}
+.road .rcar{position:absolute;bottom:6.2vh;font-size:7.5vmin;opacity:.75;filter:saturate(.65);transform:translateX(110vw)}
+.road.on .rcar{animation:drive var(--d) linear .9s forwards}
+.road .rcar span{display:inline-block;animation:bumpy .5s infinite}
+@keyframes bumpy{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-9%) rotate(3deg)}60%{transform:translateY(-3%) rotate(-2deg)}}
+.flock{animation:flockgo var(--d) ease-in-out forwards}
+@keyframes flockgo{from{transform:translate(var(--x0),0)}50%{transform:translate(50vw,-5vh)}to{transform:translate(var(--x1),3vh)}}
+.orbit{position:absolute;left:0;top:0;width:0;height:0;animation:spin var(--o) linear infinite}
+.orbit .sp{position:absolute;width:4.2vmin;transform:translate(var(--r),-50%)}
+.sp .wing{transform-box:fill-box;transform-origin:50% 100%;animation:flap .18s infinite alternate}
+.peek{width:24vmin;height:24vmin}
+.peek .who{width:100%;height:100%;animation:peekin 4.6s ease-in-out forwards}
+@keyframes peekin{0%{transform:translateY(105%)}16%,82%{transform:translateY(38%)}100%{transform:translateY(105%)}}
+.peek .blink{transform-box:fill-box;transform-origin:center;animation:blinkx 4.6s infinite}
+@keyframes blinkx{0%,30%,36%,62%,68%,100%{transform:scaleY(1)}33%,65%{transform:scaleY(.08)}}
+.peek .pup{animation:lookx 4.6s ease-in-out infinite}
+@keyframes lookx{0%,40%{transform:translateX(0)}48%,58%{transform:translateX(-2px)}70%,100%{transform:translateX(2px)}}
+.comet{width:40vmin;height:3px;border-radius:3px;background:linear-gradient(90deg,#fff8e1,rgba(255,248,225,.35) 30%,rgba(255,255,255,0));
+  opacity:0;animation:comet 4.2s ease-in-out forwards;filter:drop-shadow(0 0 4px #fff3c4)}
+.comet::before{content:'';position:absolute;left:-1.4vmin;top:50%;width:2.8vmin;height:2.8vmin;margin-top:-1.4vmin;border-radius:50%;background:#fffbe9;box-shadow:0 0 3vmin 1vmin rgba(255,240,190,.8)}
+@keyframes comet{0%{opacity:0;transform:translate(0,0) rotate(-18deg)}12%,80%{opacity:.95}100%{opacity:0;transform:translate(-70vw,25vw) rotate(-18deg)}}
+.rkt{font-size:7vmin;filter:saturate(.75);animation:rocket var(--d) ease-in-out forwards}
+.rkt .fl{position:absolute;left:-14%;bottom:-14%;width:42%;height:60%;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  background:radial-gradient(circle at 50% 30%,#ffe08a,#ff7a45 55%,#e5383b);transform:rotate(45deg);transform-origin:50% 0;animation:flame .08s infinite alternate;z-index:-1}
+@keyframes flame{to{transform:rotate(45deg) scaleY(1.35)}}
+.puff{position:absolute;width:1.8vmin;height:1.8vmin;border-radius:50%;background:rgba(215,215,232,.28);filter:blur(.4vmin);animation:puff 1.4s ease-out forwards;pointer-events:none}
+@keyframes puff{to{transform:scale(3.2) translate(-.8vmin,.8vmin);opacity:0}}
+.rock{background:#8f8ca3;opacity:.55;box-shadow:inset -.6vmin -.6vmin 0 rgba(0,0,0,.18);animation:rockfly var(--d) linear forwards}
+@keyframes rockfly{from{transform:translateX(108vw) rotate(0)}to{transform:translateX(-12vw) rotate(var(--rot))}}
+/* лицо-солнышко и лицо-луна */
+.rays,.craters{position:absolute;pointer-events:none;opacity:0;transition:opacity .8s}
+.rays{inset:-16%;border-radius:50%;background:repeating-conic-gradient(rgba(243,196,110,.75) 0 7deg,transparent 7deg 30deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 80%,#000 82%,#000 97%,transparent);mask:radial-gradient(closest-side,transparent 80%,#000 82%,#000 97%,transparent);animation:spin 14s linear infinite}
+.craters{inset:0;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(150,140,110,.35) 0 7%,transparent 8%),radial-gradient(circle at 70% 24%,rgba(150,140,110,.3) 0 5%,transparent 6%),
+  radial-gradient(circle at 76% 72%,rgba(150,140,110,.3) 0 8%,transparent 9%),radial-gradient(circle at 24% 76%,rgba(150,140,110,.25) 0 4%,transparent 5%)}
+#big.fx-sun{--feat:#7a5c3a;--featglow:transparent;background:radial-gradient(circle at 50% 38%,#fde9b4,#f2c46d);transition:background .8s,box-shadow .8s}
+#big.fx-sun .rays{opacity:1}
+#big.fx-sun .cheek{opacity:.6}
+#big.fx-moonface{--feat:#6c6754;--featglow:transparent;background:radial-gradient(circle at 38% 34%,#f6f1dc,#d6cfae);transition:background .8s}
+#big.fx-moonface .craters{opacity:1}
+#big.fx-moonface .eye{height:4%;top:46%;border-radius:2cqmin;animation:none}
 /* ===== Спокойная тема: лофт, минимализм, пастель ===== */
 :root{--bg1:#efe7dd;--bg2:#f7f2ec;--ink:#3d3a36;--soft:#8a8178;
   --idle:#e9c3a6;--listen:#a9cfb4;--think:#c9b9de;--speak:#eeb0a5;--feat:#f6eee4;--featglow:rgba(246,238,228,.55)}
@@ -246,7 +291,7 @@ body.night #gear{color:#e8e2f2;background:rgba(255,255,255,.08)}
 <div id="glow"></div>
 <div id="stage">
   <div id="center">
-    <button id="big" aria-label="Поговорить"><div class="face"><div class="cheek l"></div><div class="cheek r"></div><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div></button>
+    <button id="big" aria-label="Поговорить"><div class="rays"></div><div class="face"><div class="craters"></div><div class="cheek l"></div><div class="cheek r"></div><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div></button>
     <div id="pics"></div>
   </div>
   <div id="said"></div>
@@ -284,6 +329,19 @@ body.night #gear{color:#e8e2f2;background:rgba(255,255,255,.08)}
    </div>
    <div class="row" style="margin-top:10px"><button class="b" id="testvoice">Прослушать</button></div>
    <div class="note">Если русских голосов нет: Настройки Android → Специальные возможности → Синтез речи → Google, язык русский, скачать голос.</div>
+  </div>
+
+  <div class="sec">
+   <h2>Разговор без кнопки</h2>
+   <label class="chk"><input id="always" type="checkbox"> Всегда слушать: Саня просто говорит, нажимать не нужно</label>
+   <label for="wake">Когда Клод задремал, он просыпается</label>
+   <select id="wake">
+     <option value="any">на любую речь рядом</option>
+     <option value="words">только на слова из списка ниже</option>
+   </select>
+   <label for="wakewords">Слова, на которые Клод просыпается</label>
+   <input id="wakewords" type="text">
+   <div class="note">Пока Клод говорит, микрофон на паузе, чтобы он не слышал сам себя. Перебить можно касанием лица. Ночью и после лимита времени микрофон выключается полностью. Если рядом работает телевизор, лучше выбрать «только на слова».</div>
   </div>
 
   <div class="sec">
@@ -343,7 +401,7 @@ const S = loadSettings();
 function loadSettings(){
   let s = {};
   try { s = JSON.parse(localStorage.getItem('sanya.settings') || '{}'); } catch(e){}
-  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00', subs:true, subsKid:true, asr:'auto' }, s);
+  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00', subs:true, subsKid:true, asr:'auto', always:true, wake:'any', wakewords:'привет, клод, клот, эй, проснись, давай, поиграем' }, s);
 }
 function saveSettings(){ try { localStorage.setItem('sanya.settings', JSON.stringify(S)); } catch(e){} }
 
@@ -505,17 +563,20 @@ const NUDGES = [
   'Я так долго жду, что сейчас усну! Хр-р… Ой! Санёк, ты тут?', 'Бип-бип, вызываю Санька! Приём!'
 ];
 const BYES = [
-  'Ладно, я пока подремлю. Нажми на меня, когда захочешь поиграть!',
-  'Я тут посижу тихонько. Нажми на меня, когда захочешь!',
+  'Ладно, я пока подремлю. Позови меня, когда захочешь поиграть!',
+  'Я тут посижу тихонько. Скажи мне что-нибудь, когда захочешь!',
   'Пойду отдохну в гараже. Позови меня, как будешь готов!'
 ];
 const NUDGE_FX = { 'Ку-ку': 'peek', 'усну': 'yawn', 'Бип-бип': 'wiggle', 'спрятался': 'look', 'Под столом': 'look', 'Тук-тук': 'jump' };
 let lastNudge = '';
-function fx(name){
+const FX_ALL = FX.concat(['sun', 'moonface']);
+function fx(name, ms){
+  if (!ms && fx.longUntil > Date.now()) return;      // солнышко и луну не прерываем
+  fx.longUntil = ms ? Date.now() + ms : 0;
   name = name || pick(FX);
-  big.classList.remove(...FX.map(f => 'fx-' + f)); void big.offsetWidth;
+  big.classList.remove(...FX_ALL.map(f => 'fx-' + f)); void big.offsetWidth;
   big.classList.add('fx-' + name);
-  clearTimeout(fx.t); fx.t = setTimeout(() => big.classList.remove('fx-' + name), 1900);
+  clearTimeout(fx.t); fx.t = setTimeout(() => big.classList.remove('fx-' + name), ms || 1900);
 }
 function sayLocal(text, after){
   stopListening(); saidEl.textContent = text; heardEl.textContent = '';
@@ -532,7 +593,7 @@ function onSilence(){
   } else if (silentTries === 2) ask('[Саня молчит]');
   else {
     silentTries = 0; setEmo('sleepy', 4000);
-    sayLocal(pick(BYES), () => stopAll());
+    sayLocal(pick(BYES), () => goDoze());
   }
 }
 // когда никто не играет, личико иногда шалит само
@@ -542,20 +603,103 @@ function onSilence(){
 
 /* ================== Живой фон ================== */
 const scene = $('scene'), rnd = (a, b) => a + Math.random() * (b - a);
+const SVGNS = 'http://www.w3.org/2000/svg';
 function spawn(cls, html, styles, life){
   const el = document.createElement('div'); el.className = 'sc ' + cls; if (html) el.innerHTML = html;
-  Object.assign(el.style, styles || {}); scene.appendChild(el);
+  for (const [k, v] of Object.entries(styles || {})) k.startsWith('--') ? el.style.setProperty(k, v) : (el.style[k] = v);
+  scene.appendChild(el);
   setTimeout(() => el.remove(), life + 500);
+  return el;
+}
+const TREE = () => pick([
+  `<svg viewBox="0 0 60 100" width="${rnd(9,14)}vh"><rect x="26" y="58" width="8" height="42" rx="3" fill="#b9a08a"/><circle cx="30" cy="40" r="24" fill="#a8c6a0"/><circle cx="18" cy="52" r="14" fill="#9dbd96"/><circle cx="43" cy="50" r="15" fill="#b3cfac"/></svg>`,
+  `<svg viewBox="0 0 60 100" width="${rnd(8,12)}vh"><rect x="26" y="74" width="8" height="26" rx="3" fill="#b9a08a"/><path d="M30 4 L52 44 L40 44 L56 76 L4 76 L20 44 L8 44 Z" fill="#9dbd96"/></svg>`,
+  `<svg viewBox="0 0 60 40" width="${rnd(6,9)}vh"><circle cx="16" cy="26" r="14" fill="#b6d2ae"/><circle cx="32" cy="20" r="17" fill="#a8c6a0"/><circle cx="47" cy="27" r="12" fill="#bcd6b4"/><circle cx="24" cy="18" r="2.2" fill="#f2b8b0"/><circle cx="40" cy="15" r="2.2" fill="#f6d58e"/></svg>`,
+  `<svg viewBox="0 0 60 40" width="${rnd(5,7)}vh"><circle cx="18" cy="26" r="13" fill="#a8c6a0"/><circle cx="36" cy="24" r="15" fill="#b6d2ae"/></svg>`
+]);
+function wavyRoad(){
+  let d = 'M0 24', x = 0, y = 24;
+  while (x < 1000){ const nx = x + rnd(70, 130), ny = rnd(16, 28); d += ` Q${(x + nx) / 2} ${y + (ny - y) / 2 + rnd(-6, 6)} ${nx} ${ny}`; x = nx; y = ny; }
+  const top = d;
+  return `<svg class="rd" viewBox="0 0 1000 60" preserveAspectRatio="none"><path d="${top} L1000 60 L0 60 Z" fill="#ddd4c8"/><path d="${top.replace(/ (\d+(\.\d+)?)(?= |$)/g, (m, n) => ' ' + (+n + 14))}" fill="none" stroke="#f7f2ea" stroke-width="2.5" stroke-dasharray="22 18" vector-effect="non-scaling-stroke"/></svg>`;
 }
 const SPAWN = {
   cloud(first){ const d = rnd(60, 110); spawn('cloud', '', { '--w': rnd(14, 30) + 'vmin', '--d': d + 's', top: rnd(3, 40) + 'vh', animationDelay: first ? -rnd(0, d * 0.8) + 's' : '0s' }, d * 1000); },
-  car(){ const d = rnd(9, 15); spawn('car', '<span>' + pick(['🚗','🚒','🚛','🚙','🚌','🚜','🚓']) + '</span>', { '--d': d + 's' }, d * 1000); },
-  bird(){ const d = rnd(10, 16), n = Math.random() < .4 ? 2 : 1; for (let i = 0; i < n; i++) spawn('bird', '<span>🐦</span>', { '--d': d + 's', top: rnd(6, 30) + 'vh', animationDelay: i * 0.6 + 's' }, d * 1000 + 600); },
-  shoot(){ spawn('shoot', '', { top: rnd(2, 35) + 'vh', left: rnd(45, 100) + 'vw' }, 1300); },
-  rocket(){ const d = rnd(9, 13); spawn('rocket', '🚀', { '--d': d + 's' }, d * 1000); },
-  astro(){ const d = rnd(28, 40); spawn('astro', '🧑‍🚀', { '--d': d + 's', top: rnd(8, 45) + 'vh' }, d * 1000); }
+  // дорога появляется под машинкой, вдоль неё вырастают кустики и деревья
+  roadtrip(){
+    const d = rnd(10, 14), life = d * 1000 + 3500;
+    const el = spawn('road', wavyRoad(), {}, life);
+    const n = Math.round(rnd(4, 7));
+    for (let i = 0; i < n; i++){
+      const pl = document.createElement('div'); pl.className = 'plant'; pl.innerHTML = TREE();
+      pl.style.left = (i + rnd(0.1, 0.8)) / n * 100 + 'vw'; pl.style.transitionDelay = (0.2 + i * 0.18) + 's';
+      el.appendChild(pl);
+    }
+    const car = document.createElement('div'); car.className = 'rcar'; car.style.setProperty('--d', d + 's');
+    car.innerHTML = '<span>' + pick(['🚗','🚒','🚛','🚙','🚌','🚜','🚓']) + '</span>'; el.appendChild(car);
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('on')));
+    setTimeout(() => { el.querySelectorAll('.plant').forEach((p, i) => p.style.transitionDelay = (i * 0.1) + 's'); el.classList.add('away'); }, d * 1000 + 1200);
+  },
+  // воробушки: кружат и гоняются друг за другом
+  birds(){
+    const d = rnd(9, 13), ltr = Math.random() < .5, n = Math.random() < .5 ? 2 : 3;
+    const el = spawn('flock', '', { top: rnd(8, 32) + 'vh', '--d': d + 's', '--x0': ltr ? '-12vw' : '110vw', '--x1': ltr ? '110vw' : '-12vw' }, d * 1000);
+    for (let i = 0; i < n; i++){
+      const o = document.createElement('div'); o.className = 'orbit';
+      o.style.setProperty('--o', rnd(1.4, 2.4) + 's'); o.style.animationDelay = -rnd(0, 2) + 's';
+      if (Math.random() < .5) o.style.animationDirection = 'reverse';
+      o.innerHTML = `<svg class="sp" style="--r:${rnd(3, 7)}vmin" viewBox="0 0 40 30"><path d="M9 17 L1 12 L3 21 Z" fill="#9c826b"/><ellipse cx="20" cy="18" rx="11" ry="8" fill="#b89b80"/><ellipse cx="22" cy="21" rx="7" ry="4" fill="#e9dccd"/><circle cx="29" cy="13" r="6" fill="#a0846a"/><circle cx="31" cy="12" r="1.4" fill="#2d2a26"/><path d="M35 12.5 L39.5 14 L35 15.5 Z" fill="#e3b46b"/><ellipse class="wing" cx="17" cy="13" rx="8" ry="4.5" fill="#8a6d55"/></svg>`;
+      el.appendChild(o);
+    }
+  },
+  // белочка или лисичка выглядывает из края экрана
+  peek(kind){
+    const who = kind || pick(['squirrel', 'fox']);
+    const art = {
+      fox: `<svg class="who" viewBox="0 0 100 100"><path d="M18 8 L38 34 L14 40 Z" fill="#e8a37a"/><path d="M82 8 L62 34 L86 40 Z" fill="#e8a37a"/><path d="M22 14 L33 32 L19 35 Z" fill="#f6dccb"/><path d="M78 14 L67 32 L81 35 Z" fill="#f6dccb"/><path d="M12 38 Q50 18 88 38 Q90 70 50 96 Q10 70 12 38 Z" fill="#eeae84"/><path d="M20 58 Q36 60 50 92 Q30 80 20 58 Z" fill="#fbf1e6"/><path d="M80 58 Q64 60 50 92 Q70 80 80 58 Z" fill="#fbf1e6"/><g class="blink"><ellipse cx="36" cy="50" rx="6" ry="7" fill="#fff"/><ellipse cx="64" cy="50" rx="6" ry="7" fill="#fff"/><circle class="pup" cx="37" cy="51" r="3.6" fill="#3a302a"/><circle class="pup" cx="65" cy="51" r="3.6" fill="#3a302a"/></g><ellipse cx="50" cy="76" rx="5" ry="3.6" fill="#3a302a"/></svg>`,
+      squirrel: `<svg class="who" viewBox="0 0 100 100"><path d="M22 30 Q18 6 30 4 Q34 18 36 28 Z" fill="#b98863"/><path d="M78 30 Q82 6 70 4 Q66 18 64 28 Z" fill="#b98863"/><ellipse cx="50" cy="58" rx="36" ry="34" fill="#c99d79"/><ellipse cx="50" cy="72" rx="22" ry="18" fill="#f1e2d0"/><ellipse cx="26" cy="68" rx="8" ry="5" fill="#eeb9ad" opacity=".7"/><ellipse cx="74" cy="68" rx="8" ry="5" fill="#eeb9ad" opacity=".7"/><g class="blink"><circle cx="36" cy="50" r="8" fill="#fff"/><circle cx="64" cy="50" r="8" fill="#fff"/><circle class="pup" cx="37" cy="51" r="5" fill="#33291f"/><circle class="pup" cx="65" cy="51" r="5" fill="#33291f"/></g><ellipse cx="50" cy="64" rx="4" ry="3" fill="#6b4a36"/><rect x="45" y="70" width="4.5" height="6" rx="1.5" fill="#fff"/><rect x="50.5" y="70" width="4.5" height="6" rx="1.5" fill="#fff"/></svg>`,
+      owl: `<svg class="who" viewBox="0 0 100 100"><path d="M16 22 L30 34 L14 40 Z" fill="#7d6e8f"/><path d="M84 22 L70 34 L86 40 Z" fill="#7d6e8f"/><ellipse cx="50" cy="62" rx="38" ry="38" fill="#8d7c9f"/><ellipse cx="50" cy="80" rx="24" ry="20" fill="#b3a5c2"/><circle cx="34" cy="50" r="14" fill="#f4eedc"/><circle cx="66" cy="50" r="14" fill="#f4eedc"/><g class="blink"><circle class="pup" cx="34" cy="51" r="7" fill="#2b2633"/><circle class="pup" cx="66" cy="51" r="7" fill="#2b2633"/><circle cx="36" cy="48" r="2" fill="#fff"/><circle cx="68" cy="48" r="2" fill="#fff"/></g><path d="M45 60 L55 60 L50 70 Z" fill="#e8b86a"/></svg>`
+    }[who];
+    const side = pick(['bottom', 'bottom', 'left', 'right']), st = {};
+    if (side === 'bottom'){ st.bottom = '0'; st.left = pick([rnd(4, 26), rnd(64, 84)]) + 'vw'; }
+    else if (side === 'left'){ st.left = '0'; st.top = rnd(25, 60) + 'vh'; st.transform = 'rotate(90deg)'; }
+    else { st.right = '0'; st.top = rnd(25, 60) + 'vh'; st.transform = 'rotate(-90deg)'; }
+    const el = spawn('peek', art, st, 4600);
+    el.style.overflow = 'hidden';
+  },
+  shoot(x, y, delay){ spawn('shoot', '', { top: (y ?? rnd(2, 35)) + 'vh', left: (x ?? rnd(45, 100)) + 'vw', animationDelay: (delay || 0) + 's' }, 1300 + (delay || 0) * 1000); },
+  shower(){ const x = rnd(55, 90), y = rnd(2, 20), n = Math.round(rnd(4, 7)); for (let i = 0; i < n; i++) SPAWN.shoot(x + rnd(-12, 12), y + rnd(-4, 10), i * rnd(0.25, 0.5)); },
+  comet(){ spawn('comet', '', { top: rnd(4, 26) + 'vh', left: rnd(80, 100) + 'vw' }, 4200); },
+  // ракета с красным пламенем и дымком
+  rocket(){
+    const d = rnd(9, 13), el = spawn('rkt', '<span class="fl"></span>🚀', { '--d': d + 's' }, d * 1000);
+    const iv = setInterval(() => {
+      if (!el.isConnected){ clearInterval(iv); return; }
+      const r = el.getBoundingClientRect();
+      if (r.right < 0 || r.bottom < 0) return;
+      const p = document.createElement('div'); p.className = 'puff';
+      p.style.left = (r.left + r.width * rnd(-0.05, 0.15)) + 'px'; p.style.top = (r.top + r.height * rnd(0.7, 0.9)) + 'px';
+      scene.appendChild(p); setTimeout(() => p.remove(), 1900);
+    }, 170);
+    setTimeout(() => clearInterval(iv), d * 1000);
+  },
+  // камешки в невесомости
+  rocks(){
+    const n = Math.round(rnd(2, 4));
+    for (let i = 0; i < n; i++){
+      const d = rnd(26, 42), w = rnd(1.6, 4.2);
+      const br = [0, 0, 0, 0].map(() => Math.round(rnd(30, 70)) + '%').join(' ') + ' / ' + [0, 0, 0, 0].map(() => Math.round(rnd(30, 70)) + '%').join(' ');
+      spawn('rock', '', { width: w + 'vmin', height: w * rnd(.7, 1) + 'vmin', borderRadius: br, top: rnd(8, 70) + 'vh', '--d': d + 's', '--rot': (Math.random() < .5 ? -1 : 1) * rnd(180, 540) + 'deg', animationDelay: i * rnd(1, 3) + 's' }, d * 1000 + i * 3000);
+    }
+  },
+  owl(){ SPAWN.peek('owl'); },
+  sunface(){ if (state === 'idle' && !document.body.classList.contains('pics')) fx('sun', 4200); },
+  moonface(){ if (state === 'idle' && !document.body.classList.contains('pics')) fx('moonface', 4800); }
 };
-const PLAN = { day:{ cloud:[14, 28], bird:[14, 30], car:[18, 40] }, night:{ shoot:[5, 14], rocket:[60, 130], astro:[90, 200] } };
+const PLAN = {
+  day:{ cloud:[14, 28], birds:[18, 38], roadtrip:[25, 50], peek:[35, 70], sunface:[45, 90] },
+  night:{ shoot:[7, 15], shower:[45, 90], comet:[40, 80], rocket:[55, 110], rocks:[30, 55], owl:[40, 80], moonface:[50, 95] }
+};
 function schedule(kind, mode){
   const [a, b] = PLAN[mode][kind];
   setTimeout(() => {
@@ -570,7 +714,7 @@ function refreshScene(){
   if (m === 'day') for (let i = 0; i < 3; i++) SPAWN.cloud(true);
 }
 for (const m in PLAN) for (const k in PLAN[m]) schedule(k, m);
-setInterval(refreshScene, 1000);
+setTimeout(refreshScene, 0); setInterval(refreshScene, 1000);
 
 /* ================== Текст → речь ================== */
 let voices = [];
@@ -794,7 +938,10 @@ async function ask(userText, shownText, isLast){
   await whenSpeechDone();
   if (emo) setEmo(emo, 2500);
   if (state === 'idle') return;
-  if (isLast || endAfter){ endAfter = false; stopAll(); return; }
+  if (isLast || endAfter){
+    endAfter = false; if (sessionEnded) restUntil = Date.now() + 30 * 60000;   // после лимита отдыхаем полчаса
+    stopAll(); return;
+  }
   listen();
 }
 // API требует чередования user/assistant
@@ -816,13 +963,62 @@ async function keepAwake(on){
     if (!on && wakeLock){ await wakeLock.release(); wakeLock = null; }
   } catch(e){}
 }
+/* ---- Всегда слушать: дремлет и просыпается от речи ---- */
+let dozing = false, restUntil = 0;
+function startDoze(){
+  if (!S.always || !S.apikey || !SR || dozing) return;
+  if (state !== 'idle' || night || isNightTime() || Date.now() < restUntil || document.hidden || $('panel').classList.contains('on')) return;
+  dozing = true; hintEl.textContent = S.wake === 'words' ? 'Скажи «Привет»!' : 'Просто скажи мне что-нибудь!';
+  dozeListen();
+}
+function wakeHit(alts){
+  const t = alts.map(a => a.t.toLowerCase()).join(' ');
+  if (S.wake === 'words') return S.wakewords.split(/[,;]/).map(w => w.trim().toLowerCase()).filter(Boolean).some(w => t.includes(w));
+  return alts[0].t.replace(/\s/g, '').length >= 4;     // не реагируем на короткий шум
+}
+function dozeListen(){
+  if (!dozing) return;
+  const r = new SR(); rec = r;
+  r.lang = 'ru-RU'; r.interimResults = true; r.continuous = false; r.maxAlternatives = 5;
+  let alts = null, fatal = false;
+  r.onresult = e => {
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const x = e.results[i];
+      if (x.isFinal){ alts = alts || []; for (let j = 0; j < x.length; j++) if (x[j].transcript.trim()) alts.push({ t:x[j].transcript.trim(), c:x[j].confidence }); }
+      else if (x[0].transcript.trim()) fx('look');           // слышит голос — оглядывается
+    }
+  };
+  let slow = false;
+  r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'no-recognizer') fatal = true; else if (e.error === 'loading' || e.error === 'network' || /^other/.test(e.error)) slow = true; };
+  r.onend = () => {
+    if (rec === r) rec = null;
+    if (!dozing) return;
+    if (fatal){ dozing = false; return; }
+    if (alts && alts.length && wakeHit(alts)) wakeUp(alts);
+    else setTimeout(dozeListen, slow ? 1500 : 250);
+  };
+  try { r.start(); } catch(e){ setTimeout(dozeListen, 1500); }
+}
+function wakeUp(alts){
+  dozing = false; keepAwake(true); silentTries = 0; fx('surprise');
+  const fresh = !sessionStart || sessionEnded || Date.now() - sessionStart > S.limit * 60000;
+  if (fresh){
+    sessionStart = Date.now(); sessionEnded = false;
+    if (!history.length || Date.now() - (logItems.length ? logItems[logItems.length - 1].at : 0) > 30 * 60000) history = [];
+  }
+  onKidSaid(alts);
+}
+function goDoze(){ stopAll(); setTimeout(startDoze, 600); }
+
 function stopAll(){
+  dozing = false;
   if (abortCtl){ try { abortCtl.abort(); } catch(e){} abortCtl = null; }
   stopListening(); stopSpeaking(); emo = ''; clearTimeout(emoTimer); setState('idle'); keepAwake(false); hidePics();
 }
 
 big.addEventListener('click', () => {
   if (state === 'idle'){
+    if (dozing){ dozing = false; stopListening(); }
     if (isNightTime()){ startNight(); return; }
     if (night) setNight(false);
     // Chrome требует, чтобы первая озвучка шла от нажатия — «будим» синтезатор
@@ -836,9 +1032,9 @@ big.addEventListener('click', () => {
       ask('[Саня включил]');
     } else listen();
   } else if (state === 'speak'){ stopSpeaking(); listen(); }      // перебил — сразу слушаем
-  else if (state === 'listen'){ stopAll(); }                         // нажал, пока слушаем — пауза
+  else if (state === 'listen'){ if (S.always) fx('bounce'); else stopAll(); }   // в режиме «всегда слушать» касание не выключает
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden) stopAll(); else if (state !== 'idle') keepAwake(true); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopAll(); else { if (state !== 'idle') keepAwake(true); setTimeout(startDoze, 800); } });
 
 /* ================== Панель взрослых ================== */
 const gear = $('gear'); let holdT = null;
@@ -850,7 +1046,7 @@ gear.addEventListener('contextmenu', e => e.preventDefault());
 function openPanel(){
   holdEnd(); stopAll();
   $('apikey').value = S.apikey; $('model').value = S.model; $('rate').value = S.rate; $('pitch').value = S.pitch;
-  $('limit').value = S.limit; $('asr').value = S.asr || 'auto'; if (NATIVE && Android.asrInfo) $('asrinfo').textContent = Android.asrInfo(S.asr || 'auto'); $('subs').checked = S.subs; $('subsKid').checked = S.subsKid; $('night').value = S.night || '';
+  $('limit').value = S.limit; $('always').checked = S.always; $('wake').value = S.wake; $('wakewords').value = S.wakewords; $('asr').value = S.asr || 'auto'; if (NATIVE && Android.asrInfo) $('asrinfo').textContent = Android.asrInfo(S.asr || 'auto'); $('subs').checked = S.subs; $('subsKid').checked = S.subsKid; $('night').value = S.night || '';
   freshStats(); $('today').textContent = `Сегодня: ${Math.round(stats.minutes || 0)} мин разговора, звёздочек ${stats.stars}. Всего звёздочек: ${stats.total}.`; $('about').value = S.about; $('dict').value = S.dict;
   $('rateV').textContent = S.rate; $('pitchV').textContent = S.pitch; loadVoices(); renderLog();
   $('panel').classList.add('on');
@@ -858,9 +1054,9 @@ function openPanel(){
 function readPanel(){
   S.apikey = $('apikey').value.trim(); S.model = $('model').value; S.voice = $('voice').value;
   S.rate = +$('rate').value; S.pitch = +$('pitch').value; S.limit = Math.max(3, +$('limit').value || 20);
-  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; S.subs = $('subs').checked; S.subsKid = $('subsKid').checked; S.asr = $('asr').value; saveSettings(); applySubs();
+  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; S.subs = $('subs').checked; S.subsKid = $('subsKid').checked; S.asr = $('asr').value; S.always = $('always').checked; S.wake = $('wake').value; S.wakewords = $('wakewords').value; saveSettings(); applySubs();
 }
-$('pclose').onclick = () => { readPanel(); $('panel').classList.remove('on'); };
+$('pclose').onclick = () => { readPanel(); $('panel').classList.remove('on'); setTimeout(startDoze, 400); };
 $('rate').oninput = () => $('rateV').textContent = $('rate').value;
 $('pitch').oninput = () => $('pitchV').textContent = $('pitch').value;
 $('testvoice').onclick = () => { readPanel(); stopSpeaking(); enqueueSpeech('Привет! Поехали на пожарной машине? Р-р-р!'); };
@@ -894,6 +1090,7 @@ function renderLog(){
 function applySubs(){ document.body.classList.toggle('nosubs', !S.subs); document.body.classList.toggle('nosubskid', !S.subsKid); }
 applySubs();
 if (NATIVE) document.body.classList.add('native');
+setTimeout(startDoze, 1500);      // приложение открылось — сразу начинаем слушать
 if (!S.apikey) hintEl.textContent = 'Взрослым: удерживайте ⚙ 2 секунды и вставьте ключ';
 if (!SR) toast('Откройте в Google Chrome — здесь нет распознавания речи', 8000);
 </script>
