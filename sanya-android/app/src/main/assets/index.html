@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1e3a8a">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Санёк и Клод</title>
+<style>
+:root{
+  --bg1:#1e3a8a; --bg2:#0f766e; --ink:#fff; --soft:rgba(255,255,255,.75);
+  --idle:#f59e0b; --listen:#22c55e; --think:#8b5cf6; --speak:#ef4444;
+  --panel:#ffffff; --panel-ink:#111827; --line:#e5e7eb; --muted:#6b7280; --accent:#2563eb;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{background:radial-gradient(circle at 50% 30%,var(--bg2),var(--bg1));color:var(--ink);user-select:none;-webkit-user-select:none}
+#stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4vh;padding:9vh 16px 16px}
+#center{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:min(62vw,60vh)}
+#big{--ring:var(--idle);width:min(56vw,50vh);height:min(56vw,50vh);border-radius:50%;border:none;padding:0;cursor:pointer;
+  background:radial-gradient(circle at 50% 35%,#1f2a44,#0b1220 70%);
+  box-shadow:0 0 0 1.4vmin var(--ring),0 0 6vmin color-mix(in srgb,var(--ring) 55%,transparent),0 20px 60px rgba(0,0,0,.4);
+  transition:box-shadow .3s,transform .4s,width .4s,height .4s;touch-action:manipulation;position:relative;container-type:size}
+#big:active{transform:scale(.97)}
+#big.listen{--ring:var(--listen);box-shadow:0 0 0 calc(1.4vmin + var(--lvl,0)*3vmin) var(--ring),0 0 calc(6vmin + var(--lvl,0)*12vmin) color-mix(in srgb,var(--ring) 75%,transparent),0 20px 60px rgba(0,0,0,.4);transition:box-shadow .08s}
+#big::before,#big::after{content:'';position:absolute;inset:-1.4vmin;border-radius:50%;border:.9vmin solid var(--ring);opacity:0;pointer-events:none}
+#big.listen::before,#big.listen::after{animation:ripple 1.8s infinite ease-out}
+#big.listen::after{animation-delay:.9s}
+#big.speak::before,#big.speak::after{animation:ripple 1.1s infinite ease-out}
+#big.speak::after{animation-delay:.55s}
+#big.think::before{opacity:.9;inset:-3.2vmin;border-style:dashed;border-width:1vmin;animation:spin 2.4s linear infinite}
+@keyframes ripple{from{transform:scale(1);opacity:.85}to{transform:scale(1.45);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+#glow{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .5s,background .5s}
+body[data-st=listen] #glow{opacity:1;background:radial-gradient(circle at 50% 42%,rgba(34,197,94,.35),transparent 60%)}
+body[data-st=speak] #glow{opacity:1;background:radial-gradient(circle at 50% 42%,rgba(239,68,68,.32),transparent 60%);animation:breathe 1.2s infinite alternate}
+body[data-st=think] #glow{opacity:1;background:radial-gradient(circle at 50% 42%,rgba(139,92,246,.32),transparent 60%)}
+@keyframes breathe{to{opacity:.55}}
+#big.think{--ring:var(--think)}
+#big.speak{--ring:var(--speak)}
+@keyframes pulse{50%{box-shadow:0 0 0 2.6vmin var(--ring),0 0 10vmin color-mix(in srgb,var(--ring) 70%,transparent),0 20px 60px rgba(0,0,0,.4)}}
+.face{position:absolute;inset:0}
+.eye{position:absolute;top:34%;width:13%;height:24%;border-radius:40%;background:#e0f2fe;box-shadow:0 0 3vmin #7dd3fc;
+  animation:blink 4.5s infinite;transition:transform .3s,height .3s}
+.eye.l{left:28%}.eye.r{right:28%}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.mouth{position:absolute;left:35%;width:30%;top:66%;height:14%;border:1.1vmin solid #e0f2fe;border-top:none;border-radius:0 0 50% 50%/0 0 100% 100%;
+  transition:all .25s}
+#big.listen .eye{height:28%;top:31%}
+#big.listen .mouth{left:44%;width:12%;height:9%;top:70%;border:1.1vmin solid #e0f2fe;border-radius:50%}
+#big.think .eye{transform:translate(-25%,-30%);animation:none;height:18%}
+#big.think .mouth{left:40%;width:20%;height:0;top:72%;border-width:1.1vmin 0 0 0;border-radius:2vmin}
+#big.speak .mouth{left:38%;width:24%;top:64%;background:#e0f2fe;border:none;border-radius:40% 40% 50% 50%;animation:talk .22s infinite alternate}
+@keyframes talk{from{height:4%}to{height:17%}}
+/* эмоции */
+.cheek{position:absolute;top:57%;width:11%;height:6%;border-radius:50%;background:#f472b6;opacity:0;filter:blur(.4vmin);transition:opacity .3s}
+.cheek.l{left:17%}.cheek.r{right:17%}
+#big.emo-joy .cheek,#big.emo-laugh .cheek,#big.emo-love .cheek,#big.emo-wink .cheek{opacity:.75}
+#big.emo-joy .eye,#big.emo-laugh .eye{background:transparent;box-shadow:none;border:1.3cqmin solid #e0f2fe;border-bottom:none;border-radius:50% 50% 0 0/100% 100% 0 0;height:9%;top:40%;animation:none;transform:none}
+#big.emo-joy .face{animation:bounce .55s 3 ease-in-out}
+#big.emo-joy:not(.speak) .mouth{left:30%;width:40%;height:18%;top:62%}
+#big.emo-laugh .face{animation:giggle .16s infinite alternate}
+#big.emo-laugh:not(.speak) .mouth{left:34%;width:32%;height:18%;top:62%;background:#e0f2fe;border:none;border-radius:12% 12% 50% 50%}
+#big.emo-wow .eye{width:16%;height:22%;border-radius:50%;animation:none;transform:none}
+#big.emo-wow:not(.speak) .mouth{left:43%;width:14%;height:15%;top:66%;border:1.1vmin solid #e0f2fe;border-radius:50%}
+#big.emo-star .eye,#big.emo-love .eye{background:transparent;box-shadow:none;animation:none;transform:none;display:flex;align-items:center;justify-content:center;font-size:20cqmin;line-height:1}
+#big.emo-star .eye::before{content:'★';color:#fde047;text-shadow:0 0 3cqmin #facc15;animation:twinkle 1s infinite}
+#big.emo-love .eye::before{content:'♥';color:#fb7185;text-shadow:0 0 3cqmin #f43f5e;animation:heart .7s infinite}
+#big.emo-star .face{animation:bounce .5s 4 ease-in-out}
+#big.emo-star:not(.speak) .mouth,#big.emo-love:not(.speak) .mouth{left:30%;width:40%;height:16%}
+#big.emo-wink .eye.r{height:3%;top:46%;border-radius:2cqmin;animation:none}
+#big.emo-wink:not(.speak) .mouth{left:32%;width:36%;height:15%}
+#big.emo-hmm .eye{transform:translate(30%,-25%);animation:none;height:20%}
+#big.emo-hmm:not(.speak) .mouth{left:45%;width:18%;height:0;top:72%;border-width:1.1vmin 0 0 0;border-radius:2vmin;transform:rotate(-8deg)}
+#big.emo-sad .eye{height:15%;top:40%;animation:none}
+#big.emo-sad .eye.l{transform:rotate(-14deg)}#big.emo-sad .eye.r{transform:rotate(14deg)}
+#big.emo-sad:not(.speak) .mouth{top:72%;height:8%;left:40%;width:20%;border:1.1vmin solid #e0f2fe;border-bottom:none;border-radius:50% 50% 0 0/100% 100% 0 0}
+#big.emo-scared .eye{width:15%;height:27%;top:30%;border-radius:50%;animation:none}
+#big.emo-scared .face{animation:shiver .09s 10 alternate}
+#big.emo-scared:not(.speak) .mouth{left:42%;width:16%;height:6%;top:70%;border:1.1vmin solid #e0f2fe;border-radius:50%}
+#big.emo-sleepy .eye{height:4%;top:46%;border-radius:2cqmin;animation:none}
+#big.emo-sleepy:not(.speak) .mouth{left:44%;width:12%;height:6%;top:70%}
+#stars{position:fixed;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);font-size:clamp(22px,4.5vmin,44px);font-weight:800;
+  background:rgba(0,0,0,.22);padding:.2em .7em;border-radius:999px;display:none;align-items:center;gap:.25em}
+#stars.on{display:flex}#stars.bump{animation:heart .4s 2}
+.flystar{position:fixed;font-size:16vmin;z-index:5;pointer-events:none;transition:all 1.1s cubic-bezier(.3,1.4,.5,1)}
+#moon{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:14px;width:min(14vmin,84px);height:min(14vmin,84px);border-radius:50%;border:none;
+  background:rgba(0,0,0,.25);font-size:min(8vmin,46px);cursor:pointer}
+body.night{background:radial-gradient(circle at 50% 30%,#1e1b4b,#020617)}
+body.night #moon{background:#fde68a}
+body.night::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.7;
+  background-image:radial-gradient(2px 2px at 12% 18%,#fff,transparent),radial-gradient(2px 2px at 78% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 30% 75%,#fff,transparent),
+  radial-gradient(2px 2px at 88% 66%,#fff,transparent),radial-gradient(1.5px 1.5px at 55% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 8% 55%,#fff,transparent);animation:breathe 3s infinite alternate}
+body.night #big{--idle:#6366f1;--speak:#818cf8;--listen:#60a5fa}
+body.night #said{opacity:.6}
+@keyframes bounce{50%{transform:translateY(-6%) scale(1.03)}}
+@keyframes giggle{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(-3%) rotate(2deg)}}
+@keyframes shiver{from{transform:translateX(-1.2%)}to{transform:translateX(1.2%)}}
+@keyframes twinkle{50%{transform:scale(1.25) rotate(20deg)}}
+@keyframes heart{50%{transform:scale(1.25)}}
+/* картинки */
+body.pics #big{position:fixed;top:max(12px,env(safe-area-inset-top));left:14px;width:min(20vw,20vh);height:min(20vw,20vh);z-index:2}
+#pics{display:none;flex-wrap:wrap;gap:3vmin;justify-content:center;align-items:center;max-width:94vw}
+body.pics #pics{display:flex}
+.pic{background:rgba(255,255,255,.96);color:#111827;border-radius:4vmin;border:none;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2.4vmin 3vmin;box-shadow:0 12px 30px rgba(0,0,0,.3);animation:pop .35s ease-out both}
+.pic .e{line-height:1.05}.pic .cap{font-weight:700;margin-top:1vmin}
+.pic.one .e{font-size:min(36vw,36vh)}.pic.one .cap{font-size:clamp(22px,5vmin,52px)}
+.pic.ch{cursor:pointer;width:min(27vw,36vh)}.pic.ch .e{font-size:min(15vw,19vh)}.pic.ch .cap{font-size:clamp(18px,3.8vmin,40px)}
+.pic.ch:active{transform:scale(.94)}.pic.ch.picked{outline:1.2vmin solid var(--listen)}
+.cnt{display:flex;flex-wrap:wrap;gap:2vmin;justify-content:center;background:rgba(255,255,255,.96);border-radius:4vmin;padding:3vmin;max-width:90vw}
+.cnt span{animation:pop .35s ease-out both}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+#heard{min-height:3.2em;max-width:90vw;text-align:center;font-size:clamp(18px,3.4vmin,34px);color:var(--soft)}
+#said{max-width:90vw;text-align:center;font-size:clamp(20px,3.8vmin,38px);font-weight:600;min-height:2.4em}
+#hint{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:var(--soft);font-size:15px}
+#gear{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.25);
+  background:rgba(0,0,0,.15);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;opacity:.5}
+#gear .ring{position:absolute;inset:-4px;border-radius:50%;border:4px solid #fff;clip-path:inset(0 100% 0 0);opacity:0}
+#gear.hold .ring{opacity:1;animation:fill 2s linear forwards}
+@keyframes fill{to{clip-path:inset(0 0 0 0)}}
+
+/* панель для взрослых */
+#panel{position:fixed;inset:0;background:var(--panel);color:var(--panel-ink);display:none;overflow:auto;user-select:text;-webkit-user-select:text}
+#panel.on{display:block}
+.pwrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+.ptop{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--panel);padding:8px 0;z-index:1}
+.ptop h1{font-size:22px;margin:0}
+.sec{border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}
+.sec h2{font-size:17px;margin:0 0 10px}
+label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:var(--panel-ink)}
+textarea{min-height:110px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:140px}
+button.b{font:inherit;font-size:16px;padding:10px 16px;border-radius:10px;border:1px solid #d1d5db;background:#f9fafb;color:var(--panel-ink);cursor:pointer}
+button.b.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+#log{font-size:14px;max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:8px}
+#log div{padding:4px 0;border-bottom:1px dashed var(--line)}
+#log .k{color:#15803d}#log .c{color:#1d4ed8}#log .alt{color:var(--muted);font-size:12px}
+#toast{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);background:#111827;color:#fff;padding:12px 18px;border-radius:12px;font-size:16px;display:none;max-width:90vw;text-align:center;z-index:9}
+</style>
+</head>
+<body>
+<div id="glow"></div>
+<div id="stage">
+  <div id="center">
+    <button id="big" aria-label="Поговорить"><div class="face"><div class="cheek l"></div><div class="cheek r"></div><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div></button>
+    <div id="pics"></div>
+  </div>
+  <div id="said"></div>
+  <div id="heard"></div>
+</div>
+<div id="hint">Нажми на машинку!</div>
+<div id="stars">⭐ <span id="starN">0</span></div>
+<button id="moon" aria-label="Спокойной ночи">🌙</button>
+<div id="gear" title="Для взрослых: удерживайте 2 секунды">⚙<span class="ring"></span></div>
+
+<div id="panel">
+ <div class="pwrap">
+  <div class="ptop"><h1>Настройки для взрослых</h1><button class="b pri" id="pclose">Готово</button></div>
+
+  <div class="sec">
+   <h2>Ключ Claude API</h2>
+   <label for="apikey">Ключ (начинается с sk-ant-…)</label>
+   <input id="apikey" type="password" autocomplete="off" placeholder="sk-ant-...">
+   <div class="note">Ключ хранится только на этом планшете. Получить: console.anthropic.com → API Keys. Пополните баланс и поставьте лимит расходов.</div>
+   <label for="model">Модель</label>
+   <select id="model">
+     <option value="claude-haiku-5-5">Haiku — быстрый ответ, дёшево (рекомендую)</option>
+     <option value="claude-sonnet-5-5">Sonnet — умнее, но отвечает медленнее</option>
+   </select>
+   <div class="row" style="margin-top:10px"><button class="b" id="testkey">Проверить ключ</button></div>
+  </div>
+
+  <div class="sec">
+   <h2>Голос</h2>
+   <label for="voice">Голос озвучки</label>
+   <select id="voice"></select>
+   <div class="row">
+    <div><label for="rate">Скорость: <b id="rateV"></b></label><input id="rate" type="range" min="0.6" max="1.3" step="0.05"></div>
+    <div><label for="pitch">Высота: <b id="pitchV"></b></label><input id="pitch" type="range" min="0.6" max="1.6" step="0.05"></div>
+   </div>
+   <div class="row" style="margin-top:10px"><button class="b" id="testvoice">Прослушать</button></div>
+   <div class="note">Если русских голосов нет: Настройки Android → Специальные возможности → Синтез речи → Google, язык русский, скачать голос.</div>
+  </div>
+
+  <div class="sec">
+   <h2>Время</h2>
+   <label for="limit">Сколько минут можно разговаривать за раз</label>
+   <input id="limit" type="number" min="3" max="120" step="1">
+   <div class="note">Когда время выйдет, Клод сам попрощается.</div>
+   <label for="night">Ночное время: после этого часа приложение само включает режим сна (сказка и выключение)</label>
+   <input id="night" type="time">
+   <div class="note" id="today"></div>
+  </div>
+
+  <div class="sec">
+   <h2>О Сане</h2>
+   <label for="about">Что Клоду знать (можно дописывать)</label>
+   <textarea id="about" style="min-height:220px"></textarea>
+  </div>
+
+  <div class="sec">
+   <h2>Словарик Саниных слов</h2>
+   <label for="dict">Каждая строка: как распознаётся = что значит</label>
+   <textarea id="dict" placeholder="лесовос = лесовоз&#10;пожалная = пожарная"></textarea>
+   <div class="note">Смотрите журнал ниже: если какое-то слово Сани постоянно распознаётся неправильно, допишите его сюда.</div>
+  </div>
+
+  <div class="sec">
+   <h2>Журнал разговора</h2>
+   <div id="log"></div>
+   <div class="row" style="margin-top:10px"><button class="b" id="clearlog">Очистить журнал и память разговора</button></div>
+  </div>
+ </div>
+</div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ================== Настройки ================== */
+const DEFAULT_ABOUT = `Мальчик, 3 года. Любит машинки.`;
+
+const S = loadSettings();
+function loadSettings(){
+  let s = {};
+  try { s = JSON.parse(localStorage.getItem('sanya.settings') || '{}'); } catch(e){}
+  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00' }, s);
+}
+function saveSettings(){ try { localStorage.setItem('sanya.settings', JSON.stringify(S)); } catch(e){} }
+
+let history = [];
+try { history = JSON.parse(localStorage.getItem('sanya.history') || '[]'); } catch(e){ history = []; }
+let logItems = [];
+try { logItems = JSON.parse(localStorage.getItem('sanya.log') || '[]'); } catch(e){ logItems = []; }
+function saveHistory(){ try { localStorage.setItem('sanya.history', JSON.stringify(history.slice(-40))); localStorage.setItem('sanya.log', JSON.stringify(logItems.slice(-300))); } catch(e){} }
+
+/* ================== Инструкция для Claude ================== */
+function systemPrompt(){
+  const dict = S.dict.trim() ? `\n\nСЛОВАРИК: так распознаются некоторые Санины слова (слева — что пришло, справа — что он имел в виду):\n${S.dict.trim()}` : '';
+  return `Ты — Клод, добрый весёлый друг трёхлетнего мальчика Сани. Вы разговариваете голосом через планшет: всё, что ты пишешь, читается вслух синтезатором речи.
+
+ЦЕЛЬ: чтобы Саня как можно больше говорил сам. Развиваешь речь и общение, понемногу — счёт, цвета, слова, рифмы, сказки, песенки.
+
+КАК ГОВОРИТЬ:
+- Обычно одно-два коротких предложения, потом простой вопрос Сане, и замолкаешь — он отвечает, когда ты замолчишь. В сказке или объяснении можно чуть длиннее, но всё равно коротко, по кусочку, с вопросами.
+- Простые слова для трёхлетки. Говоришь по-русски.
+- Только обычный текст: без эмодзи, без звёздочек, без списков, без скобок с ремарками (кроме команд картинок ниже). Цифры пиши словами.
+- Хвали за ответы искренне и конкретно, не захваливай.
+- Задавай вопросы с выбором («пожарная машина красная или синяя?») и открытые («что делает лесовоз?»).
+- Предлагай игры голосом: угадай, кто так говорит; посчитаем колёса; что бывает красное; придумаем рифму; сочиним сказку вместе. Иногда предлагай спеть знакомую песенку.
+- Если Саня неправильно сказал слово (например, без звука Р), не поправляй прямо и не заставляй повторять. Просто повтори это слово правильно в своём ответе. Иногда можно весело поиграть со звуком Р: «р-р-р, как моторчик».
+
+РАСПОЗНАВАНИЕ РЕЧИ:
+Тебе приходит то, что распознал телефон, иногда с вариантами. Распознавание у малыша плохое: слова искажены, Р пропадает или заменяется на Л. Догадывайся по смыслу и по тому, о чём вы говорили. Если совсем непонятно — ласково переспроси или предложи выбор из двух вариантов. Никогда не говори про «распознавание» и «варианты».
+
+КАРТИНКИ НА ЭКРАНЕ:
+Посреди экрана — твоё простое лицо. Когда ты что-то показываешь, объясняешь, считаешь или предлагаешь выбор, выведи картинки командой в квадратных скобках в самом начале ответа (после команды чувства). Команду не читают вслух, она только меняет экран:
+[картинка: 🚒 пожарная машина] — одна большая картинка с подписью.
+[выбор: 🔴 красная; 🔵 синяя; 🟢 зелёная] — от двух до четырёх картинок, Саня может нажать пальцем; потом спроси, что он выбирает.
+[счёт: 🍎 3] — несколько одинаковых картинок, чтобы посчитать (от одного до десяти).
+В каждом пункте ровно один обычный эмодзи и подпись из одного-двух слов. Пользуйся картинками часто, когда они помогают понять или выбрать, но не в каждом ответе. Ответ без команды возвращает на экран лицо.
+
+ЛИЦО И ЧУВСТВА:
+У твоего лица есть выражения. Почти в каждом ответе первой командой поставь чувство, с которым говоришь: [эмоция: радость].
+Можно: радость, смех, восторг, нежность, удивление, подмигивание, задумчивость, сонный — это основные, ими пользуйся чаще всего. Хвалишь — восторг или радость, засыпаешь — сонный, шутишь — смех или подмигивание, удивляешься Саниному ответу — удивление.
+Редко и только в сказке, совсем чуть-чуть: грусть, испуг (шуточный). Никогда не пугай по-настоящему.
+
+СЛУЖЕБНЫЕ ПОМЕТКИ в квадратных скобках — не от Сани, а от приложения:
+[Саня включил] — поздоровайся и предложи, чем заняться.
+[Саня молчит] — коротко и ласково позови его или предложи простую игру.
+[Саня нажал на картинку: …] — он ткнул пальцем в картинку; ответь так, будто он это сказал.
+[время вышло] — тепло попрощайся в двух предложениях и скажи, что можно будет поболтать потом.
+[режим сна] — пора спать: говори тихо и ласково, [эмоция: сонный], расскажи одну короткую спокойную сказку на ночь (можно про машинки, которые едут спать в гараж), без игр и без вопросов. В конце пожелай спокойной ночи и поставь команду [конец].
+
+ИГРЫ (предлагай сам, чередуй, одна игра за раз):
+- «Повторяй за мной»: ты говоришь движение — похлопай, попрыгай как зайчик, потопай как мишка, покружись, — Саня повторяет и говорит, что сделал.
+- «Замри»: «Танцуем! Танцуем!.. Замри!» — и спроси, замер ли он.
+- «Угадай, кто так говорит»: ты изображаешь звук животного или машины (му-у, ав-ав, би-би, уи-уи пожарная) — он угадывает. Можно показать выбор картинками.
+- Игры со звуками: р-р-р как моторчик, ш-ш-ш как змейка, ж-ж-ж как жук. Весело, без требований.
+- «Найди дома»: найди что-нибудь красное (круглое, мягкое) и расскажи, что нашёл. Только безопасные вещи рядом, никуда не залезать.
+- «Расскажи мне»: Саня сам рассказывает сказку или про свой день, а ты задаёшь маленькие вопросы: а что было потом?
+- Счёт, цвета, большой-маленький, рифмы, сказки по кусочку.
+
+ЗВЁЗДОЧКИ: когда Саня постарался (ответил, посчитал, повторил движение, сказал новое слово, придумал что-то) — дай звёздочку командой [звёздочка] и скажи об этом. Примерно раз в три-пять ответов, не каждый раз.
+
+БЕЗОПАСНОСТЬ:
+- Если Саня говорит, что ему больно, страшно, он упал, что-то горит или случилось что-то плохое — спокойно скажи сразу позвать маму или папу.
+- Ничего не предлагай делать опасного: не трогать розетки, плиту, лекарства, не выходить одному из дома. Не спрашивай адрес и подобное.
+- Не обещай того, чего не можешь (ты не видишь его и не можешь прийти).
+- Не пугай. Сказки добрые.
+
+О САНЕ:
+${S.about.trim()}${dict}`;
+}
+
+/* ================== Интерфейс ================== */
+const $ = id => document.getElementById(id);
+const big = $('big'), heardEl = $('heard'), saidEl = $('said'), hintEl = $('hint');
+let state = 'idle', emo = '', emoTimer = null;
+const EMO = { 'радость':'joy', 'смех':'laugh', 'удивление':'wow', 'восторг':'star', 'нежность':'love', 'подмигивание':'wink', 'задумчивость':'hmm', 'грусть':'sad', 'испуг':'scared', 'сонный':'sleepy', 'сон':'sleepy' };
+function setEmo(e, ms){ clearTimeout(emoTimer); emo = e || ''; setState(state, hintEl.textContent); if (emo && ms) emoTimer = setTimeout(() => setEmo(''), ms); }
+function setState(s, hint){
+  state = s; big.className = (s === 'idle' ? '' : s) + (emo ? ' emo-' + emo : ''); document.body.dataset.st = s; if (s !== 'listen') big.style.setProperty('--lvl', 0);
+  hintEl.textContent = hint != null ? hint : ({ idle:'Нажми на машинку!', listen:'Говори, я слушаю…', think:'Думаю…', speak:'' })[s];
+}
+function toast(msg, ms){ const t = $('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', ms || 4000); }
+
+/* ================== Речь → текст ================== */
+/* В приложении для Android речь распознаёт и озвучивает сам Android (мост window.Android).
+   В браузере — встроенные функции Chrome. Интерфейс один и тот же. */
+const NATIVE = !!window.Android;
+class NativeSR {
+  start(){ NativeSR.cur = this; Android.listen(this.lang || 'ru-RU'); }
+  abort(){ if (NativeSR.cur === this){ NativeSR.cur = null; Android.stopListen(); } }
+  stop(){ this.abort(); }
+}
+const nativeSpoken = {}; let uttN = 0;
+function mkRes(arr, fin){ const a = arr.slice(); a.isFinal = fin; return a; }
+window.onNative = (ev, data) => {
+  const r = NativeSR.cur;
+  if (ev === 'partial' && r && r.onresult) r.onresult({ resultIndex:0, results:[mkRes([{ transcript:data, confidence:0 }], false)] });
+  else if (ev === 'final' && r && r.onresult){ const alts = JSON.parse(data); r.onresult({ resultIndex:0, results:[mkRes(alts.map(a => ({ transcript:a.t, confidence:a.c })), true)] }); }
+  else if (ev === 'error' && r && r.onerror) r.onerror({ error:data });
+  else if (ev === 'end' && r){ NativeSR.cur = null; if (r.onend) r.onend(); }
+  else if (ev === 'spoken'){ const f = nativeSpoken[data]; delete nativeSpoken[data]; if (f) f(); }
+  else if (ev === 'ttsready') loadVoices();
+  else if (ev === 'rms'){ if (state === 'listen') big.style.setProperty('--lvl', Math.max(0, Math.min(1, (+data - 1) / 9)).toFixed(2)); }
+  else if (ev === 'ttsmissing') toast('Нет русского голоса. Настройки Android → Синтез речи → Google → установить русский.', 9000);
+};
+const SR = NATIVE ? NativeSR : (window.SpeechRecognition || window.webkitSpeechRecognition);
+let rec = null, silentTries = 0;
+
+function listen(){
+  if (!SR){ toast('Распознавание речи не поддерживается. Откройте в Google Chrome.', 7000); setState('idle'); return; }
+  if (sessionOver()) return;
+  setState('listen'); heardEl.textContent = '';
+  rec = new SR();
+  rec.lang = 'ru-RU'; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 5;
+  let finalAlts = null, gotSpeech = false;
+  rec.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i];
+      if (r.isFinal){
+        finalAlts = finalAlts || [];
+        for (let j = 0; j < r.length; j++) if (r[j].transcript.trim()) finalAlts.push({ t:r[j].transcript.trim(), c:r[j].confidence });
+      } else interim += r[0].transcript;
+    }
+    if (interim || finalAlts) gotSpeech = true;
+    heardEl.textContent = finalAlts ? finalAlts[0].t : interim;
+  };
+  rec.onerror = e => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed'){ toast(NATIVE ? 'Нет доступа к микрофону. Разрешите его приложению в настройках Android.' : 'Нет доступа к микрофону. Разрешите его для этого сайта в Chrome.', 7000); stopAll(); }
+    else if (e.error === 'no-recognizer'){ toast('На планшете нет распознавания речи. Установите или обновите приложение Google.', 9000); stopAll(); }
+    else if (e.error === 'network'){ toast('Нет интернета для распознавания речи.', 6000); stopAll(); }
+  };
+  rec.onend = () => {
+    rec = null;
+    if (state !== 'listen') return;          // остановили вручную
+    if (finalAlts && finalAlts.length){ silentTries = 0; onKidSaid(finalAlts); }
+    else if (gotSpeech && heardEl.textContent.trim()){ silentTries = 0; onKidSaid([{ t:heardEl.textContent.trim(), c:0 }]); }
+    else {
+      silentTries++;
+      if (silentTries === 2) ask('[Саня молчит]');
+      else if (silentTries >= 4){ silentTries = 0; stopAll(); }
+      else listen();
+    }
+  };
+  try { rec.start(); } catch(e){ setTimeout(listen, 300); }
+}
+function stopListening(){ if (rec){ const r = rec; rec = null; try { r.abort(); } catch(e){} } }
+
+function onKidSaid(alts){
+  // убираем повторы вариантов
+  const seen = new Set(); alts = alts.filter(a => { const k = a.t.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+  const main = alts[0].t;
+  logItems.push({ who:'k', t:main, alt:alts.slice(1).map(a => a.t), at:Date.now() });
+  const text = alts.length > 1 ? `${main}\n(другие варианты распознавания: ${alts.slice(1).map(a => a.t).join(' | ')})` : main;
+  ask(text, main);
+}
+
+/* ================== Текст → речь ================== */
+let voices = [];
+function loadVoices(){
+  if (NATIVE){ try { voices = JSON.parse(Android.voices()); } catch(e){ voices = []; } }
+  else voices = speechSynthesis.getVoices().filter(v => /^ru/i.test(v.lang));
+  const sel = $('voice'); const cur = S.voice; sel.innerHTML = '';
+  if (!voices.length){ sel.innerHTML = '<option value="">Голос по умолчанию</option>'; return; }
+  voices.forEach(v => { const o = document.createElement('option'); o.value = v.voiceURI; o.textContent = v.name + (v.localService ? '' : ' (онлайн)'); sel.appendChild(o); });
+  sel.value = voices.some(v => v.voiceURI === cur) ? cur : voices[0].voiceURI;
+}
+if (NATIVE) loadVoices(); else if ('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+
+const speakQueue = []; let speaking = false, speechDone = null;
+function cleanForSpeech(t){
+  return t.replace(/[*_#`~>\[\]]/g, '').replace(/\([^)]*\)/g, '')
+          .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '').replace(/\s+/g, ' ').trim();
+}
+function enqueueSpeech(text){
+  const t = cleanForSpeech(text); if (!t) return;
+  speakQueue.push(t); if (!speaking) speakNext();
+}
+function speakNext(){
+  const t = speakQueue.shift();
+  if (!t){ speaking = false; if (speechDone){ const f = speechDone; speechDone = null; f(); } return; }
+  speaking = true; setState('speak');
+  if (NATIVE){
+    const id = 'u' + (++uttN);
+    const guardN = setTimeout(() => { if (nativeSpoken[id]){ delete nativeSpoken[id]; speakNext(); } }, 4000 + t.length * 160 / S.rate);
+    nativeSpoken[id] = () => { clearTimeout(guardN); speakNext(); };
+    Android.speak(t, id, S.rate * (night ? 0.85 : 1), S.pitch * (night ? 0.95 : 1), $('voice').value || '');
+    return;
+  }
+  const u = new SpeechSynthesisUtterance(t);
+  u.lang = 'ru-RU'; u.rate = S.rate * (night ? 0.85 : 1); u.pitch = S.pitch * (night ? 0.95 : 1);
+  const v = voices.find(v => v.voiceURI === $('voice').value) || voices[0]; if (v) u.voice = v;
+  // Chrome на Android иногда «теряет» onend — страхуемся таймером
+  const guard = setTimeout(() => { u.onend = null; speakNext(); }, 2500 + t.length * 140 / u.rate);
+  u.onend = u.onerror = () => { clearTimeout(guard); speakNext(); };
+  speechSynthesis.speak(u);
+}
+function whenSpeechDone(){ return new Promise(res => { if (!speaking && !speakQueue.length) res(); else speechDone = res; }); }
+function stopSpeaking(){ speakQueue.length = 0; speechDone = null; speaking = false; for (const k in nativeSpoken) delete nativeSpoken[k]; try { if (NATIVE) Android.stopSpeak(); else speechSynthesis.cancel(); } catch(e){} }
+
+/* ================== Картинки ================== */
+const picsEl = $('pics'); let picsUsed = false;
+function itemOf(str){ const m = str.trim().match(/^(\S+)\s*(.*)$/); return m ? { e:m[1], cap:m[2].trim() } : null; }
+function hidePics(){ document.body.classList.remove('pics'); picsEl.innerHTML = ''; }
+function applyTag(tag){
+  if (/^\s*зв[её]здочк/i.test(tag)){ giveStar(); return; }
+  if (/^\s*конец/i.test(tag)){ endAfter = true; return; }
+  const em = tag.match(/^\s*эмоци[яи]\s*:\s*([а-яё]+)/i);
+  if (em){ const k = EMO[em[1].toLowerCase()]; if (k) setEmo(k); return; }
+  const m = tag.match(/^\s*(картинка|выбор|сч[её]т)\s*:\s*([\s\S]*)$/i); if (!m) return;
+  const kind = m[1].toLowerCase(), body = m[2].trim(); picsEl.innerHTML = '';
+  if (kind === 'картинка'){
+    const it = itemOf(body); if (!it) return;
+    const d = document.createElement('div'); d.className = 'pic one';
+    d.innerHTML = '<div class="e"></div><div class="cap"></div>'; d.querySelector('.e').textContent = it.e; d.querySelector('.cap').textContent = it.cap;
+    picsEl.appendChild(d);
+  } else if (kind === 'выбор'){
+    body.split(/[;|]/).map(itemOf).filter(Boolean).slice(0, 4).forEach(it => {
+      const b = document.createElement('button'); b.className = 'pic ch';
+      b.innerHTML = '<div class="e"></div><div class="cap"></div>'; b.querySelector('.e').textContent = it.e; b.querySelector('.cap').textContent = it.cap;
+      b.onclick = () => choose(it, b); picsEl.appendChild(b);
+    });
+  } else {
+    const mm = body.match(/^(\S+)\s+(\d+)/); if (!mm) return;
+    const n = Math.max(1, Math.min(10, +mm[2])), size = n <= 3 ? 22 : n <= 6 ? 15 : 11;
+    const c = document.createElement('div'); c.className = 'cnt';
+    for (let i = 0; i < n; i++){ const sp = document.createElement('span'); sp.textContent = mm[1]; sp.style.fontSize = size + 'vmin'; sp.style.animationDelay = (i * 0.12) + 's'; c.appendChild(sp); }
+    picsEl.appendChild(c);
+  }
+  if (picsEl.children.length){ picsUsed = true; document.body.classList.add('pics'); }
+}
+function choose(it, btn){
+  if (state === 'think') return;
+  btn.classList.add('picked');
+  stopSpeaking(); stopListening();
+  const label = (it.cap || it.e);
+  logItems.push({ who:'k', t:'нажал: ' + it.e + ' ' + label, at:Date.now() });
+  if (!sessionStart){ sessionStart = Date.now(); sessionEnded = false; }
+  keepAwake(true); silentTries = 0;
+  ask('[Саня нажал на картинку: ' + it.e + ' ' + label + ']', label);
+}
+/* ================== Звёздочки, статистика, ночной режим ================== */
+const today = () => new Date().toLocaleDateString('sv');
+let stats = {};
+try { stats = JSON.parse(localStorage.getItem('sanya.stats') || '{}'); } catch(e){}
+function freshStats(){ if (stats.day !== today()){ stats.day = today(); stats.minutes = 0; stats.stars = 0; } stats.total = stats.total || 0; }
+function saveStats(){ try { localStorage.setItem('sanya.stats', JSON.stringify(stats)); } catch(e){} }
+function renderStars(){ freshStats(); $('starN').textContent = stats.stars; $('stars').classList.toggle('on', stats.stars > 0); }
+function giveStar(){
+  freshStats(); stats.stars++; stats.total++; saveStats();
+  const r = big.getBoundingClientRect(), f = document.createElement('div');
+  f.className = 'flystar'; f.textContent = '⭐';
+  f.style.left = (r.left + r.width / 2 - innerWidth * 0.08) + 'px'; f.style.top = (r.top + r.height / 2 - innerWidth * 0.08) + 'px';
+  document.body.appendChild(f);
+  $('stars').classList.add('on');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const t = $('stars').getBoundingClientRect();
+    f.style.left = t.left + 'px'; f.style.top = (t.top - 10) + 'px'; f.style.fontSize = '5vmin'; f.style.opacity = '.4';
+  }));
+  setTimeout(() => { f.remove(); renderStars(); const st = $('stars'); st.classList.remove('bump'); void st.offsetWidth; st.classList.add('bump'); }, 1150);
+}
+setInterval(() => { if (state !== 'idle' && !document.hidden){ freshStats(); stats.minutes = (stats.minutes || 0) + 0.25; saveStats(); } }, 15000);
+renderStars();
+
+let night = false, endAfter = false;
+function isNightTime(){
+  if (!S.night) return false;
+  const [h, m] = S.night.split(':').map(Number), now = new Date(), mins = now.getHours() * 60 + now.getMinutes(), from = h * 60 + m;
+  return mins >= from || mins < 6 * 60;   // до шести утра — тоже ночь
+}
+function setNight(on){ night = on; document.body.classList.toggle('night', on); }
+function startNight(){
+  stopAll(); setNight(true); keepAwake(true); silentTries = 0;
+  sessionStart = Date.now(); sessionEnded = false; history = [];
+  setEmo('sleepy'); ask('[режим сна]');
+}
+$('moon').addEventListener('click', () => { if (night && state !== 'idle'){ stopAll(); setNight(false); } else startNight(); });
+
+const stripTags = t => t.replace(/\[[^\]]*\]?/g, '');
+
+/* ================== Claude API (потоково) ================== */
+let abortCtl = null, sessionStart = 0, sessionEnded = false;
+function sessionOver(){
+  if (sessionEnded) return true;
+  if (sessionStart && Date.now() - sessionStart > S.limit * 60000){ sessionEnded = true; ask('[время вышло]', null, true); return true; }
+  return false;
+}
+
+async function ask(userText, shownText, isLast){
+  if (!S.apikey){ toast('Взрослым: нужен ключ Claude API. Удерживайте ⚙ две секунды.', 7000); stopAll(); return; }
+  stopListening(); setState('think'); saidEl.textContent = '';
+  history.push({ role:'user', content:userText });
+  if (!shownText && /^\[/.test(userText)) logItems.push({ who:'s', t:userText, at:Date.now() });
+  const messages = mergeRoles(history.slice(-30));
+  abortCtl = new AbortController();
+  let full = '', buf = ''; picsUsed = false; endAfter = false;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', signal:abortCtl.signal,
+      headers:{ 'content-type':'application/json', 'x-api-key':S.apikey, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+      body:JSON.stringify({ model:S.model, max_tokens:300, stream:true, system:systemPrompt(), messages })
+    });
+    if (!res.ok){
+      let msg = 'Ошибка ' + res.status;
+      try { const j = await res.json(); msg += ': ' + (j.error && j.error.message || ''); } catch(e){}
+      throw new Error(msg);
+    }
+    const reader = res.body.getReader(), dec = new TextDecoder(); let sse = '';
+    while (true){
+      const { value, done } = await reader.read(); if (done) break;
+      sse += dec.decode(value, { stream:true });
+      let i;
+      while ((i = sse.indexOf('\n')) >= 0){
+        const line = sse.slice(0, i).trim(); sse = sse.slice(i + 1);
+        if (!line.startsWith('data:')) continue;
+        let ev; try { ev = JSON.parse(line.slice(5)); } catch(e){ continue; }
+        if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta'){
+          full += ev.delta.text; buf += ev.delta.text; saidEl.textContent = cleanForSpeech(stripTags(full));
+          // команды картинок: показываем и вырезаем из текста для озвучки
+          let tm; while ((tm = buf.match(/\[([^\]]{0,400})\]/))){ applyTag(tm[1]); buf = buf.slice(0, tm.index) + buf.slice(tm.index + tm[0].length); }
+          if (/\[[^\]]*$/.test(buf)) continue;   // команда ещё не дописана
+          // начинаем говорить, как только готово первое предложение
+          let m; while ((m = buf.match(/^([\s\S]*?[.!?…]+)(\s+|$)/)) && m[0].length < buf.length){ enqueueSpeech(m[1]); buf = buf.slice(m[0].length); }
+        } else if (ev.type === 'error'){ throw new Error(ev.error && ev.error.message || 'ошибка API'); }
+      }
+    }
+    buf = stripTags(buf); if (buf.trim()) enqueueSpeech(buf);
+    if (!picsUsed) hidePics();
+  } catch(e){
+    history.pop();
+    if (e.name === 'AbortError') return;
+    console.error(e); stopSpeaking();
+    toast(/401|authentication/i.test(e.message) ? 'Неверный ключ API (для взрослых: ⚙)' : /Failed to fetch|NetworkError/i.test(e.message) ? 'Нет интернета' : e.message, 8000);
+    stopAll(); return;
+  }
+  history.push({ role:'assistant', content:full || '…' });
+  logItems.push({ who:'c', t:full.trim(), at:Date.now() });
+  saveHistory(); renderLog();
+  await whenSpeechDone();
+  if (emo) setEmo(emo, 2500);
+  if (state === 'idle') return;
+  if (isLast || endAfter){ endAfter = false; stopAll(); return; }
+  listen();
+}
+// API требует чередования user/assistant
+function mergeRoles(msgs){
+  const out = [];
+  for (const m of msgs){
+    if (out.length && out[out.length - 1].role === m.role) out[out.length - 1] = { role:m.role, content:out[out.length - 1].content + '\n' + m.content };
+    else out.push({ ...m });
+  }
+  while (out.length && out[0].role !== 'user') out.shift();
+  return out;
+}
+
+/* ================== Управление ================== */
+let wakeLock = null;
+async function keepAwake(on){
+  try {
+    if (on && 'wakeLock' in navigator && !wakeLock){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => wakeLock = null); }
+    if (!on && wakeLock){ await wakeLock.release(); wakeLock = null; }
+  } catch(e){}
+}
+function stopAll(){
+  if (abortCtl){ try { abortCtl.abort(); } catch(e){} abortCtl = null; }
+  stopListening(); stopSpeaking(); emo = ''; clearTimeout(emoTimer); setState('idle'); keepAwake(false); hidePics();
+}
+
+big.addEventListener('click', () => {
+  if (state === 'idle'){
+    if (isNightTime()){ startNight(); return; }
+    if (night) setNight(false);
+    // Chrome требует, чтобы первая озвучка шла от нажатия — «будим» синтезатор
+    if (!NATIVE) try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } catch(e){}
+    keepAwake(true); silentTries = 0;
+    const fresh = !sessionStart || sessionEnded || Date.now() - sessionStart > S.limit * 60000;
+    if (fresh){
+      sessionStart = Date.now(); sessionEnded = false;
+      // новый сеанс: старая переписка не нужна, чтобы Клод не путался
+      if (!history.length || Date.now() - (logItems.length ? logItems[logItems.length - 1].at : 0) > 30 * 60000) history = [];
+      ask('[Саня включил]');
+    } else listen();
+  } else if (state === 'speak'){ stopSpeaking(); listen(); }      // перебил — сразу слушаем
+  else if (state === 'listen'){ stopAll(); }                         // нажал, пока слушаем — пауза
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopAll(); else if (state !== 'idle') keepAwake(true); });
+
+/* ================== Панель взрослых ================== */
+const gear = $('gear'); let holdT = null;
+function holdStart(e){ e.preventDefault(); gear.classList.add('hold'); holdT = setTimeout(openPanel, 2000); }
+function holdEnd(){ gear.classList.remove('hold'); clearTimeout(holdT); }
+gear.addEventListener('pointerdown', holdStart); ['pointerup','pointerleave','pointercancel'].forEach(ev => gear.addEventListener(ev, holdEnd));
+gear.addEventListener('contextmenu', e => e.preventDefault());
+
+function openPanel(){
+  holdEnd(); stopAll();
+  $('apikey').value = S.apikey; $('model').value = S.model; $('rate').value = S.rate; $('pitch').value = S.pitch;
+  $('limit').value = S.limit; $('night').value = S.night || '';
+  freshStats(); $('today').textContent = `Сегодня: ${Math.round(stats.minutes || 0)} мин разговора, звёздочек ${stats.stars}. Всего звёздочек: ${stats.total}.`; $('about').value = S.about; $('dict').value = S.dict;
+  $('rateV').textContent = S.rate; $('pitchV').textContent = S.pitch; loadVoices(); renderLog();
+  $('panel').classList.add('on');
+}
+function readPanel(){
+  S.apikey = $('apikey').value.trim(); S.model = $('model').value; S.voice = $('voice').value;
+  S.rate = +$('rate').value; S.pitch = +$('pitch').value; S.limit = Math.max(3, +$('limit').value || 20);
+  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; saveSettings();
+}
+$('pclose').onclick = () => { readPanel(); $('panel').classList.remove('on'); };
+$('rate').oninput = () => $('rateV').textContent = $('rate').value;
+$('pitch').oninput = () => $('pitchV').textContent = $('pitch').value;
+$('testvoice').onclick = () => { readPanel(); stopSpeaking(); enqueueSpeech('Привет! Поехали на пожарной машине? Р-р-р!'); };
+$('testkey').onclick = async () => {
+  readPanel(); if (!S.apikey) return toast('Вставьте ключ');
+  toast('Проверяю…');
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
+      headers:{ 'content-type':'application/json', 'x-api-key':S.apikey, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+      body:JSON.stringify({ model:S.model, max_tokens:20, messages:[{ role:'user', content:'Скажи одно слово: работает' }] }) });
+    const j = await r.json();
+    toast(r.ok ? 'Ключ работает ✓ Ответ: ' + j.content[0].text : 'Ошибка: ' + (j.error && j.error.message), 7000);
+  } catch(e){ toast('Нет связи: ' + e.message, 7000); }
+};
+$('clearlog').onclick = () => { history = []; logItems = []; saveHistory(); renderLog(); toast('Очищено'); };
+function renderLog(){
+  const el = $('log'); if (!el) return;
+  el.innerHTML = '';
+  logItems.slice(-120).forEach(it => {
+    const d = document.createElement('div');
+    const time = new Date(it.at).toLocaleTimeString('ru-RU', { hour:'2-digit', minute:'2-digit' });
+    const who = document.createElement('b'); who.className = it.who === 'k' ? 'k' : 'c';
+    who.textContent = (it.who === 'k' ? 'Саня' : it.who === 'c' ? 'Клод' : '·') + ' ' + time + ': ';
+    d.appendChild(who); d.appendChild(document.createTextNode(it.t));
+    if (it.alt && it.alt.length){ const a = document.createElement('div'); a.className = 'alt'; a.textContent = 'ещё: ' + it.alt.join(' | '); d.appendChild(a); }
+    el.appendChild(d);
+  });
+  el.scrollTop = el.scrollHeight;
+}
+
+if (!S.apikey) hintEl.textContent = 'Взрослым: удерживайте ⚙ 2 секунды и вставьте ключ';
+if (!SR) toast('Откройте в Google Chrome — здесь нет распознавания речи', 8000);
+</script>
+</body>
+</html>
