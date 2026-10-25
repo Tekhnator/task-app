@@ -211,16 +211,21 @@ button.b.pri{background:var(--accent);border-color:var(--accent);color:#fff}
 .road.on .rcar{animation:drive var(--d) linear .9s forwards}
 .road .rcar span{display:inline-block;animation:bumpy .5s infinite}
 @keyframes bumpy{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-9%) rotate(3deg)}60%{transform:translateY(-3%) rotate(-2deg)}}
-.flock{animation:flockgo var(--d) ease-in-out forwards}
-@keyframes flockgo{from{transform:translate(var(--x0),0)}50%{transform:translate(50vw,-5vh)}to{transform:translate(var(--x1),3vh)}}
-.orbit{position:absolute;left:0;top:0;width:0;height:0;animation:spin var(--o) linear infinite}
-.orbit .sp{position:absolute;width:4.2vmin;transform:translate(var(--r),-50%)}
-.sp .wing{transform-box:fill-box;transform-origin:50% 100%;animation:flap .18s infinite alternate}
+.bird2{animation:birdgo var(--d) linear forwards}
+@keyframes birdgo{from{transform:translateX(var(--x0))}to{transform:translateX(var(--x1))}}
+.bird2 .bob{animation:bob var(--b) ease-in-out infinite alternate}
+@keyframes bob{from{transform:translateY(-2.2vh)}to{transform:translateY(2.2vh)}}
+.bird2 svg{width:6vmin;height:auto;display:block;overflow:visible;opacity:.8}
+.bird2.flip svg{transform:scaleX(-1)}
+.bird2 .w{transform-box:view-box;transform-origin:27px 19px;animation:wingbeat var(--f) linear infinite}
+.bird2 .w2{animation-delay:-.04s}
+/* три-четыре взмаха, потом планирует — как настоящий воробей */
+@keyframes wingbeat{0%,20%,40%,60%{transform:rotate(-18deg)}10%,30%,50%{transform:rotate(62deg)}68%,100%{transform:rotate(18deg)}}
 .peek{width:24vmin;height:24vmin}
 .peek .who{width:100%;height:100%;animation:peekin 5.3s ease-in-out forwards}
 @keyframes peekin{0%{transform:translateY(105%)}16%,82%{transform:translateY(38%)}100%{transform:translateY(105%)}}
 @keyframes peekhi{0%{transform:translateY(105%)}16%,82%{transform:translateY(16%)}100%{transform:translateY(105%)}}
-.peek.owl .who{animation-name:peekhi}
+.peek.hi .who{animation-name:peekhi}
 .peek .blink{transform-box:fill-box;transform-origin:center;animation:blinkx 5.3s infinite}
 @keyframes blinkx{0%,30%,36%,62%,68%,100%{transform:scaleY(1)}33%,65%{transform:scaleY(.08)}}
 .peek .pup{animation:lookx 5.3s ease-in-out infinite}
@@ -695,7 +700,12 @@ function pickTease(){
 }
 // когда никто не играет, личико иногда шалит само
 (function idleTease(){
-  setTimeout(() => { if (state === 'idle' && !document.hidden && !$('panel').classList.contains('on')) fx(pickTease()); idleTease(); }, (7000 + Math.random() * 8000) * 1.15);
+  setTimeout(() => {
+    if (state === 'idle' && !document.hidden && !$('panel').classList.contains('on')){
+      if (Math.random() < 0.13) (night ? SPAWN.moonface : SPAWN.sunface)(); else fx(pickTease());
+    }
+    idleTease();
+  }, 6000 + Math.random() * 7000);
 })();
 
 /* ================== Живой фон ================== */
@@ -738,31 +748,38 @@ const SPAWN = {
     requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('on')));
     setTimeout(() => { el.querySelectorAll('.plant').forEach((p, i) => p.style.transitionDelay = (i * 0.1) + 's'); el.classList.add('away'); }, d * 1000 + 1200);
   },
-  // воробушки: кружат и гоняются друг за другом
+  // воробушки: летят, машут крылышками, планируют и догоняют друг друга
   birds(){
-    const d = rnd(9, 13) * PACE, ltr = Math.random() < .5, n = Math.random() < .5 ? 2 : 3;
-    const el = spawn('flock', '', { top: rnd(8, 32) + 'vh', '--d': d + 's', '--x0': ltr ? '-12vw' : '110vw', '--x1': ltr ? '110vw' : '-12vw' }, d * 1000);
+    const d = rnd(11, 15) * PACE, ltr = Math.random() < .5, n = Math.random() < .55 ? 2 : 3, top = rnd(8, 30);
+    const art = `<svg viewBox="0 0 60 40"><path class="w w2" d="M27 19 Q20 2 8 4 Q17 13 29 21 Z" fill="#7d624d"/>
+      <path d="M15 22 L2 17 L5 27 Z" fill="#9c826b"/><ellipse cx="28" cy="24" rx="14" ry="8.5" fill="#b89b80"/><ellipse cx="31" cy="28" rx="9" ry="4.5" fill="#ecdfd0"/>
+      <circle cx="42" cy="18" r="7" fill="#a0846a"/><circle cx="44.5" cy="16.8" r="1.5" fill="#2d2a26"/><path d="M48.5 17.5 L54 19 L48.5 20.6 Z" fill="#e3b46b"/>
+      <path class="w" d="M27 19 Q19 0 5 3 Q15 14 30 22 Z" fill="#8a6d55"/></svg>`;
     for (let i = 0; i < n; i++){
-      const o = document.createElement('div'); o.className = 'orbit';
-      o.style.setProperty('--o', rnd(1.4, 2.4) + 's'); o.style.animationDelay = -rnd(0, 2) + 's';
-      if (Math.random() < .5) o.style.animationDirection = 'reverse';
-      o.innerHTML = `<svg class="sp" style="--r:${rnd(3, 7)}vmin" viewBox="0 0 40 30"><path d="M9 17 L1 12 L3 21 Z" fill="#9c826b"/><ellipse cx="20" cy="18" rx="11" ry="8" fill="#b89b80"/><ellipse cx="22" cy="21" rx="7" ry="4" fill="#e9dccd"/><circle cx="29" cy="13" r="6" fill="#a0846a"/><circle cx="31" cy="12" r="1.4" fill="#2d2a26"/><path d="M35 12.5 L39.5 14 L35 15.5 Z" fill="#e3b46b"/><ellipse class="wing" cx="17" cy="13" rx="8" ry="4.5" fill="#8a6d55"/></svg>`;
-      el.appendChild(o);
+      const st = { top: (top + rnd(-4, 4)) + 'vh', '--d': (d + rnd(-0.6, 0.6)) + 's', '--x0': ltr ? '-14vw' : '110vw', '--x1': ltr ? '112vw' : '-14vw',
+                   '--b': rnd(0.9, 1.4) + 's', '--f': rnd(1.05, 1.35) + 's', animationDelay: (i * rnd(0.35, 0.8)) + 's' };
+      // птичка в SVG смотрит вправо; летит влево — разворачиваем
+      spawn('bird2' + (ltr ? '' : ' flip'), `<div class="bob" style="animation-delay:${-rnd(0, 1)}s">${art}</div>`, st, d * 1000 + 2500);
     }
   },
   // белочка или лисичка выглядывает из края экрана
   peek(kind){
-    const who = kind || pick(['squirrel', 'fox']);
+    const who = kind || 'bear';
     const art = {
+      bear: `<svg class="who" viewBox="0 0 100 100"><circle cx="20" cy="22" r="15" fill="#a9825f"/><circle cx="80" cy="22" r="15" fill="#a9825f"/><circle cx="20" cy="22" r="8" fill="#d9b8a0"/><circle cx="80" cy="22" r="8" fill="#d9b8a0"/>
+        <ellipse cx="50" cy="56" rx="40" ry="38" fill="#b48d6b"/><ellipse cx="50" cy="70" rx="19" ry="15" fill="#ead7c3"/>
+        <ellipse cx="22" cy="64" rx="7" ry="4.5" fill="#eeb2a6" opacity=".75"/><ellipse cx="78" cy="64" rx="7" ry="4.5" fill="#eeb2a6" opacity=".75"/>
+        <g class="blink"><circle cx="34" cy="48" r="6.5" fill="#fff"/><circle cx="66" cy="48" r="6.5" fill="#fff"/><circle class="pup" cx="35" cy="49" r="4.2" fill="#2f241c"/><circle class="pup" cx="67" cy="49" r="4.2" fill="#2f241c"/><circle cx="36.5" cy="47" r="1.3" fill="#fff"/><circle cx="68.5" cy="47" r="1.3" fill="#fff"/></g>
+        <ellipse cx="50" cy="63" rx="6.5" ry="4.8" fill="#3a2a20"/><path d="M50 67.5 L50 72 M42 73 Q50 80 58 73" stroke="#3a2a20" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`,
       fox: `<svg class="who" viewBox="0 0 100 100"><path d="M18 8 L38 34 L14 40 Z" fill="#e8a37a"/><path d="M82 8 L62 34 L86 40 Z" fill="#e8a37a"/><path d="M22 14 L33 32 L19 35 Z" fill="#f6dccb"/><path d="M78 14 L67 32 L81 35 Z" fill="#f6dccb"/><path d="M12 38 Q50 18 88 38 Q90 70 50 96 Q10 70 12 38 Z" fill="#eeae84"/><path d="M20 58 Q36 60 50 92 Q30 80 20 58 Z" fill="#fbf1e6"/><path d="M80 58 Q64 60 50 92 Q70 80 80 58 Z" fill="#fbf1e6"/><g class="blink"><ellipse cx="36" cy="50" rx="6" ry="7" fill="#fff"/><ellipse cx="64" cy="50" rx="6" ry="7" fill="#fff"/><circle class="pup" cx="37" cy="51" r="3.6" fill="#3a302a"/><circle class="pup" cx="65" cy="51" r="3.6" fill="#3a302a"/></g><ellipse cx="50" cy="76" rx="5" ry="3.6" fill="#3a302a"/></svg>`,
       squirrel: `<svg class="who" viewBox="0 0 100 100"><path d="M22 30 Q18 6 30 4 Q34 18 36 28 Z" fill="#b98863"/><path d="M78 30 Q82 6 70 4 Q66 18 64 28 Z" fill="#b98863"/><ellipse cx="50" cy="58" rx="36" ry="34" fill="#c99d79"/><ellipse cx="50" cy="72" rx="22" ry="18" fill="#f1e2d0"/><ellipse cx="26" cy="68" rx="8" ry="5" fill="#eeb9ad" opacity=".7"/><ellipse cx="74" cy="68" rx="8" ry="5" fill="#eeb9ad" opacity=".7"/><g class="blink"><circle cx="36" cy="50" r="8" fill="#fff"/><circle cx="64" cy="50" r="8" fill="#fff"/><circle class="pup" cx="37" cy="51" r="5" fill="#33291f"/><circle class="pup" cx="65" cy="51" r="5" fill="#33291f"/></g><ellipse cx="50" cy="64" rx="4" ry="3" fill="#6b4a36"/><rect x="45" y="70" width="4.5" height="6" rx="1.5" fill="#fff"/><rect x="50.5" y="70" width="4.5" height="6" rx="1.5" fill="#fff"/></svg>`,
       owl: `<svg class="who" viewBox="0 0 100 100"><path d="M16 22 L30 34 L14 40 Z" fill="#7d6e8f"/><path d="M84 22 L70 34 L86 40 Z" fill="#7d6e8f"/><ellipse cx="50" cy="62" rx="38" ry="38" fill="#8d7c9f"/><ellipse cx="50" cy="80" rx="24" ry="20" fill="#b3a5c2"/><circle cx="34" cy="50" r="14" fill="#f4eedc"/><circle cx="66" cy="50" r="14" fill="#f4eedc"/><g class="blink"><circle class="pup" cx="34" cy="51" r="7" fill="#2b2633"/><circle class="pup" cx="66" cy="51" r="7" fill="#2b2633"/><circle cx="36" cy="48" r="2" fill="#fff"/><circle cx="68" cy="48" r="2" fill="#fff"/></g><path d="M45 60 L55 60 L50 70 Z" fill="#e8b86a"/></svg>`
     }[who];
     const side = pick(['bottom', 'bottom', 'left', 'right']), st = {};
-    if (side === 'bottom'){ st.bottom = '0'; st.left = pick([rnd(4, 26), rnd(64, 84)]) + 'vw'; }
+    if (side === 'bottom'){ st.bottom = '0'; st.left = pick([rnd(14, 28), rnd(62, 76)]) + 'vw'; /* не вылезать из-под кнопок */ }
     else if (side === 'left'){ st.left = '0'; st.top = rnd(25, 60) + 'vh'; st.transform = 'rotate(90deg)'; }
     else { st.right = '0'; st.top = rnd(25, 60) + 'vh'; st.transform = 'rotate(-90deg)'; }
-    const el = spawn('peek' + (who === 'owl' ? ' owl' : ''), art, st, 5300);
+    const el = spawn('peek' + (who === 'owl' || who === 'bear' ? ' hi' : ''), art, st, 5300);
     el.style.overflow = 'hidden';
   },
   shoot(x, y, delay){ spawn('shoot', '', { top: (y ?? rnd(2, 35)) + 'vh', left: (x ?? rnd(45, 100)) + 'vw', animationDelay: (delay || 0) + 's' }, 1300 + (delay || 0) * 1000); },
@@ -792,7 +809,7 @@ const SPAWN = {
   },
   // камешки в невесомости
   rocks(){
-    const n = Math.round(rnd(2, 4));
+    const n = Math.round(rnd(1, 2));
     for (let i = 0; i < n; i++){
       const d = rnd(26, 42) * PACE, w = rnd(1.6, 4.2);
       const br = [0, 0, 0, 0].map(() => Math.round(rnd(30, 70)) + '%').join(' ') + ' / ' + [0, 0, 0, 0].map(() => Math.round(rnd(30, 70)) + '%').join(' ');
@@ -803,24 +820,32 @@ const SPAWN = {
   sunface(){ if (state === 'idle' && !document.body.classList.contains('pics')) fx('sun', 4800); },
   moonface(){ if (state === 'idle' && !document.body.classList.contains('pics')) fx('moonface', 5500); }
 };
-const PLAN = {
-  day:{ cloud:[14, 28], birds:[18, 38], roadtrip:[25, 50], peek:[35, 70], sunface:[45, 90] },
-  night:{ shoot:[7, 15], shower:[45, 90], comet:[40, 80], rocket:[55, 110], rocks:[30, 55], owl:[40, 80], moonface:[50, 95] }
+// фон: сцены по одной, с паузой; тучки — отдельно и медленно
+const SCENES = {
+  day:[['roadtrip', 3], ['birds', 3], ['peek', 2]],
+  night:[['shoot', 3], ['comet', 2], ['rocket', 2], ['owl', 2], ['rocks', 1], ['shower', 1]]
 };
-function schedule(kind, mode){
-  const [a, b] = PLAN[mode][kind];
-  setTimeout(() => {
-    if ((night ? 'night' : 'day') === mode && !document.hidden && !$('panel').classList.contains('on')) SPAWN[kind]();
-    schedule(kind, mode);
-  }, rnd(a, b) * 1000 * PACE);
+const SCENE_LEN = { roadtrip:19000, birds:17000, peek:6000, shoot:2000, comet:5500, rocket:15000, owl:6000, rocks:40000, shower:5000 };
+function pickScene(mode){
+  const list = SCENES[mode], total = list.reduce((a, x) => a + x[1], 0); let r = Math.random() * total;
+  for (const [k, w] of list){ if ((r -= w) < 0) return k; } return list[0][0];
 }
+function sceneLoop(){
+  setTimeout(() => {
+    const mode = night ? 'night' : 'day';
+    if (document.hidden || $('panel').classList.contains('on')) return sceneLoop();
+    const k = pickScene(mode); SPAWN[k]();
+    setTimeout(sceneLoop, SCENE_LEN[k] * PACE);      // следующая — только после окончания этой
+  }, rnd(25, 45) * 1000);
+}
+sceneLoop();
+(function cloudLoop(){ setTimeout(() => { if (!night && !document.hidden) SPAWN.cloud(); cloudLoop(); }, rnd(30, 55) * 1000); })();
 let sceneMode = '';
 function refreshScene(){
   const m = night ? 'night' : 'day'; if (m === sceneMode) return;
   sceneMode = m; scene.innerHTML = '';
   if (m === 'day') for (let i = 0; i < 3; i++) SPAWN.cloud(true);
 }
-for (const m in PLAN) for (const k in PLAN[m]) schedule(k, m);
 setTimeout(refreshScene, 0); setInterval(refreshScene, 1000);
 
 /* ================== Музыка и звуки (генерируются, без файлов) ================== */
@@ -1458,7 +1483,7 @@ if (!NATIVE && !S.apikey){
     'Игры': [['Выбор', () => fake('[эмоция: радость][выбор: 🚒 пожарная; 🚛 лесовоз; 🚙 гелик] Какую машинку берём?')],
              ['Счёт', () => fake('[эмоция: восторг][счёт: 🚒 3] Потрогай каждую машинку!')], ['Картинка', () => fake('[картинка: 🐶 собака] Это собачка. Как она лает?')],
              ['Звёздочка', () => fake('[эмоция: восторг][звёздочка] Держи звёздочку!')]],
-    'День': [['Дорога', () => { setNight(false); SPAWN.roadtrip(); }], ['Воробьи', () => { setNight(false); SPAWN.birds(); }], ['Лисичка', () => { setNight(false); SPAWN.peek('fox'); }], ['Белочка', () => { setNight(false); SPAWN.peek('squirrel'); }]],
+    'День': [['Дорога', () => { setNight(false); SPAWN.roadtrip(); }], ['Воробьи', () => { setNight(false); SPAWN.birds(); }], ['Мишка', () => { setNight(false); SPAWN.peek('bear'); }]],
     'Ночь': [['Ракета', () => { setNight(true); SPAWN.rocket(); }], ['Комета', () => { setNight(true); SPAWN.comet(); }], ['Звездопад', () => { setNight(true); SPAWN.shower(); }],
              ['Камешки', () => { setNight(true); SPAWN.rocks(); }], ['Сова', () => { setNight(true); SPAWN.owl(); }]]
   };
