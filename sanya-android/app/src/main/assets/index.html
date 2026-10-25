@@ -133,6 +133,9 @@ body.pics #pics{display:flex}
 label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
 input,select,textarea{width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:var(--panel-ink)}
 textarea{min-height:110px;resize:vertical}
+label.chk{display:flex;align-items:center;gap:10px;color:var(--panel-ink);font-size:16px}
+label.chk input{width:22px;height:22px;flex:none}
+body.nosubs #said,body.nosubskid #heard{visibility:hidden}
 .row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:140px}
 button.b{font:inherit;font-size:16px;padding:10px 16px;border-radius:10px;border:1px solid #d1d5db;background:#f9fafb;color:var(--panel-ink);cursor:pointer}
 button.b.pri{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -217,6 +220,12 @@ body.night #gear{color:#e8e2f2;background:rgba(255,255,255,.08)}
   </div>
 
   <div class="sec">
+   <h2>Экран</h2>
+   <label class="chk"><input id="subs" type="checkbox"> Субтитры: показывать текст того, что говорит Клод</label>
+   <label class="chk"><input id="subsKid" type="checkbox"> Показывать, что услышал от Сани</label>
+  </div>
+
+  <div class="sec">
    <h2>Время</h2>
    <label for="limit">Сколько минут можно разговаривать за раз</label>
    <input id="limit" type="number" min="3" max="120" step="1">
@@ -257,7 +266,7 @@ const S = loadSettings();
 function loadSettings(){
   let s = {};
   try { s = JSON.parse(localStorage.getItem('sanya.settings') || '{}'); } catch(e){}
-  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00' }, s);
+  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00', subs:true, subsKid:true }, s);
 }
 function saveSettings(){ try { localStorage.setItem('sanya.settings', JSON.stringify(S)); } catch(e){} }
 
@@ -652,7 +661,7 @@ gear.addEventListener('contextmenu', e => e.preventDefault());
 function openPanel(){
   holdEnd(); stopAll();
   $('apikey').value = S.apikey; $('model').value = S.model; $('rate').value = S.rate; $('pitch').value = S.pitch;
-  $('limit').value = S.limit; $('night').value = S.night || '';
+  $('limit').value = S.limit; $('subs').checked = S.subs; $('subsKid').checked = S.subsKid; $('night').value = S.night || '';
   freshStats(); $('today').textContent = `Сегодня: ${Math.round(stats.minutes || 0)} мин разговора, звёздочек ${stats.stars}. Всего звёздочек: ${stats.total}.`; $('about').value = S.about; $('dict').value = S.dict;
   $('rateV').textContent = S.rate; $('pitchV').textContent = S.pitch; loadVoices(); renderLog();
   $('panel').classList.add('on');
@@ -660,7 +669,7 @@ function openPanel(){
 function readPanel(){
   S.apikey = $('apikey').value.trim(); S.model = $('model').value; S.voice = $('voice').value;
   S.rate = +$('rate').value; S.pitch = +$('pitch').value; S.limit = Math.max(3, +$('limit').value || 20);
-  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; saveSettings();
+  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; S.subs = $('subs').checked; S.subsKid = $('subsKid').checked; saveSettings(); applySubs();
 }
 $('pclose').onclick = () => { readPanel(); $('panel').classList.remove('on'); };
 $('rate').oninput = () => $('rateV').textContent = $('rate').value;
@@ -693,6 +702,8 @@ function renderLog(){
   el.scrollTop = el.scrollHeight;
 }
 
+function applySubs(){ document.body.classList.toggle('nosubs', !S.subs); document.body.classList.toggle('nosubskid', !S.subsKid); }
+applySubs();
 if (!S.apikey) hintEl.textContent = 'Взрослым: удерживайте ⚙ 2 секунды и вставьте ключ';
 if (!SR) toast('Откройте в Google Chrome — здесь нет распознавания речи', 8000);
 </script>
