@@ -249,6 +249,49 @@ button.b.pri{background:var(--accent);border-color:var(--accent);color:#fff}
 #big.fx-moonface{--feat:#6c6754;--featglow:transparent;background:radial-gradient(circle at 38% 34%,#f6f1dc,#d6cfae);transition:background .8s}
 #big.fx-moonface .craters{opacity:1}
 #big.fx-moonface .eye{height:4%;top:46%;border-radius:2cqmin;animation:none}
+
+/* ===== ещё шалости лица ===== */
+.brow,.tongue,.limb,.zzz{position:absolute;pointer-events:none;opacity:0;transition:opacity .2s}
+.brow{top:25%;width:17%;height:3.2%;background:var(--feat);border-radius:2cqmin}
+.brow.l{left:25%;transform:rotate(20deg)}.brow.r{right:25%;transform:rotate(-20deg)}
+.tongue{left:45%;top:72%;width:10%;height:12%;background:#ec8f9b;border-radius:0 0 50% 50%;transform:scaleY(0);transform-origin:50% 0}
+.limb{background:#3a3733;border-radius:3cqmin}
+.arm{top:55%;width:16%;height:4%}.arm.l{left:-12%;transform-origin:100% 50%}.arm.r{right:-12%;transform-origin:0 50%}
+.leg{bottom:-15%;width:5.5%;height:18%;transform-origin:50% 0}.leg.l{left:36%}.leg.r{right:36%}
+.leg::after{content:'';position:absolute;bottom:-2%;left:-40%;width:180%;height:28%;background:#3a3733;border-radius:3cqmin}
+.zzz{right:-6%;top:-4%;font:800 9cqmin system-ui;color:var(--feat)}
+#big.fx-angry{--ring:#e98a7e;animation:shiver .07s 22 alternate}
+#big.fx-angry .brow{opacity:1}
+#big.fx-angry .eye{height:15%;top:38%;border-radius:30% 30% 50% 50%;animation:none}
+#big.fx-angry .mouth{left:40%;width:20%;height:7%;top:70%;border:1.1vmin solid var(--feat);border-bottom:none;border-radius:50% 50% 0 0/100% 100% 0 0}
+#big.fx-angry .cheek{opacity:.9;background:#e46f6a}
+#big.fx-tongue .tongue{opacity:1;animation:tongue 2.2s ease-in-out}
+#big.fx-tongue .eye.r{animation:fxwink 2.2s ease-in-out}
+#big.fx-tongue .mouth{left:34%;width:32%;height:12%}
+@keyframes tongue{0%{transform:scaleY(0)}20%,80%{transform:scaleY(1) rotate(0)}35%{transform:scaleY(1) rotate(-12deg)}50%{transform:scaleY(1) rotate(12deg)}65%{transform:scaleY(1) rotate(-8deg)}100%{transform:scaleY(0)}}
+#big.fx-grin .mouth{left:26%;width:48%;height:20%;top:60%;background:var(--feat);border:none;border-radius:10% 10% 50% 50%}
+#big.fx-grin .eye{height:12%;top:40%;animation:none}#big.fx-grin .cheek{opacity:.7}
+#big.fx-turn .face{animation:turnaway 3s ease-in-out}
+@keyframes turnaway{25%,45%{transform:translateX(30%) scaleX(.55)}55%{transform:none}70%,85%{transform:translateX(-30%) scaleX(.55)}100%{transform:none}}
+#big.fx-hide{animation:hideme 2.8s cubic-bezier(.5,0,.5,1.3)}
+@keyframes hideme{30%{transform:scale(.04) rotate(200deg)}70%{transform:scale(.04) rotate(200deg)}100%{transform:scale(1) rotate(360deg)}}
+#big.fx-deflate{animation:deflate 3.2s ease-in-out}
+@keyframes deflate{12%{transform:scale(1.07)}30%{transform:scale(.7,.55) translateY(18%) rotate(-10deg)}40%{transform:scale(.55,.42) translateY(30%) rotate(8deg)}55%{transform:scale(.5,.38) translateY(34%)}75%{transform:scale(1.12,1.08)}88%{transform:scale(.96)}100%{transform:none}}
+#big.fx-deflate .eye{animation:fxsleep 3.2s}
+#big.fx-walk{animation:walkoff 5s ease-in-out}
+#big.fx-walk .limb{opacity:1}
+#big.fx-walk .leg.l{animation:step .32s infinite alternate}#big.fx-walk .leg.r{animation:step .32s infinite alternate-reverse}
+#big.fx-walk .arm.l{animation:swingl .32s infinite alternate}#big.fx-walk .arm.r{animation:swingr .32s infinite alternate}
+@keyframes walkoff{8%{transform:translateY(-3%)}40%,55%{transform:translateX(38vw) translateY(-3%)}60%{transform:translateX(38vw) translateY(-3%) scaleX(-1)}95%{transform:translateX(0) translateY(-3%) scaleX(-1)}100%{transform:none}}
+@keyframes step{from{transform:rotate(-22deg)}to{transform:rotate(22deg)}}
+@keyframes swingl{from{transform:rotate(-30deg)}to{transform:rotate(25deg)}}
+@keyframes swingr{from{transform:rotate(30deg)}to{transform:rotate(-25deg)}}
+#big.fx-sneeze .face{animation:sneeze 2.2s}
+#big.fx-sneeze .eye{animation:fxsleep 2.2s}
+@keyframes sneeze{0%,50%{transform:none}60%{transform:scale(.92) translateY(4%)}70%{transform:scale(1.12) translateY(-6%)}82%{transform:scale(.97)}100%{transform:none}}
+#big.fx-sleepz .eye{height:4%;top:46%;border-radius:2cqmin;animation:none}
+#big.fx-sleepz .zzz{opacity:1;animation:zzz 4s ease-out}
+@keyframes zzz{0%{transform:translate(0,30%) scale(.5);opacity:0}25%{opacity:1}100%{transform:translate(40%,-80%) scale(1.3);opacity:0}}
 /* ===== Спокойная тема: лофт, минимализм, пастель ===== */
 :root{--bg1:#efe7dd;--bg2:#f7f2ec;--ink:#3d3a36;--soft:#8a8178;
   --idle:#e9c3a6;--listen:#a9cfb4;--think:#c9b9de;--speak:#eeb0a5;--feat:#f6eee4;--featglow:rgba(246,238,228,.55)}
@@ -274,7 +317,7 @@ body[data-st=think] #glow{background:radial-gradient(circle at 50% 45%,rgba(201,
 body.night{background:linear-gradient(180deg,#2b2f3d,#1d202b)}
 body.night #said{color:#d9d3e6}
 body.night #big{--idle:#9b93c9;--speak:#b3a9dc;--listen:#93b3cf}
-body.night #moon{background:#efe0b6}
+body.night #moon{background:rgba(255,255,255,.1);box-shadow:none}
 body.night #stars{background:rgba(255,255,255,.12);color:#e8e2f2}
 body.night #gear{color:#e8e2f2;background:rgba(255,255,255,.08)}
 
@@ -308,7 +351,7 @@ body.panelon #demo{display:none}
 <div id="glow"></div>
 <div id="stage">
   <div id="center">
-    <button id="big" aria-label="Поговорить"><div class="rays"></div><div class="face"><div class="craters"></div><div class="cheek l"></div><div class="cheek r"></div><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div></button>
+    <button id="big" aria-label="Поговорить"><div class="rays"></div><div class="limb arm l"></div><div class="limb arm r"></div><div class="limb leg l"></div><div class="limb leg r"></div><div class="zzz">z Z</div><div class="face"><div class="craters"></div><div class="brow l"></div><div class="brow r"></div><div class="tongue"></div><div class="cheek l"></div><div class="cheek r"></div><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div></button>
     <div id="pics"></div>
   </div>
   <div id="said"></div>
@@ -521,7 +564,8 @@ let state = 'idle', emo = '', emoTimer = null;
 const EMO = { 'радость':'joy', 'смех':'laugh', 'удивление':'wow', 'восторг':'star', 'нежность':'love', 'подмигивание':'wink', 'задумчивость':'hmm', 'грусть':'sad', 'испуг':'scared', 'сонный':'sleepy', 'сон':'sleepy' };
 function setEmo(e, ms){ clearTimeout(emoTimer); emo = e || ''; setState(state, hintEl.textContent); if (emo && ms) emoTimer = setTimeout(() => setEmo(''), ms); }
 function setState(s, hint){
-  state = s; big.className = (s === 'idle' ? '' : s) + (emo ? ' emo-' + emo : ''); document.body.dataset.st = s; if (s !== 'listen') big.style.setProperty('--lvl', 0);
+  state = s; const keepFx = [...big.classList].filter(c => c.startsWith('fx-'));   // шалость доигрывает до конца
+  big.className = (s === 'idle' ? '' : s) + (emo ? ' emo-' + emo : ''); keepFx.forEach(c => big.classList.add(c)); document.body.dataset.st = s; if (s !== 'listen') big.style.setProperty('--lvl', 0);
   hintEl.textContent = hint != null ? hint : ({ idle:'Нажми на меня!', listen:'Говори, я слушаю…', think:'Думаю…', speak:'' })[s];
 }
 function toast(msg, ms){ const t = $('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', ms || 4000); }
@@ -599,6 +643,9 @@ function onKidSaid(alts){
 /* ================== Простой: шутки и вопросы ================== */
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const FX = ['look','wink','bounce','spin','peek','yawn','wiggle','jump','dizzy','surprise'];
+const FX_DAY = FX.concat(['turn','hide','deflate','walk','tongue','grin','sneeze','grin','walk']);
+const FX_NIGHT = ['yawn','sleepz','sleepz','turn','hide','deflate','grin','wink','look','dizzy'];
+const FX_DUR = { turn:3000, hide:2800, deflate:3200, walk:5000, tongue:2200, grin:2200, sneeze:2200, sleepz:4000, angry:2600 };
 const NUDGES = [
   'Санёк, ты здесь?', 'Ау-у! Где мой друг Санёк?', 'Тук-тук! Кто там? Санёк?', 'Я тебя жду-жду!',
   'Би-би! Ты тут?', 'Эй, дружок, ты где спрятался?', 'Ку-ку! Я тебя не слышу.', 'Санёк, скажи что-нибудь, я слушаю!',
@@ -612,14 +659,16 @@ const BYES = [
 ];
 const NUDGE_FX = { 'Ку-ку': 'peek', 'усну': 'yawn', 'Бип-бип': 'wiggle', 'спрятался': 'look', 'Под столом': 'look', 'Тук-тук': 'jump' };
 let lastNudge = '';
-const FX_ALL = FX.concat(['sun', 'moonface']);
+const FX_ALL = FX.concat(['sun', 'moonface', 'turn', 'hide', 'deflate', 'walk', 'tongue', 'grin', 'sneeze', 'sleepz', 'angry']);
 function fx(name, ms){
   if (!ms && fx.longUntil > Date.now()) return;      // солнышко и луну не прерываем
   fx.longUntil = ms ? Date.now() + ms : 0;
   name = name || pick(FX);
   big.classList.remove(...FX_ALL.map(f => 'fx-' + f)); void big.offsetWidth;
   big.classList.add('fx-' + name);
+  if (!ms && FX_DUR[name]) ms = FX_DUR[name];
   clearTimeout(fx.t); fx.t = setTimeout(() => big.classList.remove('fx-' + name), ms || 2200);
+  if (SFX[name]) try { SFX[name](); } catch(e){}
 }
 function sayLocal(text, after){
   stopListening(); saidEl.textContent = text; heardEl.textContent = '';
@@ -639,9 +688,14 @@ function onSilence(){
     sayLocal(pick(BYES), () => goDoze());
   }
 }
+function pickTease(){
+  let list = night ? FX_NIGHT : FX_DAY;
+  if (document.body.classList.contains('pics')) list = list.filter(f => !['walk', 'hide', 'deflate'].includes(f));
+  return pick(list);
+}
 // когда никто не играет, личико иногда шалит само
 (function idleTease(){
-  setTimeout(() => { if (state === 'idle' && !document.hidden && !$('panel').classList.contains('on')) fx(night ? 'yawn' : null); idleTease(); }, (7000 + Math.random() * 8000) * 1.15);
+  setTimeout(() => { if (state === 'idle' && !document.hidden && !$('panel').classList.contains('on')) fx(pickTease()); idleTease(); }, (7000 + Math.random() * 8000) * 1.15);
 })();
 
 /* ================== Живой фон ================== */
@@ -899,6 +953,22 @@ const SFX = {
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
     o.connect(g).connect(AU.sfx); o.start(t); o.stop(t + 0.3); },
   shimmer(){ if (!SFX.ok()) return; const t = AU.ctx.currentTime; [88, 84, 81, 76].forEach((m, i) => piano(m, t + i * 0.12, 2.2, 0.035, AU.sfx)); },
+  noiseHit(f0, f1, dur, vol, type){ if (!SFX.ok()) return; const ctx = AU.ctx, t = ctx.currentTime, n = ctx.createBufferSource(); n.buffer = AU.noise;
+    const bp = ctx.createBiquadFilter(); bp.type = type || 'bandpass'; bp.Q.value = 1.2; bp.frequency.setValueAtTime(f0, t); bp.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    n.connect(bp).connect(g).connect(AU.sfx); n.start(t); n.stop(t + dur + 0.05); },
+  tone(f0, f1, dur, vol, type, delay){ if (!SFX.ok()) return; const ctx = AU.ctx, t = ctx.currentTime + (delay || 0), o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type || 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(AU.sfx); o.start(t); o.stop(t + dur + 0.05); },
+  deflate(){ SFX.noiseHit(1800, 300, 1.2, 0.05); SFX.tone(700, 180, 1.1, 0.025, 'triangle'); setTimeout(() => SFX.tone(300, 600, 0.4, 0.03, 'sine'), 2300); },
+  hide(){ SFX.tone(500, 1400, 0.35, 0.03); setTimeout(() => SFX.tone(1400, 600, 0.3, 0.03), 2000); },
+  walk(){ for (let i = 0; i < 12; i++) setTimeout(() => SFX.tone(i % 2 ? 180 : 150, 120, 0.08, 0.04, 'triangle'), 300 + i * 320); },
+  tongue(){ SFX.tone(120, 90, 0.5, 0.05, 'sawtooth'); },
+  sneeze(){ SFX.tone(600, 900, 0.5, 0.025, 'sine'); setTimeout(() => SFX.noiseHit(2500, 900, 0.35, 0.07), 1350); },
+  angry(){ SFX.tone(160, 110, 0.5, 0.06, 'sawtooth'); setTimeout(() => SFX.tone(150, 100, 0.4, 0.05, 'sawtooth'), 550); },
+  sleepz(){ SFX.noiseHit(400, 250, 1.4, 0.025, 'lowpass'); },
+  grin(){ SFX.tone(700, 1000, 0.18, 0.025); },
   chime(){ if (!SFX.ok()) return; const t = AU.ctx.currentTime; (night ? [69, 72, 76, 81] : [72, 76, 79, 84]).forEach((m, i) => piano(m, t + i * 0.09, 2.6, 0.05, AU.sfx)); }
 };
 // озвучиваем сцены фона
@@ -1069,7 +1139,8 @@ function isNightTime(){
   const [h, m] = S.night.split(':').map(Number), now = new Date(), mins = now.getHours() * 60 + now.getMinutes(), from = h * 60 + m;
   return mins >= from || mins < 6 * 60;   // до шести утра — тоже ночь
 }
-function setNight(on){ night = on; document.body.classList.toggle('night', on); }
+function setNight(on){ night = on; document.body.classList.toggle('night', on);
+  const m = $('moon'); m.textContent = on ? '☀️' : '🌙'; m.setAttribute('aria-label', on ? 'Сделать день' : 'Спокойной ночи'); }
 function startNight(){
   stopAll(); setNight(true);
   if (!S.apikey){ setEmo('sleepy', 4000); return; }      // без ключа — только ночной экран и музыка
@@ -1223,7 +1294,16 @@ function stopAll(){
   stopListening(); stopSpeaking(); emo = ''; clearTimeout(emoTimer); setState('idle'); keepAwake(false); hidePics();
 }
 
+let taps = [];
+function getAngry(){
+  stopAll(); fx('angry', 2600);
+  const t = pick(['Эй, щекотно! Не так быстро!', 'Ай-ай-ай! Я не барабан!', 'Хм! Я так рассержусь… Ну ладно, не сержусь!', 'Ой-ой, у меня голова кругом!']);
+  saidEl.textContent = t; enqueueSpeech(t);
+  whenSpeechDone().then(() => { setState('idle'); fx('grin'); goDoze(); });
+}
 big.addEventListener('click', () => {
+  const now = Date.now(); taps = taps.filter(t => now - t < 1700); taps.push(now);
+  if (taps.length >= 5){ taps = []; getAngry(); return; }   // быстро-быстро тапают — понарошку злится
   if (state === 'idle'){
     if (dozing){ dozing = false; stopListening(); }
     if (isNightTime()){ startNight(); return; }
