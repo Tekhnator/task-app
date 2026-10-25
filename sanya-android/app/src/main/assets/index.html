@@ -923,8 +923,12 @@ function speakNext(){
   u.lang = 'ru-RU'; u.rate = S.rate * (night ? 0.85 : 1); u.pitch = S.pitch * (night ? 0.95 : 1);
   const v = voices.find(v => v.voiceURI === $('voice').value) || voices[0]; if (v) u.voice = v;
   // Chrome на Android иногда «теряет» onend — страхуемся таймером
+  let started = false;
   const guard = setTimeout(() => { u.onend = null; speakNext(); }, 2500 + t.length * 140 / u.rate);
-  u.onend = u.onerror = () => { clearTimeout(guard); speakNext(); };
+  // если звук так и не начался (нет голоса, браузер не даёт говорить) — не шевелим ртом впустую
+  const startGuard = setTimeout(() => { if (!started){ clearTimeout(guard); u.onend = null; try { speechSynthesis.cancel(); } catch(e){} speakNext(); } }, 1500);
+  u.onstart = () => { started = true; clearTimeout(startGuard); };
+  u.onend = u.onerror = () => { clearTimeout(guard); clearTimeout(startGuard); speakNext(); };
   speechSynthesis.speak(u);
 }
 function whenSpeechDone(){ return new Promise(res => { if (!speaking && !speakQueue.length) res(); else speechDone = res; }); }
@@ -1040,7 +1044,9 @@ function isNightTime(){
 }
 function setNight(on){ night = on; document.body.classList.toggle('night', on); }
 function startNight(){
-  stopAll(); setNight(true); keepAwake(true); silentTries = 0;
+  stopAll(); setNight(true);
+  if (!S.apikey){ setEmo('sleepy', 4000); return; }      // без ключа — только ночной экран и музыка
+  keepAwake(true); silentTries = 0;
   sessionStart = Date.now(); sessionEnded = false; history = [];
   setEmo('sleepy'); ask('[режим сна]');
 }
