@@ -17,6 +17,7 @@ import android.speech.tts.Voice;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -50,6 +51,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private String voskError = null;
     private boolean voskGotResult = false;
     private final Handler ui = new Handler(Looper.getMainLooper());
+    private PermissionRequest pendingCam;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -63,7 +65,19 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         s.setAllowUniversalAccessFromFileURLs(true);   // чтобы страница могла звать api.anthropic.com
         s.setMediaPlaybackRequiresUserGesture(false);
         s.setTextZoom(100);
-        web.setWebChromeClient(new WebChromeClient());
+        web.setWebChromeClient(new WebChromeClient() {
+            // камера для сканирования QR-кода с ключом
+            @Override public void onPermissionRequest(final PermissionRequest req) {
+                ui.post(() -> {
+                    boolean wantsCam = false;
+                    for (String r : req.getResources()) if (PermissionRequest.RESOURCE_VIDEO_CAPTURE.equals(r)) wantsCam = true;
+                    if (!wantsCam) { req.deny(); return; }
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        req.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+                    } else { pendingCam = req; requestPermissions(new String[]{Manifest.permission.CAMERA}, 2); }
+                });
+            }
+        });
         web.setWebViewClient(new WebViewClient());
         web.addJavascriptInterface(new Bridge(), "Android");
         web.loadUrl("file:///android_asset/index.html");
@@ -310,6 +324,16 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
                 }
             } catch (Exception ignored) {}
             return arr.toString();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
+        super.onRequestPermissionsResult(code, perms, res);
+        if (code == 2 && pendingCam != null) {
+            if (res.length > 0 && res[0] == PackageManager.PERMISSION_GRANTED) pendingCam.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+            else pendingCam.deny();
+            pendingCam = null;
         }
     }
 
