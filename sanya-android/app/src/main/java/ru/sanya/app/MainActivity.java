@@ -26,6 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import org.vosk.Model;
+import org.vosk.Recognizer;
+import org.vosk.android.SpeechService;
+import org.vosk.android.StorageService;
 import java.util.Locale;
 
 /**
@@ -39,6 +43,12 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private TextToSpeech tts;
     private SpeechRecognizer sr;
     private boolean ttsReady = false;
+    // офлайн-распознавание Vosk (для планшетов без сервисов Google, например Huawei)
+    private Model voskModel;
+    private SpeechService vosk;
+    private boolean voskLoading = false;
+    private String voskError = null;
+    private boolean voskGotResult = false;
     private final Handler ui = new Handler(Looper.getMainLooper());
 
     @Override
@@ -61,6 +71,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         hideBars();
 
         tts = new TextToSpeech(this, this);
+        loadVosk();
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1);
         }
@@ -91,6 +102,80 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         });
         ttsReady = true;
         emit("ttsready", "");
+    }
+
+    private void loadVosk() {
+        if (voskModel != null || voskLoading) return;
+        voskLoading = true;
+        StorageService.unpack(this, "model-ru", "model",
+                m -> { voskModel = m; voskLoading = false; emit("asrready", "vosk"); },
+                e -> { voskError = e.getMessage(); voskLoading = false; });
+    }
+
+    private boolean useGoogle(String mode) {
+        if ("vosk".equals(mode)) return false;
+        boolean avail = SpeechRecognizer.isRecognitionAvailable(this);
+        if ("google".equals(mode)) return avail;
+        return avail && voskModel == null ? true : avail && !isHuawei();
+    }
+
+    private boolean isHuawei() {
+        String m = (Build.MANUFACTURER + " " + Build.BRAND).toLowerCase(Locale.ROOT);
+        return m.contains("huawei") || m.contains("honor");
+    }
+
+    private void stopVosk() {
+        if (vosk != null) { try { vosk.stop(); vosk.shutdown(); } catch (Exception ignored) {} vosk = null; }
+    }
+
+    private void startVosk() {
+        if (voskModel == null) {
+            emit("error", voskLoading ? "loading" : "no-recognizer"); emit("end", ""); return;
+        }
+        try {
+            stopVosk();
+            Recognizer rec = new Recognizer(voskModel, 16000.0f);
+            rec.setMaxAlternatives(5);
+            voskGotResult = false;
+            vosk = new SpeechService(rec, 16000.0f);
+            vosk.startListening(new org.vosk.android.RecognitionListener() {
+                @Override public void onPartialResult(String hyp) {
+                    try { String t = new JSONObject(hyp).optString("partial", ""); if (!t.trim().isEmpty()) emit("partial", t); } catch (Exception ignored) {}
+                }
+                @Override public void onResult(String hyp) { handleVosk(hyp); }
+                @Override public void onFinalResult(String hyp) { }
+                @Override public void onError(Exception e) { stopVosk(); emit("error", "other-vosk"); emit("end", ""); }
+                @Override public void onTimeout() { if (!voskGotResult) { stopVosk(); emit("error", "no-speech"); emit("end", ""); } }
+            }, 8000);
+        } catch (Exception e) {
+            emit("error", "other-vosk"); emit("end", "");
+        }
+    }
+
+    // Vosk выдаёт результат на каждой паузе; берём первую непустую фразу
+    private void handleVosk(String hyp) {
+        if (voskGotResult) return;
+        try {
+            JSONObject o = new JSONObject(hyp);
+            JSONArray out = new JSONArray();
+            JSONArray alts = o.optJSONArray("alternatives");
+            if (alts != null) {
+                for (int i = 0; i < alts.length(); i++) {
+                    JSONObject a = alts.getJSONObject(i);
+                    String t = a.optString("text", "").trim();
+                    if (t.isEmpty()) continue;
+                    JSONObject r = new JSONObject(); r.put("t", t); r.put("c", 0); out.put(r);
+                }
+            } else {
+                String t = o.optString("text", "").trim();
+                if (!t.isEmpty()) { JSONObject r = new JSONObject(); r.put("t", t); r.put("c", 0); out.put(r); }
+            }
+            if (out.length() == 0) return;          // шум — слушаем дальше
+            voskGotResult = true;
+            stopVosk();
+            emit("final", out.toString());
+            emit("end", "");
+        } catch (Exception ignored) {}
     }
 
     private void emit(String ev, String data) {
@@ -151,15 +236,24 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
     private class Bridge {
         @JavascriptInterface
-        public void listen(final String lang) {
+        public void listen(final String lang) { listen2(lang, "auto"); }
+
+        @JavascriptInterface
+        public String asrInfo(String mode) {
+            boolean g = SpeechRecognizer.isRecognitionAvailable(MainActivity.this);
+            String cur = useGoogle(mode) ? "Google" : "офлайн Vosk";
+            return "Сейчас: " + cur + ". Google на устройстве: " + (g ? "есть" : "нет") + ". Vosk: "
+                    + (voskModel != null ? "готов" : voskLoading ? "загружается…" : "ошибка " + voskError);
+        }
+
+        @JavascriptInterface
+        public void listen2(final String lang, final String mode) {
             ui.post(() -> {
                 if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1);
                     emit("error", "not-allowed"); emit("end", ""); return;
                 }
-                if (!SpeechRecognizer.isRecognitionAvailable(MainActivity.this)) {
-                    emit("error", "no-recognizer"); emit("end", ""); return;
-                }
+                if (!useGoogle(mode)) { startVosk(); return; }
                 // новый распознаватель на каждую фразу — так меньше ошибок «занято»
                 if (sr != null) { sr.destroy(); sr = null; }
                 sr = SpeechRecognizer.createSpeechRecognizer(MainActivity.this);
@@ -179,7 +273,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
         @JavascriptInterface
         public void stopListen() {
-            ui.post(() -> { if (sr != null) { sr.cancel(); sr.destroy(); sr = null; } });
+            ui.post(() -> { if (sr != null) { sr.cancel(); sr.destroy(); sr = null; } voskGotResult = true; stopVosk(); });
         }
 
         @JavascriptInterface
@@ -225,6 +319,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         if (web != null) web.evaluateJavascript("typeof stopAll==='function'&&stopAll()", null);
         if (tts != null) tts.stop();
         if (sr != null) { sr.cancel(); sr.destroy(); sr = null; }
+        voskGotResult = true; stopVosk();
     }
 
     @Override
@@ -237,6 +332,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     protected void onDestroy() {
         if (tts != null) tts.shutdown();
         if (sr != null) sr.destroy();
+        stopVosk();
+        if (voskModel != null) voskModel.close();
         if (web != null) web.destroy();
         super.onDestroy();
     }

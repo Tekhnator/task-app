@@ -15,6 +15,14 @@ jobs:
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '8.9' }
+      - name: Russian speech model (Vosk, offline)
+        run: |
+          curl -sSL -o model.zip https://alphacephei.com/vosk/models/vosk-model-small-ru-0.22.zip
+          unzip -q model.zip
+          mkdir -p sanya-android/app/src/main/assets
+          mv vosk-model-small-ru-0.22 sanya-android/app/src/main/assets/model-ru
+          echo "small-ru-0.22" > sanya-android/app/src/main/assets/model-ru/uuid
+          du -sh sanya-android/app/src/main/assets/model-ru
       - name: Build APK
         run: gradle -p sanya-android assembleRelease --no-daemon --stacktrace
       - run: cp sanya-android/app/build/outputs/apk/release/app-release.apk Sanya.apk
