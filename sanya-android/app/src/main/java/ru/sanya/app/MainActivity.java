@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.vosk.Model;
 import org.vosk.Recognizer;
 import org.vosk.android.SpeechService;
@@ -44,6 +45,9 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private TextToSpeech tts;
     private SpeechRecognizer sr;
     private boolean ttsReady = false;
+    private List<String> engineQueue = null;   // какие синтезаторы ещё попробовать
+    private String engineName = "";
+    private boolean ttsFailed = false;
     // офлайн-распознавание Vosk (для планшетов без сервисов Google, например Huawei)
     private Model voskModel;
     private SpeechService vosk;
@@ -103,19 +107,56 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         if (hasFocus) hideBars();
     }
 
+    private boolean hasRussian() {
+        try { return tts.isLanguageAvailable(RU) >= TextToSpeech.LANG_AVAILABLE; } catch (Exception e) { return false; }
+    }
+
+    /** Ищем синтезатор, в котором есть русский голос: сначала системный, потом остальные (RHVoice первым). */
     @Override
     public void onInit(int status) {
-        if (status != TextToSpeech.SUCCESS) { emit("ttsmissing", ""); return; }
-        int r = tts.setLanguage(RU);
-        if (r == TextToSpeech.LANG_MISSING_DATA || r == TextToSpeech.LANG_NOT_SUPPORTED) emit("ttsmissing", "");
-        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-            @Override public void onStart(String id) {}
-            @Override public void onDone(String id) { emit("spoken", id); }
-            @Override public void onError(String id) { emit("spoken", id); }
-            @Override public void onStop(String id, boolean interrupted) {}
-        });
-        ttsReady = true;
-        emit("ttsready", "");
+        if (status == TextToSpeech.SUCCESS && hasRussian()) {
+            tts.setLanguage(RU);
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override public void onStart(String id) {}
+                @Override public void onDone(String id) { emit("spoken", id); }
+                @Override public void onError(String id) { emit("spoken", id); }
+                @Override public void onStop(String id, boolean interrupted) {}
+            });
+            ttsReady = true;
+            try { engineName = tts.getDefaultEngine(); } catch (Exception ignored) {}
+            emit("ttsready", engineName);
+            return;
+        }
+        if (engineQueue == null) {
+            engineQueue = new ArrayList<>();
+            String cur = "";
+            try { cur = tts.getDefaultEngine(); } catch (Exception ignored) {}
+            try {
+                for (TextToSpeech.EngineInfo e : tts.getEngines()) {
+                    if (e.name.equals(cur)) continue;
+                    if (e.name.contains("rhvoice")) engineQueue.add(0, e.name); else engineQueue.add(e.name);
+                }
+            } catch (Exception ignored) {}
+        }
+        if (!engineQueue.isEmpty()) {
+            final String next = engineQueue.remove(0);
+            try { tts.shutdown(); } catch (Exception ignored) {}
+            ui.post(() -> { engineName = next; tts = new TextToSpeech(MainActivity.this, MainActivity.this, next); });
+            return;
+        }
+        ttsFailed = true;
+        emit("ttsmissing", "");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // вернулись после установки голоса — пробуем снова
+        if (ttsFailed && !ttsReady && tts != null) {
+            ttsFailed = false; engineQueue = null;
+            try { tts.shutdown(); } catch (Exception ignored) {}
+            tts = new TextToSpeech(this, this);
+        }
     }
 
     private void loadVosk() {
@@ -301,6 +342,13 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
                 } catch (Exception ignored) {}
             }
             tts.speak(text, TextToSpeech.QUEUE_ADD, null, id);
+        }
+
+        @JavascriptInterface
+        public void openUrl(String url) {
+            // ссылки открываем во внешнем браузере (например, загрузка RHVoice)
+            if (url == null || !url.startsWith("https://")) return;
+            ui.post(() -> { try { startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))); } catch (Exception ignored) {} });
         }
 
         @JavascriptInterface
