@@ -373,6 +373,28 @@ body.panelon #demo{display:none}
   <div class="note" style="margin:-4px 0 6px">Изменения сохраняются сразу. Закрыть — крестик ✕ справа вверху.</div>
 
   <div class="sec">
+   <h2>«Мозг» приложения</h2>
+   <select id="provider">
+     <option value="giga">GigaChat (Сбер) — бесплатно для физлиц, работает в России</option>
+     <option value="claude">Claude (Anthropic) — нужен свой ключ, не работает в России</option>
+   </select>
+  </div>
+
+  <div class="sec" id="secgiga">
+   <h2>Ключ GigaChat</h2>
+   <label for="gigakey">Ключ авторизации (Authorization key)</label>
+   <input id="gigakey" type="password" autocomplete="off" placeholder="длинная строка, обычно заканчивается на ==">
+   <div class="row" style="margin-top:10px"><button class="b pri" id="scanqr2">📷 Сканировать QR-код</button></div>
+   <div class="note">Где взять: developers.sber.ru → войти по Сбер ID → создать проект «GigaChat API» для физлиц → «Ключ авторизации». Первые 12 месяцев бесплатно.</div>
+   <label for="gigamodel">Модель</label>
+   <select id="gigamodel">
+     <option value="GigaChat-2">GigaChat Lite — быстрее (рекомендую)</option>
+     <option value="GigaChat-2-Pro">GigaChat Pro — умнее, чуть медленнее</option>
+   </select>
+   <div class="row" style="margin-top:10px"><button class="b" id="testgiga">Проверить ключ</button></div>
+  </div>
+
+  <div class="sec" id="secclaude">
    <h2>Ключ Claude API</h2>
    <label for="apikey">Ключ (начинается с sk-ant-…)</label>
    <input id="apikey" type="password" autocomplete="off" placeholder="sk-ant-...">
@@ -492,7 +514,7 @@ const S = loadSettings();
 function loadSettings(){
   let s = {};
   try { s = JSON.parse(localStorage.getItem('sanya.settings') || '{}'); } catch(e){}
-  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00', subs:true, subsKid:true, asr:'auto', always:true, music:true, sfx:true, vol:0.35, wake:'any', wakewords:'привет, клод, клот, эй, проснись, давай, поиграем' }, s);
+  return Object.assign({ apikey:'', model:'claude-haiku-5-5', voice:'', rate:0.9, pitch:1.1, limit:20, about:DEFAULT_ABOUT, dict:'', night:'21:00', subs:true, subsKid:true, asr:'auto', provider:'giga', gigakey:'', gigamodel:'GigaChat-2', always:true, music:true, sfx:true, vol:0.35, wake:'any', wakewords:'привет, клод, клот, эй, проснись, давай, поиграем' }, s);
 }
 function saveSettings(){ try { localStorage.setItem('sanya.settings', JSON.stringify(S)); } catch(e){} }
 
@@ -592,6 +614,7 @@ window.onNative = (ev, data) => {
   else if (ev === 'final' && r && r.onresult){ const alts = JSON.parse(data); r.onresult({ resultIndex:0, results:[mkRes(alts.map(a => ({ transcript:a.t, confidence:a.c })), true)] }); }
   else if (ev === 'error' && r && r.onerror) r.onerror({ error:data });
   else if (ev === 'end' && r){ NativeSR.cur = null; if (r.onend) r.onend(); }
+  else if (ev === 'gdelta' || ev === 'gdone' || ev === 'gerr') gigaEvent(ev, data);
   else if (ev === 'spoken'){ const f = nativeSpoken[data]; delete nativeSpoken[data]; if (f) f(); }
   else if (ev === 'ttsready'){ loadVoices(); if ($('ttshelp').classList.contains('on')){ $('ttshelp').classList.remove('on'); toast('Русский голос найден ✓', 4000); } }
   else if (ev === 'rms'){ if (state === 'listen') big.style.setProperty('--lvl', Math.max(0, Math.min(1, (+data - 1) / 9)).toFixed(2)); }
@@ -1168,7 +1191,7 @@ function setNight(on){ night = on; document.body.classList.toggle('night', on);
   const m = $('moon'); m.textContent = on ? '☀️' : '🌙'; m.setAttribute('aria-label', on ? 'Сделать день' : 'Спокойной ночи'); }
 function startNight(){
   stopAll(); setNight(true);
-  if (!S.apikey){ setEmo('sleepy', 4000); return; }      // без ключа — только ночной экран и музыка
+  if (!hasKey()){ setEmo('sleepy', 4000); return; }      // без ключа — только ночной экран и музыка
   keepAwake(true); silentTries = 0;
   sessionStart = Date.now(); sessionEnded = false; history = [];
   setEmo('sleepy'); ask('[режим сна]');
@@ -1188,8 +1211,52 @@ function sessionOver(){
   return false;
 }
 
+/* ---- «Мозг»: GigaChat (Сбер, бесплатно для физлиц) или Claude ---- */
+const provider = () => S.provider === 'claude' ? 'claude' : 'giga';
+const hasKey = () => provider() === 'giga' ? !!S.gigakey : !!S.apikey;
+async function claudeStream(system, messages, onText, signal){
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', signal,
+    headers:{ 'content-type':'application/json', 'x-api-key':S.apikey, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+    body:JSON.stringify({ model:S.model, max_tokens:300, stream:true, system, messages })
+  });
+  if (!res.ok){ let msg = 'Ошибка ' + res.status; try { const j = await res.json(); msg += ': ' + (j.error && j.error.message || ''); } catch(e){} throw new Error(msg); }
+  const reader = res.body.getReader(), dec = new TextDecoder(); let sse = '';
+  while (true){
+    const { value, done } = await reader.read(); if (done) break;
+    sse += dec.decode(value, { stream:true }); let i;
+    while ((i = sse.indexOf('\n')) >= 0){
+      const line = sse.slice(0, i).trim(); sse = sse.slice(i + 1);
+      if (!line.startsWith('data:')) continue;
+      let ev; try { ev = JSON.parse(line.slice(5)); } catch(e){ continue; }
+      if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta') onText(ev.delta.text);
+      else if (ev.type === 'error') throw new Error(ev.error && ev.error.message || 'ошибка API');
+    }
+  }
+}
+// GigaChat ходит через Android-часть: у Сбера сертификаты Минцифры, они встроены в приложение
+const gigaJobs = {}; let gigaN = 0;
+function gigaStream(system, messages, onText, signal, maxTokens){
+  return new Promise((resolve, reject) => {
+    if (!NATIVE || !Android.giga) return reject(new Error('GigaChat работает только в приложении на планшете'));
+    const id = 'g' + (++gigaN);
+    gigaJobs[id] = { onText, resolve, reject };
+    if (signal) signal.addEventListener('abort', () => { delete gigaJobs[id]; try { Android.gigaAbort(id); } catch(e){} const er = new Error('abort'); er.name = 'AbortError'; reject(er); });
+    const body = { model:S.gigamodel || 'GigaChat-2', stream:true, max_tokens:maxTokens || 300, temperature:0.8,
+      messages:[{ role:'system', content:system }].concat(messages) };
+    Android.giga(id, S.gigakey, JSON.stringify(body));
+  });
+}
+function gigaEvent(ev, data){
+  let o; try { o = JSON.parse(data); } catch(e){ o = { id:data }; }
+  const j = gigaJobs[o.id]; if (!j) return;
+  if (ev === 'gdelta') j.onText(o.t || '');
+  else if (ev === 'gdone'){ delete gigaJobs[o.id]; j.resolve(); }
+  else if (ev === 'gerr'){ delete gigaJobs[o.id]; j.reject(new Error((o.status ? 'Ошибка ' + o.status + ': ' : '') + (o.msg || 'GigaChat не ответил'))); }
+}
+
 async function ask(userText, shownText, isLast){
-  if (!S.apikey){ toast('Взрослым: нужен ключ Claude API. Удерживайте ⚙ две секунды.', 7000); stopAll(); enqueueSpeech('Привет! Попроси папу или маму меня настроить.'); whenSpeechDone().then(() => setState('idle')); return; }
+  if (!hasKey()){ toast('Взрослым: нужен ключ (GigaChat или Claude). Удерживайте ⚙ две секунды.', 7000); stopAll(); enqueueSpeech('Привет! Попроси папу или маму меня настроить.'); whenSpeechDone().then(() => setState('idle')); return; }
   stopListening(); setState('think'); saidEl.textContent = '';
   history.push({ role:'user', content:userText });
   if (!shownText && /^\[/.test(userText)) logItems.push({ who:'s', t:userText, at:Date.now() });
@@ -1197,42 +1264,23 @@ async function ask(userText, shownText, isLast){
   abortCtl = new AbortController();
   let full = '', buf = ''; picsUsed = false; endAfter = false;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', signal:abortCtl.signal,
-      headers:{ 'content-type':'application/json', 'x-api-key':S.apikey, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
-      body:JSON.stringify({ model:S.model, max_tokens:300, stream:true, system:systemPrompt(), messages })
-    });
-    if (!res.ok){
-      let msg = 'Ошибка ' + res.status;
-      try { const j = await res.json(); msg += ': ' + (j.error && j.error.message || ''); } catch(e){}
-      throw new Error(msg);
-    }
-    const reader = res.body.getReader(), dec = new TextDecoder(); let sse = '';
-    while (true){
-      const { value, done } = await reader.read(); if (done) break;
-      sse += dec.decode(value, { stream:true });
-      let i;
-      while ((i = sse.indexOf('\n')) >= 0){
-        const line = sse.slice(0, i).trim(); sse = sse.slice(i + 1);
-        if (!line.startsWith('data:')) continue;
-        let ev; try { ev = JSON.parse(line.slice(5)); } catch(e){ continue; }
-        if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta'){
-          full += ev.delta.text; buf += ev.delta.text; saidEl.textContent = cleanForSpeech(stripTags(full));
-          // команды картинок: показываем и вырезаем из текста для озвучки
-          let tm; while ((tm = buf.match(/\[([^\]]{0,400})\]/))){ applyTag(tm[1]); buf = buf.slice(0, tm.index) + buf.slice(tm.index + tm[0].length); }
-          if (/\[[^\]]*$/.test(buf)) continue;   // команда ещё не дописана
-          // начинаем говорить, как только готово первое предложение
-          let m; while ((m = buf.match(/^([\s\S]*?[.!?…]+)(\s+|$)/)) && m[0].length < buf.length){ enqueueSpeech(m[1]); buf = buf.slice(m[0].length); }
-        } else if (ev.type === 'error'){ throw new Error(ev.error && ev.error.message || 'ошибка API'); }
-      }
-    }
+    const onText = text => {
+      full += text; buf += text; saidEl.textContent = cleanForSpeech(stripTags(full));
+      // команды картинок: показываем и вырезаем из текста для озвучки
+      let tm; while ((tm = buf.match(/\[([^\]]{0,400})\]/))){ applyTag(tm[1]); buf = buf.slice(0, tm.index) + buf.slice(tm.index + tm[0].length); }
+      if (/\[[^\]]*$/.test(buf)) return;   // команда ещё не дописана
+      // начинаем говорить, как только готово первое предложение
+      let m; while ((m = buf.match(/^([\s\S]*?[.!?…]+)(\s+|$)/)) && m[0].length < buf.length){ enqueueSpeech(m[1]); buf = buf.slice(m[0].length); }
+    };
+    if (provider() === 'giga') await gigaStream(systemPrompt(), messages, onText, abortCtl.signal);
+    else await claudeStream(systemPrompt(), messages, onText, abortCtl.signal);
     buf = stripTags(buf); if (buf.trim()) enqueueSpeech(buf);
     if (!picsUsed) hidePics();
   } catch(e){
     history.pop();
     if (e.name === 'AbortError') return;
     console.error(e); stopSpeaking();
-    toast(/401|authentication/i.test(e.message) ? 'Неверный ключ API (для взрослых: ⚙)' : /Failed to fetch|NetworkError/i.test(e.message) ? 'Нет интернета' : e.message, 8000);
+    toast(/401|authentication|unauthor/i.test(e.message) ? 'Неверный ключ (для взрослых: ⚙)' : /Failed to fetch|NetworkError|UnknownHost|connect|timeout/i.test(e.message) ? 'Нет интернета или сервер недоступен' : /402|payment|квот|limit/i.test(e.message) ? 'Закончились бесплатные токены или лимит (для взрослых: ⚙)' : e.message, 8000);
     stopAll(); return;
   }
   history.push({ role:'assistant', content:full || '…' });
@@ -1269,7 +1317,7 @@ async function keepAwake(on){
 /* ---- Всегда слушать: дремлет и просыпается от речи ---- */
 let dozing = false, restUntil = 0;
 function startDoze(){
-  if (!S.always || !S.apikey || !SR || dozing) return;
+  if (!S.always || !hasKey() || !SR || dozing) return;
   if (state !== 'idle' || night || isNightTime() || Date.now() < restUntil || document.hidden || $('panel').classList.contains('on')) return;
   dozing = true; hintEl.textContent = S.wake === 'words' ? 'Скажи «Привет»!' : 'Просто скажи мне что-нибудь!';
   dozeListen();
@@ -1359,7 +1407,7 @@ function openPanel(){
   document.body.classList.add('panelon'); gear.firstChild.textContent = '✕';
   holdEnd(); stopAll();
   $('apikey').value = S.apikey; $('model').value = S.model; $('rate').value = S.rate; $('pitch').value = S.pitch;
-  $('limit').value = S.limit; $('music').checked = S.music; $('sfx').checked = S.sfx; $('vol').value = S.vol; $('volV').textContent = Math.round(S.vol * 100) + '%'; $('always').checked = S.always; $('wake').value = S.wake; $('wakewords').value = S.wakewords; $('asr').value = S.asr || 'auto'; if (NATIVE && Android.asrInfo) $('asrinfo').textContent = Android.asrInfo(S.asr || 'auto'); $('subs').checked = S.subs; $('subsKid').checked = S.subsKid; $('night').value = S.night || '';
+  $('limit').value = S.limit; $('provider').value = provider(); $('gigakey').value = S.gigakey || ''; $('gigamodel').value = S.gigamodel || 'GigaChat-2'; showProv(); $('music').checked = S.music; $('sfx').checked = S.sfx; $('vol').value = S.vol; $('volV').textContent = Math.round(S.vol * 100) + '%'; $('always').checked = S.always; $('wake').value = S.wake; $('wakewords').value = S.wakewords; $('asr').value = S.asr || 'auto'; if (NATIVE && Android.asrInfo) $('asrinfo').textContent = Android.asrInfo(S.asr || 'auto'); $('subs').checked = S.subs; $('subsKid').checked = S.subsKid; $('night').value = S.night || '';
   freshStats(); $('today').textContent = `Сегодня: ${Math.round(stats.minutes || 0)} мин разговора, звёздочек ${stats.stars}. Всего звёздочек: ${stats.total}.`; $('about').value = S.about; $('dict').value = S.dict;
   $('rateV').textContent = S.rate; $('pitchV').textContent = S.pitch; loadVoices(); renderLog();
   $('panel').classList.add('on');
@@ -1367,7 +1415,7 @@ function openPanel(){
 function readPanel(){
   S.apikey = $('apikey').value.trim(); S.model = $('model').value; S.voice = $('voice').value;
   S.rate = +$('rate').value; S.pitch = +$('pitch').value; S.limit = Math.max(3, +$('limit').value || 20);
-  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; S.subs = $('subs').checked; S.subsKid = $('subsKid').checked; S.asr = $('asr').value; S.always = $('always').checked; S.music = $('music').checked; S.sfx = $('sfx').checked; S.vol = +$('vol').value; S.wake = $('wake').value; S.wakewords = $('wakewords').value; saveSettings(); applySubs();
+  S.about = $('about').value.trim() || DEFAULT_ABOUT; S.dict = $('dict').value; S.night = $('night').value; S.subs = $('subs').checked; S.subsKid = $('subsKid').checked; S.asr = $('asr').value; S.provider = $('provider').value; S.gigakey = $('gigakey').value.trim(); S.gigamodel = $('gigamodel').value; S.always = $('always').checked; S.music = $('music').checked; S.sfx = $('sfx').checked; S.vol = +$('vol').value; S.wake = $('wake').value; S.wakewords = $('wakewords').value; saveSettings(); applySubs();
 }
 function closePanel(){ stopScan(); readPanel(); $('panel').classList.remove('on'); document.body.classList.remove('panelon'); gear.firstChild.textContent = '⚙'; setTimeout(startDoze, 400); }
 $('pclose').onclick = closePanel;
@@ -1412,7 +1460,7 @@ async function startScan(){
       c.width = v.videoWidth * k; c.height = v.videoHeight * k; ctx.drawImage(v, 0, 0, c.width, c.height);
       const code = jsQR(ctx.getImageData(0, 0, c.width, c.height).data, c.width, c.height, { inversionAttempts:'attemptBoth' });
       if (code && code.data){
-        try { const n = await applyConfig(code.data); stopScan(); toast('Готово: ' + n + '. Проверяю ключ…', 4000); setTimeout(() => $('testkey').click(), 600); return; }
+        try { const n = await applyConfig(code.data); stopScan(); toast('Готово: ' + n + '. Проверяю ключ…', 4000); setTimeout(() => (provider() === 'giga' ? $('testgiga') : $('testkey')).click(), 600); return; }
         catch(e){ $('scanmsg').textContent = 'Это не тот QR-код: ' + e.message; }
       }
     }
@@ -1424,6 +1472,7 @@ function stopScan(){ clearTimeout(scanTimer); if (scanStream){ scanStream.getTra
 async function applyConfig(text){
   text = text.trim(); let cfg;
   if (/^sk-ant-[\w-]+$/.test(text)) cfg = { apikey:text };
+  else if (/^[A-Za-z0-9+/]{40,}={0,2}$/.test(text)) cfg = { gigakey:text };
   else if (/^SANYA[12]:/.test(text)){
     const bin = Uint8Array.from(atob(text.slice(7)), ch => ch.charCodeAt(0));
     let bytes = bin;
@@ -1433,13 +1482,24 @@ async function applyConfig(text){
   else if (/Sanya\.apk|releases/.test(text)) throw new Error('это QR-код для скачивания приложения, а не ключ');
   else throw new Error('в нём нет ключа');
   const got = [];
-  if (cfg.apikey){ S.apikey = cfg.apikey.trim(); $('apikey').value = S.apikey; got.push('ключ'); }
+  if (cfg.apikey){ S.apikey = cfg.apikey.trim(); $('apikey').value = S.apikey; S.provider = 'claude'; got.push('ключ Claude'); }
+  if (cfg.gigakey){ S.gigakey = cfg.gigakey.trim(); $('gigakey').value = S.gigakey; S.provider = 'giga'; got.push('ключ GigaChat'); }
+  $('provider').value = provider(); showProv();
   if (cfg.about){ S.about = cfg.about; $('about').value = S.about; got.push('«О Сане»'); }
   if (cfg.dict){ S.dict = cfg.dict; $('dict').value = S.dict; got.push('словарик'); }
   if (!got.length) throw new Error('он пустой');
   saveSettings(); return got.join(', ');
 }
 $('scanqr').onclick = startScan;
+$('scanqr2').onclick = startScan;
+function showProv(){ const g = $('provider').value !== 'claude'; $('secgiga').style.display = g ? '' : 'none'; $('secclaude').style.display = g ? 'none' : ''; }
+$('provider').addEventListener('change', showProv);
+$('testgiga').onclick = async () => {
+  readPanel(); if (!S.gigakey) return toast('Вставьте ключ GigaChat');
+  toast('Проверяю…');
+  try { let t = ''; await gigaStream('Отвечай одним словом.', [{ role:'user', content:'Скажи: работает' }], x => t += x, null, 10); toast('Ключ работает ✓ Ответ: ' + t.trim(), 7000); }
+  catch(e){ toast('Не получилось: ' + e.message, 9000); }
+};
 $('ttsok').onclick = () => $('ttshelp').classList.remove('on');
 $('rhget').onclick = () => { const u = 'https://f-droid.org/repo/com.github.olga_yakovleva.rhvoice.android_118040.apk';
   if (NATIVE && Android.openUrl) Android.openUrl(u); else window.open(u, '_blank'); };
@@ -1464,7 +1524,7 @@ function applySubs(){ document.body.classList.toggle('nosubs', !S.subs); documen
 applySubs();
 if (NATIVE) document.body.classList.add('native');
 /* ---- Демо для просмотра в браузере без ключа (в APK не показывается) ---- */
-if (!NATIVE && !S.apikey){
+if (!NATIVE && !hasKey()){
   const D = $('demo'); D.classList.add('on');
   { const x = document.createElement('button'); x.textContent = '✕ Скрыть демо'; x.onclick = () => D.classList.remove('on'); D.appendChild(x); }
   const fake = (txt) => { const r = window.__demoReply = txt; stopAll(); applyDemo(r); };
@@ -1492,7 +1552,7 @@ if (!NATIVE && !S.apikey){
 }
 if (NATIVE) setTimeout(() => { const c = audioInit(); if (c && c.state === 'suspended') c.resume(); }, 800);   // в приложении музыка может начаться без касания
 setTimeout(startDoze, 1500);      // приложение открылось — сразу начинаем слушать
-if (!S.apikey) hintEl.textContent = 'Взрослым: удерживайте ⚙ 2 секунды и вставьте ключ';
+if (!hasKey()) hintEl.textContent = 'Взрослым: удерживайте ⚙ 2 секунды и вставьте ключ';
 if (!SR) toast('Откройте в Google Chrome — здесь нет распознавания речи', 8000);
 </script>
 </body>

@@ -26,6 +26,15 @@ import android.webkit.WebViewClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import org.vosk.Model;
@@ -48,6 +57,99 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private List<String> engineQueue = null;   // какие синтезаторы ещё попробовать
     private String engineName = "";
     private boolean ttsFailed = false;
+
+    /* ===== GigaChat (Сбер): токен на 30 минут, потоковые ответы ===== */
+    private static final String GIGA_AUTH = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth";
+    private static final String[] GIGA_BASES = { "https://gigachat.devices.sberbank.ru/api/v1", "https://api.giga.chat/v1" };
+    private String gigaTok = null, gigaTokKey = "";
+    private long gigaExp = 0;
+    private final ConcurrentHashMap<String, HttpURLConnection> gigaConns = new ConcurrentHashMap<>();
+    private final java.util.Set<String> gigaAborted = ConcurrentHashMap.newKeySet();
+
+    static class GigaErr extends Exception { final int status; GigaErr(int s, String m) { super(m); status = s; } }
+
+    private static String readAll(InputStream in) throws Exception {
+        if (in == null) return "";
+        StringBuilder sb = new StringBuilder(); BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        String l; while ((l = r.readLine()) != null) sb.append(l).append('\n'); return sb.toString();
+    }
+
+    private static String errText(String body) {
+        try { JSONObject o = new JSONObject(body); String m = o.optString("message", o.optString("error_description", o.optString("error", ""))); if (!m.isEmpty()) return m; } catch (Exception ignored) {}
+        return body.length() > 200 ? body.substring(0, 200) : body;
+    }
+
+    private synchronized String gigaToken(String key, boolean force) throws Exception {
+        if (!force && gigaTok != null && key.equals(gigaTokKey) && System.currentTimeMillis() < gigaExp - 60000) return gigaTok;
+        HttpURLConnection c = (HttpURLConnection) new URL(GIGA_AUTH).openConnection();
+        c.setRequestMethod("POST"); c.setDoOutput(true); c.setConnectTimeout(15000); c.setReadTimeout(20000);
+        c.setRequestProperty("Authorization", "Basic " + key.trim());
+        c.setRequestProperty("RqUID", UUID.randomUUID().toString());
+        c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        c.setRequestProperty("Accept", "application/json");
+        try (OutputStream o = c.getOutputStream()) { o.write("scope=GIGACHAT_API_PERS".getBytes(StandardCharsets.UTF_8)); }
+        int code = c.getResponseCode();
+        String body = readAll(code < 400 ? c.getInputStream() : c.getErrorStream());
+        if (code != 200) throw new GigaErr(code, code == 401 ? "неверный ключ авторизации" : errText(body));
+        JSONObject j = new JSONObject(body);
+        gigaTok = j.has("access_token") ? j.getString("access_token") : j.getString("tok");
+        gigaExp = j.has("expires_at") ? j.getLong("expires_at") : j.optLong("exp", System.currentTimeMillis() + 25 * 60000);
+        if (gigaExp < 100000000000L) gigaExp *= 1000;   // на всякий случай: секунды → миллисекунды
+        gigaTokKey = key;
+        return gigaTok;
+    }
+
+    private void gigaRun(String id, String key, String body) {
+        try {
+            String tok = gigaToken(key, false);
+            Exception last = null;
+            for (String base : GIGA_BASES) {
+                try { gigaStreamOnce(id, base, tok, body, true); return; }
+                catch (GigaErr e) { throw e; }
+                catch (Exception e) { last = e; if (gigaAborted.contains(id)) return; }   // сеть/сертификат — пробуем другой адрес
+            }
+            if (last != null) throw last;
+        } catch (GigaErr e) {
+            if (!gigaAborted.remove(id)) emit("gerr", gj(id, e.status, e.getMessage()));
+        } catch (Exception e) {
+            if (!gigaAborted.remove(id)) emit("gerr", gj(id, 0, e.getClass().getSimpleName() + ": " + e.getMessage()));
+        } finally { gigaConns.remove(id); }
+    }
+
+    private void gigaStreamOnce(String id, String base, String tok, String body, boolean retry401) throws Exception {
+        HttpURLConnection c = (HttpURLConnection) new URL(base + "/chat/completions").openConnection();
+        gigaConns.put(id, c);
+        c.setRequestMethod("POST"); c.setDoOutput(true); c.setConnectTimeout(15000); c.setReadTimeout(40000);
+        c.setRequestProperty("Authorization", "Bearer " + tok);
+        c.setRequestProperty("Content-Type", "application/json");
+        c.setRequestProperty("Accept", "text/event-stream");
+        try (OutputStream o = c.getOutputStream()) { o.write(body.getBytes(StandardCharsets.UTF_8)); }
+        int code = c.getResponseCode();
+        if (code == 401 && retry401) { gigaStreamOnce(id, base, gigaToken(gigaTokKey, true), body, false); return; }
+        if (code != 200) throw new GigaErr(code, errText(readAll(c.getErrorStream())));
+        BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+        String line;
+        while ((line = r.readLine()) != null) {
+            if (gigaAborted.contains(id)) { c.disconnect(); gigaAborted.remove(id); return; }
+            line = line.trim();
+            if (!line.startsWith("data:")) continue;
+            String v = line.substring(5).trim();
+            if (v.equals("[DONE]")) break;
+            try {
+                JSONObject ch = new JSONObject(v).getJSONArray("choices").getJSONObject(0);
+                JSONObject d = ch.optJSONObject("delta");
+                String t = d != null ? d.optString("content", "") : "";
+                if (!t.isEmpty()) emit("gdelta", gj(id, 0, null, t));
+            } catch (Exception ignored) {}
+        }
+        emit("gdone", gj(id, 0, null));
+    }
+
+    private static String gj(String id, int status, String msg) { return gj(id, status, msg, null); }
+    private static String gj(String id, int status, String msg, String t) {
+        try { JSONObject o = new JSONObject(); o.put("id", id); if (status != 0) o.put("status", status); if (msg != null) o.put("msg", msg); if (t != null) o.put("t", t); return o.toString(); }
+        catch (Exception e) { return "{\"id\":\"" + id + "\"}"; }
+    }
     // офлайн-распознавание Vosk (для планшетов без сервисов Google, например Huawei)
     private Model voskModel;
     private SpeechService vosk;
@@ -342,6 +444,19 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
                 } catch (Exception ignored) {}
             }
             tts.speak(text, TextToSpeech.QUEUE_ADD, null, id);
+        }
+
+        @JavascriptInterface
+        public void giga(final String id, final String key, final String body) {
+            gigaAborted.remove(id);
+            new Thread(() -> gigaRun(id, key, body), "giga-" + id).start();
+        }
+
+        @JavascriptInterface
+        public void gigaAbort(String id) {
+            gigaAborted.add(id);
+            HttpURLConnection c = gigaConns.remove(id);
+            if (c != null) new Thread(c::disconnect).start();
         }
 
         @JavascriptInterface

@@ -35,6 +35,16 @@ jobs:
             ffmpeg -loglevel error -y -i "$f" -ac 1 -ar 44100 -af loudnorm=I=-24:TP=-2 -c:a libvorbis -q:a 3 "sanya-android/app/src/main/assets/music/$b.ogg"
           done
           ls -la sanya-android/app/src/main/assets/music
+      - name: Russian Trusted CA (for GigaChat only)
+        run: |
+          mkdir -p sanya-android/app/src/main/res/raw
+          for n in root sub; do
+            curl -sSL --fail -o c.crt "https://gu-st.ru/content/lending/russian_trusted_${n}_ca_pem.crt" || curl -sSLk --fail -o c.crt "https://gu-st.ru/content/lending/russian_trusted_${n}_ca_pem.crt"
+            openssl x509 -in c.crt -noout -subject -issuer -fingerprint -sha256
+            openssl x509 -in c.crt -out "sanya-android/app/src/main/res/raw/russian_trusted_${n}_ca.pem"
+          done
+          # ресурсы в raw без расширения в имени
+          cd sanya-android/app/src/main/res/raw && for f in *.pem; do mv "$f" "${f%.pem}"; done && ls -la
       - name: Build APK
         run: gradle -p sanya-android assembleRelease --no-daemon --stacktrace
       - run: cp sanya-android/app/build/outputs/apk/release/app-release.apk Sanya.apk

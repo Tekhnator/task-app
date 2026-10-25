@@ -34,18 +34,19 @@ code{background:#f2ebe2;padding:1px 6px;border-radius:6px}
  <p class="sub">Ключ и текст никуда не отправляются: QR-код рисуется прямо в этом браузере.</p>
 
  <div class="card">
-  <h2>1. Получите ключ Claude API</h2>
+  <h2>1. Получите ключ GigaChat (бесплатно на 12 месяцев)</h2>
   <ol>
-   <li>Откройте <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> и войдите или зарегистрируйтесь.</li>
-   <li>Раздел <b>Billing</b>: пополните баланс и поставьте месячный лимит расходов.</li>
-   <li>Раздел <b>API Keys</b> → <b>Create Key</b>, имя «Санёк». Скопируйте ключ: он начинается с <code>sk-ant-</code> и показывается один раз.</li>
+   <li>Откройте <a href="https://developers.sber.ru/studio" target="_blank" rel="noopener">developers.sber.ru/studio</a> и войдите по Сбер ID.</li>
+   <li>Создайте проект <b>GigaChat API</b> для физических лиц (тариф Freemium подключается сам).</li>
+   <li>В настройках проекта нажмите <b>«Получить ключ»</b> и скопируйте <b>ключ авторизации</b> (Authorization key) — длинная строка, обычно заканчивается на <code>==</code>. Он показывается один раз.</li>
   </ol>
+  <p class="note">Если пользуетесь Claude — сюда же можно вставить ключ Anthropic (начинается с <code>sk-ant-</code>).</p>
  </div>
 
  <div class="card">
   <h2>2. Сделайте QR-код</h2>
-  <label for="key">Ключ Claude API</label>
-  <input id="key" type="password" autocomplete="off" placeholder="sk-ant-...">
+  <label for="key">Ключ авторизации GigaChat (или ключ Claude)</label>
+  <input id="key" type="password" autocomplete="off" placeholder="вставьте ключ">
   <div class="row"><label style="margin:0;display:flex;gap:8px;align-items:center;color:var(--ink)"><input id="show" type="checkbox" style="width:18px;height:18px"> показать ключ</label></div>
   <label for="about">О Сане (необязательно — тогда не придётся вставлять текст на планшете)</label>
   <textarea id="about" placeholder="Вставьте сюда текст из файла sanya-about.txt"></textarea>
@@ -2377,8 +2378,9 @@ async function pack(obj){
 $('make').onclick = async () => {
   $('err').textContent = '';
   const key = $('key').value.trim(), about = $('about').value.trim(), dict = $('dict').value.trim();
-  if (!/^sk-ant-[\w-]{20,}$/.test(key)){ $('err').textContent = 'Ключ должен начинаться с sk-ant-'; return; }
-  const cfg = { apikey:key }; if (about) cfg.about = about; if (dict) cfg.dict = dict;
+  const isClaude = /^sk-ant-[\w-]{20,}$/.test(key), isGiga = /^[A-Za-z0-9+/]{40,}={0,2}$/.test(key);
+  if (!isClaude && !isGiga){ $('err').textContent = 'Это не похоже на ключ: нужен «ключ авторизации» GigaChat или ключ sk-ant-…'; return; }
+  const cfg = isClaude ? { apikey:key } : { gigakey:key }; if (about) cfg.about = about; if (dict) cfg.dict = dict;
   const text = (about || dict) ? await pack(cfg) : key;
   try {
     const qr = qrcode(0, 'L'); qr.addData(text); qr.make();
