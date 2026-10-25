@@ -145,6 +145,28 @@ button.b.pri{background:var(--accent);border-color:var(--accent);color:#fff}
 #log .k{color:#15803d}#log .c{color:#1d4ed8}#log .alt{color:var(--muted);font-size:12px}
 #toast{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);background:#111827;color:#fff;padding:12px 18px;border-radius:12px;font-size:16px;display:none;max-width:90vw;text-align:center;z-index:9}
 
+
+/* шуточные анимации в простое */
+#big.fx-look .eye{animation:fxlook 1.8s ease-in-out}
+@keyframes fxlook{25%,40%{transform:translateX(-45%)}60%,75%{transform:translateX(45%)}}
+#big.fx-wink .eye.r{animation:fxwink 1s ease-in-out}
+@keyframes fxwink{30%,60%{transform:scaleY(.08)}}
+#big.fx-bounce .face{animation:bounce .45s 3 ease-in-out}
+#big.fx-spin .face{animation:fxspin 1.3s ease-in-out}
+@keyframes fxspin{to{transform:rotate(360deg)}}
+#big.fx-peek .eye{animation:fxpeek 1.6s ease-in-out}
+@keyframes fxpeek{15%,55%{transform:scaleY(.05)}70%{transform:scale(1.35)}}
+#big.fx-yawn .eye{animation:fxsleep 1.8s}#big.fx-yawn .mouth{animation:fxyawn 1.8s}
+@keyframes fxsleep{20%,80%{transform:scaleY(.12)}}
+@keyframes fxyawn{20%,80%{left:42%;width:16%;height:22%;top:62%;border-radius:50%;border:1.1vmin solid var(--feat)}}
+#big.fx-wiggle .face{animation:fxwig .18s 8 alternate}
+@keyframes fxwig{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+#big.fx-jump{animation:fxjump .9s ease-out}
+@keyframes fxjump{20%{transform:scale(1.06,.9)}45%{transform:translateY(-9%) scale(.96,1.05)}75%{transform:translateY(0) scale(1.04,.95)}}
+#big.fx-dizzy .eye{animation:fxdizzy 1.6s linear}
+@keyframes fxdizzy{to{transform:rotate(720deg)}}
+#big.fx-surprise .eye{animation:fxsur 1.4s}#big.fx-surprise .face{animation:fxjump .9s}
+@keyframes fxsur{30%,70%{transform:scale(1.4)}}
 /* ===== Спокойная тема: лофт, минимализм, пастель ===== */
 :root{--bg1:#efe7dd;--bg2:#f7f2ec;--ink:#3d3a36;--soft:#8a8178;
   --idle:#e9c3a6;--listen:#a9cfb4;--think:#c9b9de;--speak:#eeb0a5;--feat:#f6eee4;--featglow:rgba(246,238,228,.55)}
@@ -309,7 +331,7 @@ function systemPrompt(){
 
 СЛУЖЕБНЫЕ ПОМЕТКИ в квадратных скобках — не от Сани, а от приложения:
 [Саня включил] — поздоровайся и предложи, чем заняться.
-[Саня молчит] — коротко и ласково позови его или предложи простую игру.
+[Саня молчит] — он долго не отвечает. Повтори свой последний вопрос проще и короче, лучше с выбором из двух картинок; или весело предложи другую игру. Каждый раз по-новому, не одними и теми же словами.
 [Саня нажал на картинку: …] — он ткнул пальцем в картинку; ответь так, будто он это сказал.
 [время вышло] — тепло попрощайся в двух предложениях и скажи, что можно будет поболтать потом.
 [режим сна] — пора спать: говори тихо и ласково, [эмоция: сонный], расскажи одну короткую спокойную сказку на ночь (можно про машинки, которые едут спать в гараж), без игр и без вопросов. В конце пожелай спокойной ночи и поставь команду [конец].
@@ -401,12 +423,7 @@ function listen(){
     if (state !== 'listen') return;          // остановили вручную
     if (finalAlts && finalAlts.length){ silentTries = 0; onKidSaid(finalAlts); }
     else if (gotSpeech && heardEl.textContent.trim()){ silentTries = 0; onKidSaid([{ t:heardEl.textContent.trim(), c:0 }]); }
-    else {
-      silentTries++;
-      if (silentTries === 2) ask('[Саня молчит]');
-      else if (silentTries >= 4){ silentTries = 0; stopAll(); }
-      else listen();
-    }
+    else onSilence();
   };
   try { rec.start(); } catch(e){ setTimeout(listen, 300); }
 }
@@ -420,6 +437,51 @@ function onKidSaid(alts){
   const text = alts.length > 1 ? `${main}\n(другие варианты распознавания: ${alts.slice(1).map(a => a.t).join(' | ')})` : main;
   ask(text, main);
 }
+
+/* ================== Простой: шутки и вопросы ================== */
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const FX = ['look','wink','bounce','spin','peek','yawn','wiggle','jump','dizzy','surprise'];
+const NUDGES = [
+  'Санёк, ты здесь?', 'Ау-у! Где мой друг Санёк?', 'Тук-тук! Кто там? Санёк?', 'Я тебя жду-жду!',
+  'Би-би! Ты тут?', 'Эй, дружок, ты где спрятался?', 'Ку-ку! Я тебя не слышу.', 'Санёк, скажи что-нибудь, я слушаю!',
+  'Алло-алло! Санёк на связи?', 'Раз, два, три, Санёк, отзовись!', 'Ой, а где же Санёк? Под столом? За диваном?',
+  'Я так долго жду, что сейчас усну! Хр-р… Ой! Санёк, ты тут?', 'Бип-бип, вызываю Санька! Приём!'
+];
+const BYES = [
+  'Ладно, я пока подремлю. Нажми на меня, когда захочешь поиграть!',
+  'Я тут посижу тихонько. Нажми на меня, когда захочешь!',
+  'Пойду отдохну в гараже. Позови меня, как будешь готов!'
+];
+const NUDGE_FX = { 'Ку-ку': 'peek', 'усну': 'yawn', 'Бип-бип': 'wiggle', 'спрятался': 'look', 'Под столом': 'look', 'Тук-тук': 'jump' };
+let lastNudge = '';
+function fx(name){
+  name = name || pick(FX);
+  big.classList.remove(...FX.map(f => 'fx-' + f)); void big.offsetWidth;
+  big.classList.add('fx-' + name);
+  clearTimeout(fx.t); fx.t = setTimeout(() => big.classList.remove('fx-' + name), 1900);
+}
+function sayLocal(text, after){
+  stopListening(); saidEl.textContent = text; heardEl.textContent = '';
+  history.push({ role:'assistant', content:text }); logItems.push({ who:'c', t:text, at:Date.now() }); saveHistory();
+  const key = Object.keys(NUDGE_FX).find(k => text.includes(k)); fx(key ? NUDGE_FX[key] : null);
+  enqueueSpeech(text);
+  whenSpeechDone().then(() => { if (state !== 'idle') after(); });
+}
+function onSilence(){
+  silentTries++;
+  if (silentTries === 1 || silentTries === 3){
+    let t; do { t = pick(NUDGES); } while (t === lastNudge); lastNudge = t;
+    sayLocal(t, listen);
+  } else if (silentTries === 2) ask('[Саня молчит]');
+  else {
+    silentTries = 0; setEmo('sleepy', 4000);
+    sayLocal(pick(BYES), () => stopAll());
+  }
+}
+// когда никто не играет, личико иногда шалит само
+(function idleTease(){
+  setTimeout(() => { if (state === 'idle' && !document.hidden && !$('panel').classList.contains('on')) fx(night ? 'yawn' : null); idleTease(); }, 7000 + Math.random() * 8000);
+})();
 
 /* ================== Текст → речь ================== */
 let voices = [];
