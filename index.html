@@ -393,6 +393,14 @@ body.is-app .web-only { display: none !important; }
 [data-theme="iphone"] .calc-keys .fn { background: #a5a5a5; color: #000; }
 [data-theme="iphone"][data-mode="light"] .calc-keys .fn { background: #d4d4d2; }
 @media (max-width: 760px) { .w-pop { left: 12px !important; right: 12px; width: auto; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom)); } }
+.w-net { --wc: var(--text-muted); cursor: pointer; gap: 7px; }
+#widget-sync { cursor: pointer; }
+.w-net .w-ico svg { width: 15px; height: 15px; }
+.w-net .w-sub { max-width: 150px; }
+.w-net.ok { --wc: var(--success); } .w-net.warn { --wc: var(--warning); } .w-net.err { --wc: var(--danger); } .w-net.off { --wc: var(--text-muted); }
+.w-net.busy .w-ico svg { animation: spin 1.1s linear infinite; }
+.w-net .w-sub { color: var(--topbar-text-dim); }
+.w-net.err .w-sub, .w-net.warn .w-sub { color: var(--wc); }
 .w-clock { --wc: var(--w-clock); } .w-sw { --wc: var(--w-sw); padding-right: 6px; } .w-weather { --wc: var(--w-weather); } .w-search { --wc: var(--w-search); }
 .w-sw.running { background: color-mix(in srgb, var(--wc) 18%, transparent); border-color: color-mix(in srgb, var(--wc) 50%, transparent); }
 .w-btn { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: var(--wc); }
@@ -838,6 +846,7 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
 <!-- ТОПБАР -->
 <div class="topbar" id="topbar">
     <div class="topbar-resizer" id="topbar-resizer"></div>
+    <div class="topbar-widget" id="widget-sync" data-widget="sync"><div class="w-chip w-net" id="net-chip"><span class="w-ico" id="net-ico"></span><span class="w-sub" id="net-text">…</span></div></div>
     <div class="topbar-widget" id="widget-clock" data-widget="clock" draggable="true" title="Открыть календарь"><div class="w-chip w-clock"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="w-main" id="clock-time">00:00</span><span class="w-sub" id="clock-date"></span></div></div>
     <div class="topbar-widget" id="widget-stopwatch" data-widget="stopwatch" draggable="true"><div class="w-chip w-sw" id="sw-chip"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><line x1="12" y1="13.5" x2="12" y2="10"/><line x1="10" y1="3" x2="14" y2="3"/><line x1="18.5" y1="6.5" x2="17.3" y2="7.7"/></svg><span class="w-main w-mono" id="stopwatch-display">00:00:00</span><span class="w-sep"></span><button class="w-btn" id="sw-toggle" title="Старт/Пауза"><svg id="sw-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg id="sw-icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button><button class="w-btn" id="sw-reset" title="Сброс"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button></div></div>
     <div class="topbar-widget" id="widget-weather" data-widget="weather" draggable="true"><div class="w-chip w-weather"><span class="w-ico" id="weather-icon"></span><span class="w-main" id="weather-temp">--°</span><span class="w-sub" id="weather-city">Москва</span><span class="w-warn" id="weather-warn" title="">!</span></div></div>
@@ -853,7 +862,7 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-resizer" id="sidebar-resizer"></div>
         <div class="sidebar-header">
-            <div class="app-name">Задачи <span class="sync-dot" id="sync-dot" style="display:none"></span></div>
+            <div class="app-name">Задачи</div>
             <div class="sidebar-tools">
             <button class="icon-btn" id="collapse-sidebar-btn" title="Свернуть панель (Ctrl+B)"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><polyline points="15 10 13 12 15 14"/></svg></button>
             </div>
@@ -1095,6 +1104,7 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
                 <div class="settings-row"><div class="settings-label">Часы и дата (клик — календарь)</div><div class="toggle" id="topbar-clock-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Секундомер</div><div class="toggle" id="topbar-stopwatch-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Строка поиска</div><div class="toggle" id="topbar-search-toggle"></div></div>
+                <div class="settings-row"><div class="settings-label">Сеть и синхронизация (слева)</div><div class="toggle" id="topbar-sync-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Калькулятор</div><div class="toggle" id="topbar-calc-toggle"></div></div>
                 <div class="settings-row"><div class="settings-label">Погода</div><div class="toggle" id="topbar-weather-toggle"></div></div>
                 <details class="info-details fold" id="weather-extra" style="display:none;margin-top:10px">
@@ -1314,7 +1324,7 @@ const getFolder = (id) => folders.find(f => f.id === id);
 const countActive = (l) => (l.tasks || []).filter(t => !t.completedFinal && !t.pendingDelete).length;
 
 /* ===================== НАСТРОЙКИ ===================== */
-const DEFAULT_SETTINGS = { theme: BASE_THEME, mode: 'dark', fontSize: 15, uiScale: 100, topbarClock: false, topbarStopwatch: false, topbarSearch: false, topbarWeather: false, topbarCalc: false, weatherUrl: '', weatherCity: 'Москва', widgetOrder: ['clock','calc','stopwatch','weather','search'], leftWidth: 300, topHeight: 56, showHidden: false, showCounts: true, sidebarCollapsed: false, gcalClientId: '', gcalCalendarId: 'primary', gcalAuto: true, voiceMode: 'windows', voiceEnabled: true, voiceModel: 'small', calShowTasks: true, calShowEvents: true, calShowHolidays: true, calShowWeekends: true, holCountry: 'RU', calGoogleEvents: true };
+const DEFAULT_SETTINGS = { theme: BASE_THEME, mode: 'dark', fontSize: 15, uiScale: 100, topbarClock: false, topbarStopwatch: false, topbarSearch: false, topbarWeather: false, topbarCalc: false, weatherUrl: '', weatherCity: 'Москва', widgetOrder: ['sync','clock','calc','stopwatch','weather','search'], topbarSync: true, leftWidth: 300, topHeight: 56, showHidden: false, showCounts: true, sidebarCollapsed: false, gcalClientId: '', gcalCalendarId: 'primary', gcalAuto: true, voiceMode: 'windows', voiceEnabled: true, voiceModel: 'small', calShowTasks: true, calShowEvents: true, calShowHolidays: true, calShowWeekends: true, holCountry: 'RU', calGoogleEvents: true };
 let settings = { ...DEFAULT_SETTINGS };
 function loadSettings() { try { const s = localStorage.getItem(LS_SETTINGS); if (s) settings = { ...DEFAULT_SETTINGS, ...JSON.parse(s) }; } catch (e) {} }
 function saveSettings() { try { localStorage.setItem(LS_SETTINGS, JSON.stringify(settings)); } catch (e) {} }
@@ -1346,11 +1356,12 @@ function applySettings() {
     updateTopbar();
 }
 function updateTopbar() {
-    const on = { clock: settings.topbarClock, stopwatch: settings.topbarStopwatch, search: settings.topbarSearch, weather: settings.topbarWeather, calc: settings.topbarCalc };
+    const on = { sync: settings.topbarSync !== false, clock: settings.topbarClock, stopwatch: settings.topbarStopwatch, search: settings.topbarSearch, weather: settings.topbarWeather, calc: settings.topbarCalc };
     const any = Object.values(on).some(Boolean);
     el.topbar.classList.toggle('visible', any); document.body.classList.toggle('topbar-on', any);
-    const w = { clock: $('widget-clock'), stopwatch: $('widget-stopwatch'), weather: $('widget-weather'), search: $('widget-search'), calc: $('widget-calc') };
+    const w = { sync: $('widget-sync'), clock: $('widget-clock'), stopwatch: $('widget-stopwatch'), weather: $('widget-weather'), search: $('widget-search'), calc: $('widget-calc') };
     const order = (settings.widgetOrder || []).filter(k => w[k]); DEFAULT_SETTINGS.widgetOrder.forEach((k, i) => { if (!order.includes(k)) order.splice(Math.min(i, order.length), 0, k); }); settings.widgetOrder = order;
+    order.splice(order.indexOf('sync'), 1); order.unshift('sync'); settings.widgetOrder = order;
     order.forEach(k => { if (w[k]) el.topbar.appendChild(w[k]); });
     Object.keys(w).forEach(k => { w[k].style.display = on[k] ? 'flex' : 'none'; });
     if (!on.search && searchQuery) { searchQuery = ''; $('search-input').value = ''; renderTasks(); }
@@ -3221,7 +3232,7 @@ async function updateVoiceStatus(extra) {
     const st = await NV.status(), m = settings.voiceModel || 'small';
     $('voice-status').textContent = extra || (!st.installed ? 'Модуль распознавания не установлен — запустите «Установить голосовой ввод.bat» в папке программы.' : st.models[m] ? 'Модель скачана — голосовой ввод работает без интернета.' : 'Модель ещё не скачана — скачается при первом использовании или кнопкой выше.');
 }
-const toggles = { 'topbar-clock-toggle': 'topbarClock', 'topbar-stopwatch-toggle': 'topbarStopwatch', 'topbar-search-toggle': 'topbarSearch', 'topbar-weather-toggle': 'topbarWeather', 'topbar-calc-toggle': 'topbarCalc' };
+const toggles = { 'topbar-clock-toggle': 'topbarClock', 'topbar-stopwatch-toggle': 'topbarStopwatch', 'topbar-search-toggle': 'topbarSearch', 'topbar-weather-toggle': 'topbarWeather', 'topbar-calc-toggle': 'topbarCalc', 'topbar-sync-toggle': 'topbarSync' };
 function syncSettingsUI() {
     renderThemeSelect();
     $('dark-mode-toggle').classList.toggle('on', settings.mode === 'dark');
@@ -3574,7 +3585,34 @@ async function syncNow(manual) {
     }
 }
 function isPristine() { const n = lists.reduce((a, l) => a + (l.tasks || []).length, 0); return n === 0 && folders.length === 0 && lists.length <= 1; }
+const NET_ICO = {
+    cloud: '<svg class="i" viewBox="0 0 24 24"><path d="M7 18h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.2 3.2 0 0 0 7 18z"/><polyline points="9.5 13.5 11.5 15.5 15 12"/></svg>',
+    sync: '<svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><polyline points="4 3.5 4 8 8.5 8"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><polyline points="20 20.5 20 16 15.5 16"/></svg>',
+    off: '<svg class="i" viewBox="0 0 24 24"><path d="M7 18h10.5a4 4 0 0 0 2.2-.7M20.6 13.6A4 4 0 0 0 17.9 10 6 6 0 0 0 9 6.4M6.3 9.4A6 6 0 0 0 6.3 11.6 3.2 3.2 0 0 0 7 18"/><line x1="3" y1="3" x2="21" y2="21"/></svg>',
+    err: '<svg class="i" viewBox="0 0 24 24"><path d="M7 18h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.2 3.2 0 0 0 7 18z"/><line x1="12" y1="10.5" x2="12" y2="13.5"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg>',
+    plain: '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><line x1="12" y1="19.5" x2="12" y2="19.51"/><path d="M1.5 9a15 15 0 0 1 21 0"/></svg>',
+};
+let netState = { cls: '', text: '' };
+function updateNetWidget() {
+    const chip = $('net-chip'); if (!chip) return;
+    const online = navigator.onLine !== false, cfg = syncCfg();
+    let cls, ico, text, tip;
+    if (!online) { cls = 'off'; ico = NET_ICO.off; text = 'Нет сети'; tip = 'Нет интернета. Всё работает, изменения отправятся, когда связь появится.'; }
+    else if (!cfg) { cls = 'off'; ico = NET_ICO.plain; text = 'В сети'; tip = 'Интернет есть. Синхронизация с телефоном не подключена — клик, чтобы настроить.'; }
+    else if (syncBusy) { cls = 'warn busy'; ico = NET_ICO.sync; text = 'Синхронизация…'; tip = 'Идёт синхронизация'; }
+    else if (syncSt.lastErr) { cls = 'err'; ico = NET_ICO.err; text = 'Ошибка синхр.'; tip = 'Ошибка синхронизации: ' + syncSt.lastErr + ' · клик — повторить'; }
+    else if (syncSt.lastOk) { cls = 'ok'; ico = NET_ICO.cloud; text = new Date(syncSt.lastOk).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); tip = 'Синхронизировано ' + agoText(syncSt.lastOk) + ' · клик — синхронизировать сейчас'; }
+    else { cls = 'warn'; ico = NET_ICO.sync; text = 'Ожидание'; tip = 'Синхронизация ещё не выполнялась · клик — синхронизировать'; }
+    chip.className = 'w-chip w-net ' + cls; $('net-ico').innerHTML = ico; $('net-text').textContent = text; $('widget-sync').title = tip;
+}
+$('widget-sync').addEventListener('click', () => {
+    if (!syncCfg()) { openSettings(); setTimeout(() => { $('sync-repo').scrollIntoView({ block: 'center' }); }, 80); return; }
+    syncNow(true);
+});
+window.addEventListener('online', updateNetWidget); window.addEventListener('offline', updateNetWidget);
+setInterval(updateNetWidget, 30000);
 function setSyncStatus(text, cls) {
+    setTimeout(updateNetWidget, 0);
     const s = $('sync-status'); if (s) { s.textContent = text; s.className = 'gcal-status' + (cls ? ' ' + cls : ''); }
     const dot = $('sync-dot'); if (dot) { dot.className = 'sync-dot ' + (cls || ''); dot.title = text; dot.style.display = syncCfg() ? '' : 'none'; }
 }
@@ -3693,6 +3731,7 @@ tick();
 refreshGcalStatus();
 if (isApp && settings.gcalClientId) gcalEnsure(false).then(ok => { refreshGcalStatus(); if (ok) flushGcal(); });
 syncReady = true;
+updateNetWidget();
 renderToday(); setTimeout(refreshTodaySources, 1500);
 syncFromHash();
 flushSave(); // сохранить нормализованные данные (например, задачи, «зависшие» в выполнении)
