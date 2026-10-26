@@ -544,11 +544,19 @@ body.sidebar-collapsed .sidebar-expand-tab { display: flex; }
 .task-item.done { opacity: .65; }
 .task-item.fade-out { opacity: 0; transform: translateX(24px); }
 .task-item.dragging { opacity: .35; }
+.task-item.drag-placeholder { background: var(--task-hover-bg); outline: 1.5px dashed var(--border-color); outline-offset: -2px; }
+.task-item.drag-placeholder > *, .task-item.drag-placeholder::after, .task-item.drag-placeholder::before { opacity: 0; }
+.drag-ghost { position: fixed; z-index: 7000; margin: 0; pointer-events: none; background: var(--right-bg); border-radius: 10px; will-change: transform; transition: scale .15s ease, box-shadow .15s ease; }
+.drag-ghost::before { display: none; }
+.drag-ghost.lifted { scale: .97; box-shadow: 0 14px 34px rgba(0,0,0,.35), 0 0 0 1px var(--input-active-border); cursor: grabbing; }
+.drag-ghost.landing { transition: transform .16s ease, scale .16s ease, box-shadow .16s ease; }
+body.task-dragging, body.task-dragging * { user-select: none !important; -webkit-user-select: none !important; cursor: grabbing !important; }
+.task-item { -webkit-touch-callout: none; }
 .task-item.drop-top { box-shadow: inset 0 3px 0 var(--accent-cyan); }
 .task-item.drop-bottom { box-shadow: inset 0 -3px 0 var(--accent-cyan); }
 .task-item.move-source { box-shadow: inset 0 0 0 2px var(--accent-cyan); background: var(--input-active-bg); }
 
-.task-handle { position: absolute; left: -15px; top: .55rem; width: 14px; height: 1.4rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0; cursor: grab; font-size: .85rem; letter-spacing: -2px; user-select: none; transition: opacity .15s; }
+.task-handle { display: none !important; position: absolute; left: -15px; top: .55rem; width: 14px; height: 1.4rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0; cursor: grab; font-size: .85rem; letter-spacing: -2px; user-select: none; transition: opacity .15s; }
 .task-item:hover .task-handle { opacity: .6; }
 .task-handle:hover { opacity: 1 !important; color: var(--accent-cyan); }
 .checkbox { width: var(--cb); height: var(--cb); margin-top: calc((1.4rem - var(--cb)) / 2); border-radius: 50%; border: 1.5px solid var(--checkbox-border); display: flex; align-items: center; justify-content: center; transition: border-color .15s, background-color .15s; }
@@ -1592,32 +1600,106 @@ el.tasks.addEventListener('click', (e) => {
     openEditor(t);
 });
 
-/* перетаскивание задач */
-let dragTaskId = null;
-el.tasks.addEventListener('mousedown', (e) => { const h = e.target.closest('.task-handle'); if (h) h.parentElement.draggable = true; });
-el.tasks.addEventListener('dragstart', (e) => {
-    const item = e.target.closest('.task-item'); if (!item || !item.draggable) { e.preventDefault(); return; }
-    dragTaskId = Number(item.dataset.id); item.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'task:' + dragTaskId);
+/* перетаскивание задач: зажал в любом месте — задача «приподнимается» и едет за курсором/пальцем,
+   остальные плавно расступаются, у краёв список сам прокручивается */
+let pd = null, suppressClick = false;
+const DRAG_START_PX = 6, TOUCH_HOLD_MS = 280, EDGE = 70;
+function pdItems() { return [...el.tasks.querySelectorAll('.task-item')]; }
+el.tasks.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || pd) return;
+    const item = e.target.closest('.task-item'); if (!item || item.classList.contains('editing')) return;
+    if (viewMode !== 'active' || item.classList.contains('pending')) return;
+    pd = { id: Number(item.dataset.id), item, pid: e.pointerId, type: e.pointerType, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, started: false, timer: 0, raf: 0, ghost: null };
+    if (e.pointerType !== 'mouse') pd.timer = setTimeout(() => { if (pd && !pd.started) { startTaskDrag(); if (navigator.vibrate) navigator.vibrate(12); } }, TOUCH_HOLD_MS);
 });
-el.tasks.addEventListener('dragend', () => { dragTaskId = null; el.tasks.querySelectorAll('.task-item').forEach(x => { x.draggable = false; x.classList.remove('dragging', 'drop-top', 'drop-bottom'); }); });
-el.tasks.addEventListener('dragover', (e) => {
-    if (dragTaskId === null) return; e.preventDefault();
-    const item = e.target.closest('.task-item');
-    el.tasks.querySelectorAll('.drop-top,.drop-bottom').forEach(x => x.classList.remove('drop-top', 'drop-bottom'));
-    if (item && Number(item.dataset.id) !== dragTaskId) { const r = item.getBoundingClientRect(); item.classList.add(e.clientY < r.top + r.height / 2 ? 'drop-top' : 'drop-bottom'); }
-});
-el.tasks.addEventListener('drop', (e) => {
-    if (dragTaskId === null) return; e.preventDefault();
-    const item = e.target.closest('.task-item'); const l = getList(activeListId);
-    if (!item || !l || Number(item.dataset.id) === dragTaskId) return;
-    const dragged = l.tasks.find(t => t.id === dragTaskId), target = l.tasks.find(t => t.id === Number(item.dataset.id));
-    if (!dragged || !target) return;
-    const r = item.getBoundingClientRect(), before = e.clientY < r.top + r.height / 2;
-    l.tasks.splice(l.tasks.indexOf(dragged), 1);
-    const ti = l.tasks.indexOf(target); l.tasks.splice(before ? ti : ti + 1, 0, dragged);
-    renderTasks(); scheduleSave();
-});
+window.addEventListener('pointermove', (e) => {
+    if (!pd || e.pointerId !== pd.pid) return;
+    pd.x = e.clientX; pd.y = e.clientY;
+    if (!pd.started) {
+        const moved = Math.hypot(e.clientX - pd.x0, e.clientY - pd.y0) > DRAG_START_PX;
+        if (!moved) return;
+        if (pd.type === 'mouse') startTaskDrag(); else { clearTimeout(pd.timer); pd = null; }   // палец сдвинулся раньше — это прокрутка списка
+        return;
+    }
+    e.preventDefault();
+    moveGhost(); reorderUnderPointer();
+}, { passive: false });
+// на iPhone не даём странице прокручиваться, пока задача «в руке»
+window.addEventListener('touchmove', (e) => { if (pd && pd.started) e.preventDefault(); }, { passive: false });
+window.addEventListener('pointerup', (e) => { if (pd && e.pointerId === pd.pid) endTaskDrag(true); });
+window.addEventListener('pointercancel', (e) => { if (pd && e.pointerId === pd.pid) endTaskDrag(pd.started); });
+el.tasks.addEventListener('click', (e) => { if (suppressClick) { e.stopPropagation(); e.preventDefault(); suppressClick = false; } }, true);
+el.tasks.addEventListener('contextmenu', (e) => { if (pd && pd.type !== 'mouse') e.preventDefault(); });
+el.tasks.addEventListener('dragstart', (e) => e.preventDefault());   // отключаем системное перетаскивание (оно и тормозило)
+
+function startTaskDrag() {
+    const r = pd.item.getBoundingClientRect();
+    try { getSelection().removeAllRanges(); } catch (x) {}
+    pd.started = true; pd.dx = pd.x - r.left; pd.dy = pd.y - r.top; pd.w = r.width; pd.h = r.height;
+    const g = pd.item.cloneNode(true);
+    g.classList.add('drag-ghost'); g.classList.remove('is-new');
+    g.style.width = r.width + 'px'; g.style.left = r.left + 'px'; g.style.top = r.top + 'px';
+    document.body.appendChild(g); pd.ghost = g;
+    requestAnimationFrame(() => g.classList.add('lifted'));
+    pd.item.classList.add('drag-placeholder');
+    document.body.classList.add('task-dragging');
+    pd.raf = requestAnimationFrame(autoScrollLoop);
+}
+function moveGhost() { if (pd.ghost) pd.ghost.style.transform = `translate(${pd.x - pd.dx - parseFloat(pd.ghost.style.left)}px, ${pd.y - pd.dy - parseFloat(pd.ghost.style.top)}px)`; }
+function reorderUnderPointer() {
+    const box = el.tasks.getBoundingClientRect(), y = pd.y - box.top;   // координата внутри списка (учитывает прокрутку)
+    const others = pdItems().filter(x => x !== pd.item);
+    let before = null;
+    for (const it of others) { if (y < it.offsetTop + it.offsetHeight / 2) { before = it; break; } }
+    const next = pd.item.nextElementSibling;
+    if (before === next || (!before && !next)) return;
+    // FLIP: запомнить положения, переставить, плавно довести соседей
+    const vis = others.filter(it => { const rr = it.getBoundingClientRect(); return rr.bottom > -200 && rr.top < innerHeight + 200; });
+    const first = new Map(vis.map(it => [it, it.offsetTop]));
+    if (before) el.tasks.insertBefore(pd.item, before); else el.tasks.appendChild(pd.item);
+    vis.forEach(it => {
+        const d = first.get(it) - it.offsetTop; if (!d) return;
+        it.style.transition = 'none'; it.style.transform = `translateY(${d}px)`;
+        requestAnimationFrame(() => { it.style.transition = 'transform .18s ease'; it.style.transform = ''; });
+    });
+}
+function autoScrollLoop() {
+    if (!pd || !pd.started) return;
+    const r = el.scroll.getBoundingClientRect();
+    let v = 0;
+    if (pd.y < r.top + EDGE) v = -Math.ceil((r.top + EDGE - pd.y) / EDGE * 18);
+    else if (pd.y > r.bottom - EDGE) v = Math.ceil((pd.y - (r.bottom - EDGE)) / EDGE * 18);
+    // чем дольше держишь у края — тем быстрее едет (длинные списки пролистываются за пару секунд)
+    if (v) { pd.edge = (pd.edge || 0) + 1; const acc = Math.min(14, 1 + pd.edge / 18); const before = el.scroll.scrollTop; el.scroll.scrollTop += Math.round(Math.max(-28, Math.min(28, v)) * acc); if (el.scroll.scrollTop !== before) reorderUnderPointer(); }
+    else pd.edge = 0;
+    pd.raf = requestAnimationFrame(autoScrollLoop);
+}
+function endTaskDrag(commit) {
+    const p = pd; pd = null; if (!p) return;
+    clearTimeout(p.timer); cancelAnimationFrame(p.raf);
+    if (!p.started) return;
+    suppressClick = true; setTimeout(() => { suppressClick = false; }, 350);
+    document.body.classList.remove('task-dragging');
+    pdItems().forEach(it => { it.style.transition = ''; it.style.transform = ''; });
+    // «приземление» призрака на место задачи
+    const g = p.ghost, r = p.item.getBoundingClientRect();
+    if (g) {
+        g.classList.remove('lifted'); g.classList.add('landing');
+        g.style.transform = `translate(${r.left - parseFloat(g.style.left)}px, ${r.top - parseFloat(g.style.top)}px)`;
+        setTimeout(() => { g.remove(); p.item.classList.remove('drag-placeholder'); }, 170);
+    } else p.item.classList.remove('drag-placeholder');
+    if (!commit) { renderTasks(); return; }
+    // применяем новый порядок видимых задач к списку
+    const l = getList(activeListId); if (!l) return;
+    const order = pdItems().map(it => Number(it.dataset.id));
+    const pos = l.tasks.map((t, i) => order.includes(t.id) ? i : -1).filter(i => i >= 0);
+    const byId = new Map(l.tasks.map(t => [t.id, t]));
+    const moved = order.map(id => byId.get(id)).filter(Boolean);
+    if (moved.length !== pos.length) { renderTasks(); return; }
+    const changed = moved.some((t, k) => l.tasks[pos[k]] !== t);
+    pos.forEach((i, k) => { l.tasks[i] = moved[k]; });
+    if (changed) scheduleSave();
+}
 
 function toggleCheck(t, l) {
     if (t.completedFinal) {
