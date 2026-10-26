@@ -22,3 +22,9 @@ contextBridge.exposeInMainWorld('nativeVoice', {
     winDictation: () => ipcRenderer.invoke('sys:dictation'),
     onProgress: (cb) => { const h = (_e, p) => cb(p); ipcRenderer.on('asr:progress', h); return () => ipcRenderer.removeListener('asr:progress', h); },
 });
+
+contextBridge.exposeInMainWorld('nativeBackup', {
+    write: (json, kind, tag) => ipcRenderer.invoke('backup:write', String(json), String(kind || 'latest'), String(tag || '')),
+    info: () => ipcRenderer.invoke('backup:info'),
+    open: () => ipcRenderer.invoke('backup:open'),
+});

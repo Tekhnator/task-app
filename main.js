@@ -230,6 +230,44 @@ ipcMain.handle('sys:dictation', () => {
 if (process.platform === 'win32') app.whenReady().then(() => setTimeout(() => { try { getPS(); } catch {} }, 4000));
 app.on('will-quit', () => { if (psProc) { try { psProc.stdin.end(); psProc.kill(); } catch {} } });
 
+/* ===================== Бэкапы данных =====================
+   Документы\Задачи\Бэкапы:
+   zadachi-ГГГГ-ММ-ДД.json — снимок на начало каждого дня (хранятся 30 последних),
+   zadachi-последняя.json — самое свежее состояние (обновляется через полминуты после правки),
+   zadachi-ГГГГ-ММ-ДД-ЧЧММ-до-….json — копия перед импортом, восстановлением или очисткой (10 последних). */
+const backupDir = () => path.join(app.getPath('documents'), 'Задачи', 'Бэкапы');
+const p2 = (n) => String(n).padStart(2, '0');
+function pruneBackups(dir, re, keep) {
+    const files = fs.readdirSync(dir).filter(f => re.test(f)).sort();
+    files.slice(0, Math.max(0, files.length - keep)).forEach(f => { try { fs.unlinkSync(path.join(dir, f)); } catch {} });
+}
+ipcMain.handle('backup:write', (_e, json, kind, tag) => {
+    try {
+        if (typeof json !== 'string' || json.length < 2 || json.length > 300e6) return { error: 'Пустые данные' };
+        JSON.parse(json);   // пишем только корректный JSON
+        const dir = backupDir(); fs.mkdirSync(dir, { recursive: true });
+        const d = new Date(), day = `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+        const safeTag = String(tag || '').replace(/[^\p{L}\d-]+/gu, '-').slice(0, 40);
+        let name;
+        if (kind === 'daily') name = `zadachi-${day}.json`;
+        else if (kind === 'event') name = `zadachi-${day}-${p2(d.getHours())}${p2(d.getMinutes())}-${safeTag || 'копия'}.json`;
+        else name = 'zadachi-последняя.json';
+        const file = path.join(dir, name), tmp = file + '.tmp';
+        fs.writeFileSync(tmp, json, 'utf8'); fs.renameSync(tmp, file);   // через временный файл — не останется «полузаписанного»
+        pruneBackups(dir, /^zadachi-\d{4}-\d{2}-\d{2}\.json$/, 30);
+        pruneBackups(dir, /^zadachi-\d{4}-\d{2}-\d{2}-\d{4}-.+\.json$/, 10);
+        return { ok: true, file, dir };
+    } catch (err) { return { error: String((err && err.message) || err) }; }
+});
+ipcMain.handle('backup:info', () => {
+    try {
+        const dir = backupDir(); if (!fs.existsSync(dir)) return { dir, count: 0 };
+        const files = fs.readdirSync(dir).filter(f => /^zadachi-.*\.json$/.test(f));
+        return { dir, count: files.length };
+    } catch (err) { return { dir: backupDir(), count: 0 }; }
+});
+ipcMain.handle('backup:open', async () => { const dir = backupDir(); fs.mkdirSync(dir, { recursive: true }); const e = await shell.openPath(dir); return e ? { error: e } : { ok: true }; });
+
 /* ===================== Окно ===================== */
 function createWindow() {
     const win = new BrowserWindow({

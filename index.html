@@ -753,6 +753,13 @@ body.voice-off .tb-mic, body.voice-off .voice-live { display: none !important; }
 .toggle.on::after { transform: translateX(16px); }
 .settings-btn { height: 34px; padding: 0 14px; background: var(--seg-bg); border-radius: 9px; color: var(--accent-cyan); font-size: .9rem; font-weight: 600; transition: background-color .15s; white-space: nowrap; }
 .settings-btn:hover { background: var(--menu-item-active); }
+.bk-ver-list { margin-top: 8px; max-height: 300px; overflow-y: auto; border-radius: 10px; background: var(--seg-bg); }
+.bk-ver { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: .85rem; }
+.bk-ver + .bk-ver { border-top: 1px solid var(--border-color, rgba(128,128,128,.15)); }
+.bk-ver .bk-when { font-weight: 600; white-space: nowrap; min-width: 112px; font-variant-numeric: tabular-nums; }
+.bk-ver .bk-msg { flex: 1; min-width: 0; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bk-ver .settings-btn { height: 28px; padding: 0 10px; font-size: .82rem; }
+.bk-ver-more { padding: 8px 12px; font-size: .82rem; color: var(--text-muted); }
 .settings-btn.danger { color: var(--danger); }
 .settings-btn.danger:hover { background: rgba(255,82,82,.15); }
 .settings-btn:disabled { opacity: .5; cursor: default; }
@@ -1168,7 +1175,21 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
             <div class="settings-section">
                 <div class="settings-section-title">Данные</div>
                 <div class="btn-row"><button class="settings-btn" id="export-btn">Экспорт (JSON)</button><button class="settings-btn" id="import-btn">Импорт (JSON)</button><button class="settings-btn" id="ics-btn">Экспорт дедлайнов (.ics)</button><input type="file" id="import-file" accept=".json,application/json" style="display:none"></div>
-                <div class="settings-hint">JSON — резервная копия и перенос между компьютером и iPhone. Файл .ics можно импортировать в Google Календарь (calendar.google.com → Настройки → Импорт).</div>
+                <div class="settings-hint">JSON — резервная копия и перенос между компьютером и iPhone. «Импорт» открывает и автоматические бэкапы. Файл .ics можно импортировать в Google Календарь (calendar.google.com → Настройки → Импорт).</div>
+                <div style="margin-top:12px">
+                    <div class="settings-row"><div class="settings-label">Копии на этом устройстве</div><button class="settings-btn" id="bk-loc-btn">Показать копии</button></div>
+                    <div class="settings-hint" id="bk-status">Папки, списки, задачи и мои календари сохраняются сами: снимок на начало каждого дня (30 последних дней), «последняя» — через полминуты после правки, и копия перед импортом, восстановлением или очисткой.</div>
+                    <div id="bk-loc-list" class="bk-ver-list" style="display:none"></div>
+                    <div id="bk-app" style="display:none;margin-top:8px">
+                        <div class="btn-row"><button class="settings-btn" id="bk-now-btn">Сохранить сейчас</button><button class="settings-btn" id="bk-open-btn">Открыть папку с файлами</button></div>
+                        <div class="settings-hint">На ПК те же копии ещё и файлами в <code>Документы\Задачи\Бэкапы</code> — их можно вернуть через «Импорт (JSON)», даже если программа переустановлена.</div>
+                    </div>
+                </div>
+                <div id="bk-gh" style="display:none;margin-top:12px">
+                    <div class="settings-row"><div class="settings-label">Версии на GitHub</div><button class="settings-btn" id="bk-ver-btn">Показать версии</button></div>
+                    <div class="settings-hint">Каждая синхронизация — сохранённая версия. Можно вернуть данные на любой момент — на всех устройствах.</div>
+                    <div id="bk-ver-list" class="bk-ver-list" style="display:none"></div>
+                </div>
             </div>
 
             <div class="settings-section">
@@ -1319,7 +1340,7 @@ function flushSave() {
     clearTimeout(saveTimer); saveTimer = null;
     try { localStorage.setItem(LS_DATA, JSON.stringify({ folders, lists, listIdCounter, folderIdCounter })); }
     catch (e) { toast('Не удалось сохранить: память заполнена. Удалите большие картинки или сделайте экспорт.', 5000); }
-    if (syncReady) { try { syncMarkLocal(); } catch (e) { console.warn(e); } syncSoon(); }
+    if (syncReady) { try { syncMarkLocal(); } catch (e) { console.warn(e); } syncSoon(); try { backupSoon(); } catch (e) {} }
 }
 let syncReady = false;
 const getList = (id) => lists.find(l => l.id === id);
@@ -3251,6 +3272,7 @@ function syncSettingsUI() {
     $('gcal-auto-toggle').classList.toggle('on', settings.gcalAuto !== false);
     refreshGcalStatus();
     $('hol-country').value = settings.holCountry || 'RU'; calAddError(''); renderCalSources();
+    try { refreshBackupUI(); } catch (e) {}
 }
 function openSettings() { closeEditor(); syncSettingsUI(); $('settings-overlay').classList.add('visible'); }
 function closeSettings() { $('settings-overlay').classList.remove('visible'); }
@@ -3313,7 +3335,9 @@ $('import-file').addEventListener('change', (e) => {
         try {
             const d = JSON.parse(reader.result);
             if (!Array.isArray(d.lists)) throw new Error('нет списков');
-            if (!confirm('Импорт заменит текущие данные. Продолжить?')) return;
+            if (!confirm(`Импорт заменит текущие данные.\n\nВ файле: ${statsText(snapStats(d))}.\nСейчас: ${statsText(snapStats({ lists }))}.\n\nТекущие данные сначала сохранятся копией. Продолжить?`)) return;
+            writeBackup('event', 'до импорта');
+            if (d.kind === 'zadachi-data') { restoreSnapshot(d); syncSettingsUI(); toast('Данные восстановлены из файла'); return; }
             closeEditor();
             Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
             folders = d.folders || []; lists = d.lists; listIdCounter = d.listIdCounter || 100; folderIdCounter = d.folderIdCounter || 100;
@@ -3329,7 +3353,8 @@ $('import-file').addEventListener('change', (e) => {
 });
 $('wipe-all-btn').addEventListener('click', () => {
     if (!confirm('Стереть ВСЕ папки, списки и задачи?\nЭто действие необратимо.')) return;
-    if (!confirm('Точно стереть? Восстановить будет невозможно (если нет экспорта).')) return;
+    if (!confirm('Точно стереть? Перед этим сохранится копия — её можно вернуть в «Копии на этом устройстве».')) return;
+    try { writeBackup('event', 'до очистки'); } catch (e) {}
     closeEditor(); Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
     folders = []; lists = []; listIdCounter = 100; folderIdCounter = 100; activeFolderId = null;
     flushSave(); setActiveList(null); closeSettings(); toast('Все данные стёрты');
@@ -3620,6 +3645,7 @@ function setSyncStatus(text, cls) {
     const dot = $('sync-dot'); if (dot) { dot.className = 'sync-dot ' + (cls || ''); dot.title = text; dot.style.display = syncCfg() ? '' : 'none'; }
 }
 function refreshSyncUI() {
+    try { refreshBackupUI(); } catch (e) {}
     if ($('sync-join')) updateSyncInvite();
     const c = settings.sync || {};
     $('sync-repo').value = c.repo || ''; $('sync-token').value = c.token || ''; $('sync-device').value = c.device || '';
@@ -3718,6 +3744,148 @@ $('invite-paste').addEventListener('click', async () => {
 $('a2hs-close').addEventListener('click', () => $('a2hs-banner').classList.remove('visible'));
 window.addEventListener('hashchange', () => { if (/#sync=/.test(location.hash)) { syncFromHash(); refreshSyncUI(); syncSoon(300); } });
 
+/* ===================== БЭКАПЫ ДАННЫХ =====================
+   1) На каждом устройстве (и на iPhone) — копии внутри приложения (IndexedDB):
+      снимок на начало дня (30 дней), «последняя» (через 30 с после правки), копии перед импортом/восстановлением/очисткой (10).
+   2) На ПК те же копии ещё и файлами в Документы\Задачи\Бэкапы.
+   3) На GitHub — каждая синхронизация = версия; любую можно вернуть. */
+const BK_DAYS = 30, BK_EVENTS = 10;
+let bkDbP = null, bkTimer = null, bkLastHash = '';
+function bkDb() {
+    if (bkDbP) return bkDbP;
+    bkDbP = new Promise((res, rej) => {
+        if (!window.indexedDB) return rej(new Error('нет хранилища'));
+        const r = indexedDB.open('planner_backups', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('snaps', { keyPath: 'key' });
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    });
+    bkDbP.catch(() => { bkDbP = null; });
+    return bkDbP;
+}
+function bkTx(mode, fn) { return bkDb().then(db => new Promise((res, rej) => { const tx = db.transaction('snaps', mode), st = tx.objectStore('snaps'); let out; const q = fn(st); if (q) q.onsuccess = () => { out = q.result; }; tx.oncomplete = () => res(out); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('нет места')); })); }
+const bkAll = () => bkTx('readonly', st => st.getAll()).then(a => (a || []).sort((x, y) => y.at - x.at));
+function dataSnapshot() {
+    const src = {}; Object.keys(calEvents.src || {}).forEach(id => { if ((settings.calendars || []).some(c => c.id === id)) src[id] = { items: calEvents.src[id].items || [] }; });
+    return { kind: 'zadachi-data', v: 1, savedAt: new Date().toISOString(), folders, lists, listIdCounter, folderIdCounter, calendars: settings.calendars || [], calSrc: src };
+}
+const snapStats = (d) => ({ lists: (d.lists || []).length, tasks: (d.lists || []).reduce((a, l) => a + (l.tasks || []).length, 0) });
+const statsText = (s) => `${s.lists} ${plural(s.lists, ['список', 'списка', 'списков'])}, ${s.tasks} ${plural(s.tasks, ['задача', 'задачи', 'задач'])}`;
+// kind: 'daily' | 'latest' | 'event'
+async function writeBackup(kind, tag) {
+    const d = dataSnapshot(), json = JSON.stringify(d), st = snapStats(d), at = Date.now();
+    if (kind !== 'event' && isPristine()) return;   // пустое не сохраняем — чтобы не вытеснить нормальные копии
+    if (kind === 'latest') { const h = fnv(json); if (h === bkLastHash) return; bkLastHash = h; }
+    const key = kind === 'daily' ? 'daily-' + isoDate(new Date()) : kind === 'event' ? 'event-' + at : 'latest';
+    const rec = { key, kind, at, tag: tag || '', stats: st, json };
+    try {
+        await bkTx('readwrite', s => s.put(rec));
+        const all = await bkAll(); const drop = [];
+        all.filter(r => r.kind === 'daily').slice(BK_DAYS).forEach(r => drop.push(r.key));
+        all.filter(r => r.kind === 'event').slice(BK_EVENTS).forEach(r => drop.push(r.key));
+        if (drop.length) await bkTx('readwrite', s => { drop.forEach(k => s.delete(k)); });
+    } catch (e) { console.warn('бэкап на устройстве:', e); }
+    if (window.nativeBackup) { try { const r = await window.nativeBackup.write(JSON.stringify(d, null, 1), kind, tag); if (r && r.error) console.warn('файл бэкапа:', r.error); } catch (e) {} }
+    if ($('settings-overlay').classList.contains('visible') && $('bk-loc-list').style.display !== 'none') renderLocalBackups();
+}
+function backupSoon() { clearTimeout(bkTimer); bkTimer = setTimeout(() => writeBackup('latest'), 30000); }
+async function backupDaily() {
+    try { const have = await bkTx('readonly', s => s.get('daily-' + isoDate(new Date()))); if (!have) await writeBackup('daily'); }
+    catch (e) { await writeBackup('daily'); }
+}
+// заменить текущие данные снимком (из копии на устройстве, файла или версии GitHub)
+function restoreSnapshot(d) {
+    closeEditor(); Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
+    folders = d.folders || []; lists = d.lists || []; listIdCounter = d.listIdCounter || listIdCounter || 100; folderIdCounter = d.folderIdCounter || folderIdCounter || 100;
+    normalizeData();
+    if (Array.isArray(d.calendars)) {
+        settings.calendars = d.calendars; const src = d.calSrc || {};
+        Object.keys(src).forEach(id => { calEvents.src[id] = Object.assign({}, calEvents.src[id] || {}, { items: src[id].items || [] }); });
+        Object.keys(calEvents.src).forEach(id => { if (!settings.calendars.some(c => c.id === id)) delete calEvents.src[id]; });
+        saveSettings(); saveCalEvents();
+    }
+    flushSave();   // при подключённой синхронизации восстановленное уйдёт на GitHub и на другие устройства
+    activeListId = null; const v = lists.find(l => !l.hidden); setActiveList(v ? v.id : null);
+    renderSidebar(); updateStats(); try { renderCalSources(); renderToday(); } catch (e) {}
+}
+const fmtWhen = (ts) => { const d = new Date(ts); return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const BK_KIND = { daily: 'начало дня', latest: 'последняя', event: 'копия' };
+async function renderLocalBackups() {
+    const box = $('bk-loc-list'); box.style.display = '';
+    let all = []; try { all = await bkAll(); } catch (e) { box.innerHTML = '<div class="bk-ver-more">Хранилище копий недоступно в этом браузере</div>'; return; }
+    if (!all.length) { box.innerHTML = '<div class="bk-ver-more">Копий пока нет — первая появится через полминуты</div>'; return; }
+    box.innerHTML = all.map(r => `<div class="bk-ver"><span class="bk-when">${fmtWhen(r.at)}</span><span class="bk-msg">${esc(r.tag ? r.tag : BK_KIND[r.kind] || '')} · ${statsText(r.stats || {})}</span><button class="settings-btn" data-bk="${esc(r.key)}">Вернуть</button></div>`).join('');
+}
+$('bk-loc-btn').addEventListener('click', () => {
+    const box = $('bk-loc-list');
+    if (box.style.display !== 'none') { box.style.display = 'none'; $('bk-loc-btn').textContent = 'Показать копии'; return; }
+    $('bk-loc-btn').textContent = 'Скрыть'; renderLocalBackups();
+});
+$('bk-loc-list').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-bk]'); if (!b) return;
+    const rec = await bkTx('readonly', s => s.get(b.dataset.bk)); if (!rec) return;
+    const d = JSON.parse(rec.json);
+    if (!confirm(`Вернуть данные на ${fmtWhen(rec.at)}?\n\nВ копии: ${statsText(snapStats(d))}.\nСейчас: ${statsText(snapStats({ lists }))}.\n\nТекущие данные сначала сохранятся отдельной копией.`)) return;
+    await writeBackup('event', 'до восстановления');
+    restoreSnapshot(d); toast('Данные восстановлены'); renderLocalBackups();
+});
+$('bk-now-btn').addEventListener('click', async () => { await writeBackup('event', 'вручную'); toast('Копия сохранена'); });
+$('bk-open-btn').addEventListener('click', async () => { const r = window.nativeBackup && await window.nativeBackup.open(); if (r && r.error) toast('Не удалось открыть папку: ' + r.error, 5000); });
+
+/* --- версии на GitHub --- */
+let ghVerPage = 1;
+async function ghSnapshotEnts(sha) {
+    const c = await ghReq('GET', `/git/commits/${sha}`); if (c.status !== 200) throw ghFail(c, 'версия');
+    const t = await ghReq('GET', `/git/trees/${c.json.tree.sha}?recursive=1`); if (t.status !== 200) throw ghFail(t, 'файлы версии');
+    const items = {};
+    for (const x of (t.json.tree || [])) {
+        if (x.type !== 'blob' || !/^(meta|calendars)\.json$|^tasks\/[0-9a-f]{2}\.json$/.test(x.path)) continue;
+        const b = await ghReq('GET', `/git/blobs/${x.sha}`); if (b.status !== 200) throw ghFail(b, 'файл ' + x.path);
+        try { Object.assign(items, JSON.parse(b64dec(b.json.content)).items || {}); } catch (e) {}
+    }
+    const ents = {}; for (const k in items) if (!items[k].deleted) ents[k] = strip(items[k]);
+    return ents;
+}
+async function renderGhVersions(more) {
+    const box = $('bk-ver-list'); box.style.display = '';
+    if (!more) { ghVerPage = 1; box.innerHTML = '<div class="bk-ver-more">Загружаю…</div>'; }
+    try {
+        await ghHead();
+        const r = await ghReq('GET', `/commits?sha=${encodeURIComponent(syncSt.branch)}&per_page=40&page=${ghVerPage}`);
+        if (r.status !== 200 || !Array.isArray(r.json)) throw ghFail(r, 'список версий');
+        const rows = r.json.filter(c => c.commit && !/начало синхронизации/i.test(c.commit.message || '')).map(c => `<div class="bk-ver"><span class="bk-when">${fmtWhen(Date.parse(c.commit.committer && c.commit.committer.date || c.commit.author.date))}</span><span class="bk-msg">${esc((c.commit.message || '').split('·')[0].trim())}</span><button class="settings-btn" data-sha="${esc(c.sha)}">Вернуть</button></div>`).join('');
+        box.querySelectorAll('.bk-ver-more').forEach(x => x.remove());
+        box.insertAdjacentHTML('beforeend', rows || (more ? '' : '<div class="bk-ver-more">Версий пока нет</div>'));
+        if (r.json.length === 40) box.insertAdjacentHTML('beforeend', '<div class="bk-ver-more"><button class="settings-btn" id="bk-ver-more">Ещё</button></div>');
+    } catch (e) { box.innerHTML = `<div class="bk-ver-more">Не получилось: ${esc(e.message)}</div>`; }
+}
+$('bk-ver-btn').addEventListener('click', () => {
+    const box = $('bk-ver-list');
+    if (box.style.display !== 'none') { box.style.display = 'none'; $('bk-ver-btn').textContent = 'Показать версии'; return; }
+    $('bk-ver-btn').textContent = 'Скрыть'; renderGhVersions(false);
+});
+$('bk-ver-list').addEventListener('click', async (e) => {
+    if (e.target.id === 'bk-ver-more') { ghVerPage++; e.target.disabled = true; renderGhVersions(true); return; }
+    const b = e.target.closest('[data-sha]'); if (!b || b.disabled) return;
+    const when = b.parentElement.querySelector('.bk-when').textContent;
+    b.disabled = true; b.textContent = '…';
+    try {
+        const ents = await ghSnapshotEnts(b.dataset.sha);
+        const n = { lists: Object.keys(ents).filter(k => k.startsWith('l:')).length, tasks: Object.keys(ents).filter(k => k.startsWith('t:')).length };
+        if (!n.lists) { toast('В этой версии нет данных'); return; }
+        if (!confirm(`Вернуть данные на ${when}?\n\nВ версии: ${statsText(n)}.\nСейчас: ${statsText(snapStats({ lists }))}.\n\nВосстановленное уйдёт на все устройства. Текущие данные сначала сохранятся копией на этом устройстве.`)) return;
+        await writeBackup('event', 'до восстановления');
+        closeEditor(); Object.keys(pendingTimers).forEach(k => clearTimeout(pendingTimers[k]));
+        rebuildFromEntities(ents); normalizeData();
+        flushSave(); refreshAfterSync(); try { renderCalSources(); } catch (x) {}
+        syncSoon(300); toast('Версия восстановлена');
+    } catch (err) { toast('Не получилось: ' + err.message, 6000); }
+    finally { b.disabled = false; b.textContent = 'Вернуть'; }
+});
+function refreshBackupUI() {
+    $('bk-app').style.display = window.nativeBackup ? '' : 'none';
+    $('bk-gh').style.display = syncCfg() ? '' : 'none';
+}
+
 /* ===================== СТАРТ ===================== */
 loadSettings();
 calInit();
@@ -3740,6 +3908,8 @@ syncFromHash();
 flushSave(); // сохранить нормализованные данные (например, задачи, «зависшие» в выполнении)
 refreshSyncUI();
 if (syncCfg()) syncSoon(800);
+setTimeout(() => { backupDaily(); writeBackup('latest'); }, 5000);
+setInterval(backupDaily, 30 * 60 * 1000);   // программа может быть открыта несколько дней
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 });
 </script>
