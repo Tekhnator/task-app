@@ -305,6 +305,11 @@ body:not(.is-app) .app-only { display: none !important; }
 body.is-app .web-only { display: none !important; }
 .swatches button { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(0,0,0,.15); }
 .swatches button.on { box-shadow: 0 0 0 2px var(--bg-sidebar), 0 0 0 4px var(--text-white); }
+.layer .layer-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-radius: 4px; padding: 1px 3px; margin-left: -3px; }
+.layer .layer-name:hover { background: var(--menu-item-hover); color: var(--text-white); }
+.layer.dim { opacity: .4; }
+.layer.solo .layer-name { color: var(--text-white); font-weight: 700; }
+.solo-bar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .78rem; color: var(--text-white); padding: 2px 0 4px; }
 .cp-status { grid-column: 1 / -1; font-size: .72rem; color: var(--text-muted); cursor: pointer; line-height: 1.4; }
 .cp-status:hover { color: var(--accent-cyan); }
 .cp-status:empty { display: none; }
@@ -419,6 +424,22 @@ body.topbar-on .app-body { margin-top: var(--topbar-height); }
     padding: 0 10px 0 16px; border-bottom: 1px solid var(--border-color);
 }
 .sidebar-tools { display: flex; gap: 2px; }
+.today-box { flex-shrink: 0; padding: 8px 4px 6px 8px; border-bottom: 1px solid var(--line); }
+.today-head { display: flex; align-items: center; gap: 6px; height: 1.9rem; padding: 0 6px 0 8px; border-radius: 6px; cursor: pointer; user-select: none; font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; color: var(--left-text); opacity: .88; }
+.today-head:hover { background: var(--folder-header-hover); opacity: 1; }
+.today-head #today-title { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.today-count { font-size: .62rem; font-weight: 700; color: var(--text-muted); text-transform: none; }
+.today-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2px; max-height: 230px; overflow-y: auto; }
+.today-box.collapsed .today-list { display: none; }
+.today-item { display: flex; align-items: center; gap: 7px; min-height: 1.75rem; padding: 0 6px 0 10px; border-radius: 6px; cursor: pointer; font-size: .84rem; color: var(--left-text); }
+.today-item:hover { background: var(--menu-item-hover); }
+.today-item .stat-dot { width: 7px; height: 7px; flex-shrink: 0; }
+.today-item .tm { font-size: .7rem; color: var(--text-muted); font-variant-numeric: tabular-nums; flex-shrink: 0; min-width: 34px; }
+.today-item .t { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.today-item.past { opacity: .45; }
+.today-item.now .tm { color: var(--accent-cyan); font-weight: 700; }
+.today-item.hol .t { color: var(--danger); font-weight: 600; }
+.today-empty { font-size: .78rem; color: var(--text-muted); padding: 4px 10px 6px; }
 /* низ панели: создание списков/папок — как в Things, To Do, Todoist */
 .sidebar-footer { flex-shrink: 0; display: flex; align-items: center; gap: 4px; padding: 8px; border-top: 1px solid var(--border-color); }
 .footer-add { flex: 1; display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 8px; border-radius: 8px; color: var(--text-muted); font-size: .92rem; font-weight: 500; text-align: left; transition: background-color .15s, color .15s; }
@@ -836,6 +857,10 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
             <div class="sidebar-tools">
             <button class="icon-btn" id="collapse-sidebar-btn" title="Свернуть панель (Ctrl+B)"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><polyline points="15 10 13 12 15 14"/></svg></button>
             </div>
+        </div>
+        <div class="today-box" id="today-box">
+            <div class="today-head" id="today-head" title="Свернуть / развернуть"><span class="chev open" id="today-chev"><svg class="i" viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></span><span id="today-title">Сегодня</span><span class="today-count" id="today-count"></span></div>
+            <div class="today-list" id="today-list"></div>
         </div>
         <ul class="menu-list" id="lists-container"></ul>
         <div class="sidebar-footer">
@@ -1733,6 +1758,7 @@ function afterTaskChange(t, l, full) { if (l.id === activeListId) { full ? rende
 
 /* ----- счётчики и фильтры ----- */
 function updateStats() {
+    try { renderToday(); } catch (e) {}
     const l = getList(activeListId);
     const c = { all: 0, danger: 0, warning: 0, success: 0, none: 0 };
     if (l) (l.tasks || []).forEach(t => { if (!t.completedFinal && !t.pendingDelete) { c.all++; c[category(t)]++; } });
@@ -2504,7 +2530,7 @@ async function ensureCalendar(cal, force) {
         calEvents.src[cal.id] = Object.assign({ items: [] }, c || {}, { at: Date.now(), error: e.native ? e.message : (e instanceof TypeError ? 'сервис не отдаёт календарь браузеру — откройте в программе' : e.message) });
     } finally {
         delete calPending[cal.id]; saveCalEvents();
-        if ($('clock-pop').classList.contains('visible')) renderClockPop(true);
+        if ($('clock-pop').classList.contains('visible')) renderClockPop(true); try { renderToday(); } catch (e) {}
         if ($('settings-overlay').classList.contains('visible')) renderCalSources();
     }
 }
@@ -2524,7 +2550,7 @@ function ensureHolidays(y, force) {
     httpJSON(`https://date.nager.at/api/v3/PublicHolidays/${y}/${cc}`)
         .then(arr => { holCache[key] = arr.map(h => { const [Y, M, D] = h.date.split('-'); return { date: `${D}.${M}.${Y}`, name: h.localName || h.name }; }); })
         .catch(() => { if (cc === 'RU' && !holCache[key]) holCache[key] = builtinRU(y); })
-        .finally(() => { delete holPending[key]; try { localStorage.setItem(LS_HOL, JSON.stringify(holCache)); } catch (e) {} if ($('clock-pop').classList.contains('visible')) renderClockPop(); });
+        .finally(() => { delete holPending[key]; try { localStorage.setItem(LS_HOL, JSON.stringify(holCache)); } catch (e) {} if ($('clock-pop').classList.contains('visible')) renderClockPop(); try { renderToday(); } catch (e) {} });
 }
 
 /* встречи из Google */
@@ -2558,7 +2584,7 @@ async function ensureGoogleEvents(force) {
         const keys = Object.keys(calEvents.google); if (keys.length > 12) keys.sort((a, b) => calEvents.google[a].at - calEvents.google[b].at).slice(0, keys.length - 12).forEach(k => delete calEvents.google[k]);
         saveCalEvents(); gEvState = '';
     } catch (e) { gEvState = e.message === 'auth' ? 'auth' : 'error'; }
-    finally { delete gEvPending[key]; if ($('clock-pop').classList.contains('visible')) renderClockPop(true); }
+    finally { delete gEvPending[key]; if ($('clock-pop').classList.contains('visible')) renderClockPop(true); try { renderToday(); } catch (e) {} }
 }
 
 /* проверка ответа календаря: понятная причина, если пришёл не календарь */
@@ -2643,7 +2669,11 @@ function expandICS(ev) {
 }
 
 /* сборка данных по дням */
-function eventsByDay() {
+let cpSolo = null;   // показать только один слой календаря (клик по названию)
+const layerOn = (key) => cpSolo ? cpSolo === key : settings[key] !== false;
+const calVis = (id) => cpSolo ? cpSolo === id : calLayerOn(id);
+function eventsByDay(month, vis) {
+    month = month || cp.month; vis = vis || calVis;
     const m = {};
     const add = (ev0, color, srcName) => {
         const ev = Object.assign({}, ev0, { color, srcName });
@@ -2652,9 +2682,9 @@ function eventsByDay() {
         let lastDay = new Date(en); if (ev.allDay || (en.getHours() === 0 && en.getMinutes() === 0 && en > st)) lastDay.setTime(en.getTime() - 1); lastDay.setHours(0, 0, 0, 0);
         for (let i = 0; d <= lastDay && i < 62; i++) { (m[fmtDate(d)] = m[fmtDate(d)] || []).push(ev); d.setDate(d.getDate() + 1); }
     };
-    const gk = cp.month.getFullYear() + '-' + cp.month.getMonth();
-    if (settings.gcalClientId && calLayerOn('google') && calEvents.google[gk]) calEvents.google[gk].items.forEach(x => add(x, '#0a84ff', 'Google'));
-    settings.calendars.forEach(c => { if (calLayerOn(c.id) && calEvents.src[c.id]) calEvents.src[c.id].items.forEach(x => add(x, c.color, c.name)); });
+    const gk = month.getFullYear() + '-' + month.getMonth();
+    if (settings.gcalClientId && vis('google') && calEvents.google[gk]) calEvents.google[gk].items.forEach(x => add(x, '#0a84ff', 'Google'));
+    settings.calendars.forEach(c => { if (vis(c.id) && calEvents.src[c.id]) calEvents.src[c.id].items.forEach(x => add(x, c.color, c.name)); });
     Object.values(m).forEach(arr => arr.sort((a, b) => (b.allDay - a.allDay) || (new Date(a.start) - new Date(b.start))));
     return m;
 }
@@ -2696,7 +2726,7 @@ function renderClockPop(skipFetch) {
         ensureGoogleEvents(false);
         settings.calendars.forEach(c => { if (calLayerOn(c.id)) ensureCalendar(c, false); });
     }
-    const tasksM = settings.calShowTasks ? deadlinesMap() : {}, holM = settings.calShowHolidays ? holidaysByDay() : {}, evM = eventsByDay();
+    const tasksM = layerOn('calShowTasks') ? deadlinesMap() : {}, holM = layerOn('calShowHolidays') ? holidaysByDay() : {}, evM = eventsByDay();
     $('cp-title').textContent = `${MONTHS[mo]} ${y}`;
     let h = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d => `<div class="cal-dn">${d}</div>`).join('');
     const { start } = gridRange();
@@ -2704,7 +2734,7 @@ function renderClockPop(skipFetch) {
         const d = new Date(start); d.setDate(start.getDate() + i);
         if (i >= 35 && d.getMonth() !== mo) break;
         const s = fmtDate(d), tk = tasksM[s], hl = holM[s], ev = evM[s];
-        const wk = settings.calShowWeekends && (d.getDay() === 0 || d.getDay() === 6);
+        const wk = layerOn('calShowWeekends') && (d.getDay() === 0 || d.getDay() === 6);
         let dots = '';
         if (tk) { const cats = tk.map(x => category(x.t)); dots += `<i style="background:${cats.includes('danger') ? 'var(--danger)' : cats.includes('warning') ? 'var(--warning)' : 'var(--success)'}"></i>`; }
         if (ev) [...new Set(ev.map(x => x.color))].slice(0, 3).forEach(c => { dots += `<i style="background:${esc(c)}"></i>`; });
@@ -2732,7 +2762,9 @@ function renderClockPop(skipFetch) {
         { key: 'calShowWeekends', name: 'Выходные', c: 'var(--danger)', on: settings.calShowWeekends !== false }];
     if (settings.gcalClientId) layers.push({ cal: 'google', name: 'Google', c: '#0a84ff', on: calLayerOn('google') });
     settings.calendars.forEach(c => layers.push({ cal: c.id, name: c.name, c: c.color, on: calLayerOn(c.id) }));
-    $('cp-layer-list').innerHTML = layers.map(l => `<label class="layer${l.on ? ' on' : ''}" ${l.key ? `data-layer="${l.key}"` : `data-cal="${esc(l.cal)}"`} style="--lc:${esc(l.c)}" title="${esc(l.name)}"><span class="mini-toggle"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.name)}</span></label>`).join('')
+    const soloKey = (l) => l.key || l.cal;
+    $('cp-layer-list').innerHTML = (cpSolo ? `<div class="solo-bar">Только «${esc((layers.find(l => soloKey(l) === cpSolo) || {}).name || '')}» <button class="pop-today" data-solo-off="1">Показать все</button></div>` : '')
+        + layers.map(l => `<label class="layer${l.on ? ' on' : ''}${cpSolo ? (soloKey(l) === cpSolo ? ' solo' : ' dim') : ''}" ${l.key ? `data-layer="${l.key}"` : `data-cal="${esc(l.cal)}"`} style="--lc:${esc(l.c)}"><span class="mini-toggle" title="Включить / выключить"></span><span class="layer-name" title="Показать только «${esc(l.name)}» (ещё раз — вернуть все)">${esc(l.name)}</span></label>`).join('')
         + `<label class="layer" data-addcal="1" style="color:var(--wc)"><span style="width:28px;text-align:center;font-size:1rem">+</span>Календарь</label>`;
     let st = '';
     if (settings.gcalClientId && calLayerOn('google')) {
@@ -2744,17 +2776,25 @@ function renderClockPop(skipFetch) {
     if (errs.length) st = `«${errs[0].name}»: ${calEvents.src[errs[0].id].error}`;
     $('cp-status').textContent = st;
 }
-$('widget-clock').addEventListener('click', () => { if (togglePop($('clock-pop'), $('widget-clock'))) { cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); renderClockPop(); } });
+$('widget-clock').addEventListener('click', () => { if (togglePop($('clock-pop'), $('widget-clock'))) { cpSolo = null; cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); renderClockPop(); } });
 $('cp-prev').addEventListener('click', () => { cp.month.setMonth(cp.month.getMonth() - 1); renderClockPop(); });
 $('cp-next').addEventListener('click', () => { cp.month.setMonth(cp.month.getMonth() + 1); renderClockPop(); });
 $('cp-today').addEventListener('click', () => { cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); renderClockPop(); });
 $('cp-grid').addEventListener('click', (e) => { const d = e.target.closest('[data-date]'); if (!d) return; cp.sel = d.dataset.date; cpOpenEv = null; const pd = parseDate(cp.sel); if (pd.getMonth() !== cp.month.getMonth()) { cp.month = new Date(pd.getFullYear(), pd.getMonth(), 1); } renderClockPop(); });
 $('cp-layers').addEventListener('click', (e) => {
     if (e.target.closest('#cp-status') || e.target.closest('[data-addcal]')) { e.preventDefault(); closePops(); openSettings(); $('cal-add-fold').open = true; setTimeout(() => { $('cal-new-name').scrollIntoView({ block: 'center' }); $('cal-new-name').focus(); }, 60); return; }
+    if (e.target.closest('[data-solo-off]')) { e.preventDefault(); cpSolo = null; cpOpenEv = null; renderClockPop(); return; }
     const l = e.target.closest('.layer'); if (!l) return; e.preventDefault();
+    const key = l.dataset.cal || l.dataset.layer;
+    if (e.target.closest('.layer-name')) {   // клик по названию — показать только этот календарь, повторный — вернуть всё
+        cpSolo = cpSolo === key ? null : key; cpOpenEv = null;
+        if (cpSolo) { if (l.dataset.cal) settings.calOn[key] = true; else settings[key] = true; saveSettings(); }
+        renderClockPop(); return;
+    }
+    cpSolo = null;
     if (l.dataset.cal) settings.calOn[l.dataset.cal] = !calLayerOn(l.dataset.cal);
     else settings[l.dataset.layer] = settings[l.dataset.layer] === false;
-    saveSettings(); renderClockPop();
+    saveSettings(); renderClockPop(); renderToday();
 });
 async function calSyncNow() {
     const btn = $('cp-sync'); btn.classList.add('spin');
@@ -2884,6 +2924,52 @@ $('cal-src-list').addEventListener('click', (e) => {
     if (act.dataset.act === 'del') { if (!confirm(`Удалить календарь «${c.name}»?`)) return; settings.calendars = settings.calendars.filter(x => x !== c); delete calEvents.src[c.id]; delete settings.calOn[c.id]; saveSettings(); saveCalEvents(); renderCalSources(); }
 });
 $('hol-country').addEventListener('change', (e) => { settings.holCountry = (e.target.value.trim() || 'RU').toUpperCase().slice(0, 2); e.target.value = settings.holCountry; saveSettings(); renderCalSources(); toast('Праздники: ' + settings.holCountry); });
+
+/* ----- «Сегодня» в левой панели: встречи, праздники и дедлайны на сегодня ----- */
+function renderToday() {
+    const box = $('today-box'); if (!box) return;
+    box.classList.toggle('collapsed', !!settings.todayCollapsed);
+    $('today-chev').classList.toggle('open', !settings.todayCollapsed);
+    const now = new Date(), todayS = fmtDate(now);
+    $('today-title').textContent = 'Сегодня · ' + now.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' }).replace('.', '');
+    const vis = (id) => calLayerOn(id);
+    const hol = settings.calShowHolidays !== false ? (holidaysByDayFor(now.getFullYear())[todayS] || []) : [];
+    const evs = eventsByDay(new Date(now.getFullYear(), now.getMonth(), 1), vis)[todayS] || [];
+    const tks = settings.calShowTasks !== false ? (deadlinesMap()[todayS] || []) : [];
+    todayEvents = evs;
+    let h = '';
+    hol.forEach(x => { h += `<div class="today-item hol" data-today-cal="1"><span class="ico" style="color:var(--danger);display:flex">${ICON_STAR.replace('class="i"', 'class="i" style="width:12px;height:12px"')}</span><span class="t">${esc(x.name)}</span></div>`; });
+    evs.forEach((x, i) => {
+        const st = new Date(x.start), en = new Date(x.end), past = !x.allDay && en < now, cur = !x.allDay && st <= now && en > now;
+        h += `<div class="today-item${past ? ' past' : ''}${cur ? ' now' : ''}" data-today-ev="${i}"><span class="stat-dot" style="background:${esc(x.color || 'var(--ev)')}"></span><span class="tm">${x.allDay ? 'день' : fmtTime(st)}</span><span class="t">${esc(cleanTitle(x.title))}</span></div>`;
+    });
+    tks.forEach(({ t, l }) => { h += `<div class="today-item" data-today-task="${t.id}" data-list="${esc(l.id)}"><span class="stat-dot ${category(t)}"></span><span class="tm">срок</span><span class="t">${esc(t.title || '(без названия)')}</span></div>`; });
+    const n = hol.length + evs.length + tks.length;
+    $('today-count').textContent = n ? String(n) : '';
+    $('today-list').innerHTML = h || '<div class="today-empty">Ничего не запланировано</div>';
+}
+let todayEvents = [];
+function holidaysByDayFor(y) { const m = {}; [y - 1, y, y + 1].forEach(yy => (holCache[holKey(yy)] || []).forEach(h => { (m[h.date] = m[h.date] || []).push(h); })); return m; }
+$('today-head').addEventListener('click', () => { settings.todayCollapsed = !settings.todayCollapsed; saveSettings(); renderToday(); });
+$('today-list').addEventListener('click', (e) => {
+    const tk = e.target.closest('[data-today-task]');
+    if (tk) { closeDrawer(); if (viewMode !== 'active') switchView('active'); if (activeListId !== tk.dataset.list) setActiveList(tk.dataset.list); const { t } = findTask(Number(tk.dataset.todayTask), tk.dataset.list); if (t) openEditor(t); return; }
+    const ev = e.target.closest('[data-today-ev], [data-today-cal]'); if (!ev) return;
+    // открыть календарь на сегодня, с раскрытой встречей
+    const x = ev.dataset.todayEv !== undefined ? todayEvents[+ev.dataset.todayEv] : null;
+    if (!$('widget-clock').offsetParent) { settings.topbarClock = true; saveSettings(); applySettings(); }
+    closeDrawer();
+    if (!$('clock-pop').classList.contains('visible')) togglePop($('clock-pop'), $('widget-clock'));
+    cpSolo = null; cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); cpOpenEv = x ? eventKey(x) : null; renderClockPop();
+});
+// встречи для «Сегодня» подгружаем и без открытия календаря
+function refreshTodaySources() {
+    const y = new Date().getFullYear();
+    if (settings.calShowHolidays !== false) ensureHolidays(y);
+    settings.calendars.forEach(c => { if (calLayerOn(c.id)) ensureCalendar(c, false); });
+}
+setInterval(() => { renderToday(); }, 60000);
+setInterval(refreshTodaySources, 30 * 60000);
 
 /* ----- калькулятор ----- */
 const calc = { cur: '0', acc: null, op: null, fresh: true, expr: '' };
@@ -3410,11 +3496,12 @@ function rebuildFromEntities(e) {
     try { localStorage.setItem(LS_DATA, JSON.stringify({ folders, lists, listIdCounter, folderIdCounter })); } catch (x) {}
 }
 function refreshAfterSync() {
+    try { renderToday(); } catch (e) {}
     if (activeListId && !getList(activeListId)) { const v = lists[0]; activeListId = null; setActiveList(v ? v.id : null); return; }
     if (!ed) renderTasks();
     renderSidebar(); updateStats();
     if (activeListId) el.title.textContent = getList(activeListId).name;
-    if ($('clock-pop').classList.contains('visible')) renderClockPop(true);
+    if ($('clock-pop').classList.contains('visible')) renderClockPop(true); try { renderToday(); } catch (e) {}
 }
 
 /* --- один цикл синхронизации --- */
@@ -3606,6 +3693,7 @@ tick();
 refreshGcalStatus();
 if (isApp && settings.gcalClientId) gcalEnsure(false).then(ok => { refreshGcalStatus(); if (ok) flushGcal(); });
 syncReady = true;
+renderToday(); setTimeout(refreshTodaySources, 1500);
 syncFromHash();
 flushSave(); // сохранить нормализованные данные (например, задачи, «зависшие» в выполнении)
 refreshSyncUI();
