@@ -399,7 +399,7 @@ body.is-app .web-only { display: none !important; }
 .w-net .w-sub { max-width: 150px; }
 .w-net.ok { --wc: var(--success); } .w-net.warn { --wc: var(--warning); } .w-net.err { --wc: var(--danger); } .w-net.off { --wc: var(--text-muted); }
 .w-net.busy .w-ico svg { animation: spin 1.1s linear infinite; }
-.w-net .w-sub { color: var(--topbar-text-dim); }
+.w-net .w-sub { color: var(--topbar-text-dim); font-variant-numeric: tabular-nums; }
 .w-net.err .w-sub, .w-net.warn .w-sub { color: var(--wc); }
 .w-clock { --wc: var(--w-clock); } .w-sw { --wc: var(--w-sw); padding-right: 6px; } .w-weather { --wc: var(--w-weather); } .w-search { --wc: var(--w-search); }
 .w-sw.running { background: color-mix(in srgb, var(--wc) 18%, transparent); border-color: color-mix(in srgb, var(--wc) 50%, transparent); }
@@ -3681,7 +3681,7 @@ function updateNetWidget() {
     let cls, ico, text, tip;
     if (!online) { cls = 'off'; ico = NET_ICO.off; text = 'Нет сети'; tip = 'Нет интернета. Всё работает, изменения отправятся, когда связь появится.'; }
     else if (!cfg) { cls = 'off'; ico = NET_ICO.plain; text = 'В сети'; tip = 'Интернет есть. Синхронизация с телефоном не подключена — клик, чтобы настроить.'; }
-    else if (syncBusy) { cls = 'warn busy'; ico = NET_ICO.sync; text = 'Синхронизация…'; tip = 'Идёт синхронизация'; }
+    else if (syncBusy) { cls = 'warn busy'; ico = NET_ICO.sync; text = syncSt.lastOk ? new Date(syncSt.lastOk).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : 'Ожидание'; tip = 'Идёт синхронизация'; }   // текст тот же, крутится только значок — размер виджета не меняется
     else if (syncSt.lastErr) { cls = 'err'; ico = NET_ICO.err; text = 'Ошибка синхр.'; tip = 'Ошибка синхронизации: ' + syncSt.lastErr + ' · клик — повторить'; }
     else if (syncSt.lastOk) { cls = 'ok'; ico = NET_ICO.cloud; text = new Date(syncSt.lastOk).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); tip = 'Синхронизировано ' + agoText(syncSt.lastOk) + ' · клик — синхронизировать сейчас'; }
     else { cls = 'warn'; ico = NET_ICO.sync; text = 'Ожидание'; tip = 'Синхронизация ещё не выполнялась · клик — синхронизировать'; }
