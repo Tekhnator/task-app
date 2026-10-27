@@ -627,6 +627,19 @@ body.task-dragging, body.task-dragging * { user-select: none !important; -webkit
 .add-task-btn:hover { color: var(--accent-cyan); }
 .add-task-btn:hover .plus { background: var(--accent-cyan); color: var(--bg-main); }
 .task-input-area.open .add-task-btn { display: none; }
+/* редактор на месте задачи: задача прячется, редактор встаёт в её строку */
+.task-item.ed-hidden { display: none; }
+.task-input-area.in-list { margin: 3px 0; padding-top: .7rem; padding-bottom: .7rem; border-radius: 12px; background: var(--input-active-bg); box-shadow: inset 0 0 0 1px var(--input-active-border); animation: edIn .18s ease-out; }
+.task-input-area.in-list + .task-item::before { opacity: 0; }
+@keyframes edIn { from { opacity: .4; transform: scale(.992); } to { opacity: 1; transform: none; } }
+/* «импульс» задачи после закрытия редактора — видно, какую правили */
+.task-item.pulse { animation: taskPulse 1.1s cubic-bezier(.2,.7,.3,1); z-index: 1; }
+.task-item.pulse::before, .task-item.pulse + .task-item::before { opacity: 0; }
+@keyframes taskPulse {
+    0%   { transform: scale(1.018); background: color-mix(in srgb, var(--accent-cyan) 20%, transparent); box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-cyan) 55%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--accent-cyan) 60%, transparent); }
+    35%  { transform: scale(1); box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent-cyan) 0%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--accent-cyan) 45%, transparent); }
+    100% { background: transparent; box-shadow: 0 0 0 0 transparent, inset 0 0 0 1px transparent; }
+}
 .editor-circle { grid-column: 1; width: var(--cb); height: var(--cb); border-radius: 50%; border: 1.5px solid var(--accent-cyan); margin-top: -3px; display: none; }
 .editor-col { grid-column: 2 / 4; min-width: 0; display: none; flex-direction: column; gap: 10px; }
 .task-input-area.open .editor-circle { display: block; }
@@ -1641,10 +1654,30 @@ function emptyText() {
 function renderTasks() {
     const l = getList(activeListId);
     const ts = l ? visibleTasks(l) : [];
+    const inList = el.inputArea.parentNode === el.tasks, hadFocus = document.activeElement === el.rte;
+    if (inList) el.inputArea.remove();   // не даём innerHTML уничтожить открытый редактор
     el.tasks.innerHTML = ts.length ? ts.map(taskHTML).join('') : `<div class="empty-state">${emptyText()}</div>`;
+    if (inList) { placeEditor(ed && ed.taskId !== null ? taskEl(ed.taskId) : null); if (hadFocus) el.rte.focus({ preventScroll: true }); }
+}
+// поставить редактор на место задачи (node) или вернуть наверх (null)
+let edHome = null;
+function placeEditor(node) {
+    if (!node) {
+        if (edHome) { edHome.replaceWith(el.inputArea); edHome = null; }
+        el.inputArea.classList.remove('in-list');
+        return;
+    }
+    if (!edHome) {
+        edHome = document.createElement('div'); edHome.className = 'task-input-area ed-home';
+        const b = el.addTask.cloneNode(true); b.removeAttribute('id');
+        b.addEventListener('click', () => { if (!activeListId) { showCreateListHint(); return; } openEditor(null); });
+        edHome.appendChild(b); el.inputArea.replaceWith(edHome);
+    }
+    node.classList.add('editing', 'ed-hidden');
+    node.before(el.inputArea); el.inputArea.classList.add('in-list');
 }
 function taskEl(id) { return el.tasks.querySelector(`.task-item[data-id="${id}"]`); }
-function patchTask(t) { const node = taskEl(t.id); if (!node) return; const tmp = document.createElement('div'); tmp.innerHTML = taskHTML(t); node.replaceWith(tmp.firstElementChild); }
+function patchTask(t) { const node = taskEl(t.id); if (!node) return; const tmp = document.createElement('div'); tmp.innerHTML = taskHTML(t); const n = tmp.firstElementChild; if (node.classList.contains('ed-hidden')) n.classList.add('editing', 'ed-hidden'); node.replaceWith(n); }
 function findTask(id, listId) { const l = getList(listId); return l ? { l, t: (l.tasks || []).find(x => x.id === id) } : { l: null, t: null }; }
 
 el.tasks.addEventListener('click', (e) => {
@@ -1855,19 +1888,24 @@ function placeCaretAtEnd(node) { const r = document.createRange(); r.selectNodeC
 function openEditor(task) {
     if (!activeListId || viewMode !== 'active') return;
     if (ed && task && ed.taskId === task.id) { el.rte.focus(); return; }
-    if (ed) closeEditor();
+    const tNode = task ? taskEl(task.id) : null, anchorTop = tNode ? tNode.getBoundingClientRect().top : null;
+    if (ed) closeEditor(tNode, true);
     ed = { taskId: task ? task.id : null, listId: activeListId };
     edDirty = false;
     el.inputArea.classList.add('open');
     el.edHead.textContent = task ? 'Редактирование' : 'Новая заявка';
     el.rte.innerHTML = task ? (task.html || '<p><br></p>') : '<p><br></p>';
     el.rte.classList.toggle('is-empty', isEditorEmpty());
-    el.tasks.querySelectorAll('.task-item.editing').forEach(x => x.classList.remove('editing'));
-    if (task) { const n = taskEl(task.id); if (n) n.classList.add('editing'); }
+    el.tasks.querySelectorAll('.task-item.editing').forEach(x => x.classList.remove('editing', 'ed-hidden'));
+    const n = task ? taskEl(task.id) : null;
+    placeEditor(n);
+    // редактор появляется ровно там, где была задача на экране — список никуда не уезжает
+    if (n && anchorTop !== null) el.scroll.scrollTop += el.inputArea.getBoundingClientRect().top - anchorTop;
     updateFormInfo();
     el.rte.focus({ preventScroll: true });
     if (task) placeCaretAtEnd(el.rte); else placeCaretAtEnd(el.rte.firstChild || el.rte);
-    if (task) el.scroll.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n) { const r = el.inputArea.getBoundingClientRect(), b = el.scroll.getBoundingClientRect(); if (r.bottom > b.bottom - 8) el.scroll.scrollTop += Math.min(r.bottom - b.bottom + 16, r.top - b.top - 8); }
+    else if (task) el.scroll.scrollTo({ top: 0, behavior: 'smooth' });
     updateToolbarState();
 }
 function commitEditor() {
@@ -1897,16 +1935,26 @@ function hideEditorUI() {
     el.inputArea.classList.remove('open');
     el.rte.innerHTML = ''; el.rte.classList.add('is-empty');
     selectImage(null); el.formInfo.innerHTML = '';
-    el.tasks.querySelectorAll('.task-item.editing').forEach(x => x.classList.remove('editing'));
+    el.tasks.querySelectorAll('.task-item.editing').forEach(x => x.classList.remove('editing', 'ed-hidden'));
+    placeEditor(null);
 }
-function closeEditor() {
+// anchorEl — элемент, который должен остаться на месте экрана (например, задача, по которой кликнули)
+function closeEditor(anchorEl, noPulse) {
     if (!ed) return;
     if (dictationOn) setDictation(false);
     stopVoice(); commitEditor();
     const { l, t } = findTask(ed.taskId, ed.listId);
+    const inList = el.inputArea.classList.contains('in-list'), edTop = el.inputArea.getBoundingClientRect().top;
+    const anchor = anchorEl && anchorEl.isConnected && !anchorEl.classList.contains('ed-hidden') ? anchorEl : null, aTop = anchor ? anchor.getBoundingClientRect().top : 0;
     ed = null;
     hideEditorUI();
     if (l && t && !t.text && !t.hasImg) { l.tasks.splice(l.tasks.indexOf(t), 1); if (l.id === activeListId) renderTasks(); updateStats(); updateCounts(); scheduleSave(); }
+    else if (inList && t) {
+        const node = taskEl(t.id);
+        if (anchor && anchor.isConnected) el.scroll.scrollTop += anchor.getBoundingClientRect().top - aTop;
+        else if (node) el.scroll.scrollTop += node.getBoundingClientRect().top - edTop;
+        if (node && !noPulse) { node.classList.remove('pulse'); void node.offsetWidth; node.classList.add('pulse'); setTimeout(() => node.classList.remove('pulse'), 1200); }
+    }
     if (document.activeElement === el.rte) el.rte.blur();
 }
 function flashSaved() {
@@ -2090,7 +2138,7 @@ document.addEventListener('pointerdown', (e) => {
     // клик по самой редактируемой задаче в списке — не закрываем
     const item = e.target.closest('.task-item');
     if (item && Number(item.dataset.id) === ed.taskId && !e.target.closest('[data-act]')) return;
-    closeEditor();
+    closeEditor(item || null);
 }, true);
 // уход со страницы / сворачивание окна — сразу сохраняем
 document.addEventListener('visibilitychange', () => { if (document.hidden) { commitEditor(); flushSave(); } });
