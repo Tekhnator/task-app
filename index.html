@@ -654,6 +654,12 @@ body.task-dragging, body.task-dragging * { user-select: none !important; -webkit
 .tb-btn:hover { color: var(--text-white); }
 .tb-btn.active { background: var(--seg-active); color: var(--text-white); box-shadow: 0 1px 2px rgba(0,0,0,.18); }
 .tb-btn.txt { font-size: .76rem; font-weight: 600; padding: 0 10px; }
+/* стили текста показаны «как будут выглядеть» — как в Заметках iPhone */
+.tb-btn.txt[data-block] { color: var(--text-white); opacity: .72; letter-spacing: 0; line-height: 1; }
+.tb-btn.txt[data-block]:hover, .tb-btn.txt[data-block].active { opacity: 1; }
+.tb-btn.txt[data-block="h1"] { font-size: 1.08rem; font-weight: 700; letter-spacing: -.2px; }
+.tb-btn.txt[data-block="h2"] { font-size: .9rem; font-weight: 600; }
+.tb-btn.txt[data-block="p"] { font-size: .8rem; font-weight: 400; }
 .tb-btn .g-b { font-weight: 800; font-family: var(--font-family); }
 .tb-btn .g-i { font-style: italic; font-family: Georgia, "Times New Roman", serif; font-size: 1.05rem; }
 .tb-btn .g-u { text-decoration: underline; text-underline-offset: 2px; }
