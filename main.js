@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, net, shell, safeStorage } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, net, shell, safeStorage, screen } = require('electron');
 const { execFile } = require('child_process');
 const path = require('path');
 const fs = require('fs');
@@ -269,10 +269,42 @@ ipcMain.handle('backup:info', () => {
 ipcMain.handle('backup:open', async () => { const dir = backupDir(); fs.mkdirSync(dir, { recursive: true }); const e = await shell.openPath(dir); return e ? { error: e } : { ok: true }; });
 
 /* ===================== Окно ===================== */
+// размер, положение и «развёрнуто на весь экран» запоминаются при закрытии
+const winStateFile = () => path.join(app.getPath('userData'), 'window-state.json');
+function loadWinState() {
+    try {
+        const st = JSON.parse(fs.readFileSync(winStateFile(), 'utf8'));
+        if (!(st.width >= 400 && st.height >= 300)) return null;
+        // окно должно попадать на один из подключённых мониторов (монитор могли отключить)
+        if (st.x != null && st.y != null) {
+            const wa = screen.getDisplayMatching({ x: st.x, y: st.y, width: st.width, height: st.height }).workArea;
+            const vis = Math.min(st.x + st.width, wa.x + wa.width) - Math.max(st.x, wa.x) >= 120 && Math.min(st.y + st.height, wa.y + wa.height) - Math.max(st.y, wa.y) >= 60;
+            if (!vis) { delete st.x; delete st.y; }
+            st.width = Math.min(st.width, wa.width); st.height = Math.min(st.height, wa.height);
+        }
+        return st;
+    } catch { return null; }
+}
+function trackWinState(win) {
+    let t = null;
+    const save = () => {
+        try {
+            if (win.isDestroyed() || win.isMinimized()) return;
+            const b = win.getNormalBounds();
+            fs.writeFileSync(winStateFile(), JSON.stringify({ x: b.x, y: b.y, width: b.width, height: b.height, maximized: win.isMaximized(), fullscreen: win.isFullScreen() }));
+        } catch {}
+    };
+    const soon = () => { clearTimeout(t); t = setTimeout(save, 400); };
+    ['resize', 'move', 'maximize', 'unmaximize', 'enter-full-screen', 'leave-full-screen'].forEach(ev => win.on(ev, soon));
+    win.on('close', () => { clearTimeout(t); save(); });
+}
 function createWindow() {
+    const st = loadWinState() || {};
     const win = new BrowserWindow({
-        width: 1400,
-        height: 900,
+        width: st.width || 1400,
+        height: st.height || 900,
+        ...(st.x != null && st.y != null ? { x: st.x, y: st.y } : {}),
+        show: false,
         minWidth: 400,
         minHeight: 300,
         backgroundColor: '#05353d',
@@ -301,6 +333,12 @@ function createWindow() {
 
     win.loadFile('index.html');
     Menu.setApplicationMenu(null);
+    win.once('ready-to-show', () => {
+        if (st.maximized) win.maximize();
+        if (st.fullscreen) win.setFullScreen(true);
+        win.show();
+    });
+    trackWinState(win);
 }
 
 app.whenReady().then(createWindow);

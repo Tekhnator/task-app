@@ -3949,8 +3949,19 @@ loadCustomThemes();
 applySettings();
 setSidebarCollapsed(settings.sidebarCollapsed);
 syncDateFilterUI();
-const first = lists.find(l => !l.hidden);
+/* вид на момент закрытия: открытый список, «Активные/Выполненные», прокрутка (у каждого устройства свой) */
+const LS_UI = 'planner_ui_v1';
+let uiSt = {}; try { uiSt = JSON.parse(localStorage.getItem(LS_UI)) || {}; } catch (e) {}
+const first = (uiSt.list && lists.find(l => l.id === uiSt.list)) || lists.find(l => !l.hidden);
 setActiveList(first ? first.id : null);
+if (uiSt.view === 'completed' && first) switchView('completed');
+if (first && uiSt.list === first.id && uiSt.scroll > 0) requestAnimationFrame(() => { el.scroll.scrollTop = uiSt.scroll; });
+function saveUiState() { try { localStorage.setItem(LS_UI, JSON.stringify({ list: activeListId, view: viewMode, scroll: Math.round(el.scroll.scrollTop) })); } catch (e) {} }
+let uiSaveT = null;
+el.scroll.addEventListener('scroll', () => { clearTimeout(uiSaveT); uiSaveT = setTimeout(saveUiState, 300); }, { passive: true });
+window.addEventListener('pagehide', saveUiState); window.addEventListener('beforeunload', saveUiState);
+document.addEventListener('visibilitychange', () => { if (document.hidden) saveUiState(); });
+setInterval(saveUiState, 5000);
 if (settings.weatherLast && settings.weatherLast.temp != null) weatherData = settings.weatherLast;
 if (settings.topbarWeather) { if (weatherData) updateWeather(); fetchWeather(); }
 tick();
