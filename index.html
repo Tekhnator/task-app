@@ -861,8 +861,10 @@ body.move-mode .list-row:not(.move-self):hover .count, body.move-mode .list-row:
     .editor-circle, .task-input-area.open .editor-circle { display: none; }
     .editor-col, .add-task-btn { grid-column: 1 / 4; }
     .tb-mic { order: -1; margin-left: 0; }
-    .gear-btn { order: 2; }
-    .panel-title { flex: 1 0 calc(100% - 100px); }
+    .gear-btn, .money-btn { order: 2; }
+    /* в первой строке: меню, название и три значка (развитие, деньги, настройки) */
+    .panel-title { flex: 1 0 calc(100% - 200px); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .header-wrap > .money-btn, .header-wrap > .gear-btn { margin-left: -6px; }
     .settings-overlay { padding: 0; align-items: flex-end; }
     .settings-panel { border-radius: 16px 16px 0 0; max-height: 92dvh; padding-bottom: env(safe-area-inset-bottom); }
     .calendar-popup { left: 50% !important; transform: translateX(-50%); top: auto !important; bottom: calc(16px + env(safe-area-inset-bottom)); }
