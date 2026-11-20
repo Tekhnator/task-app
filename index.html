@@ -1341,7 +1341,10 @@ body.money-on .g-pill { right: auto; left: 24px; }
 
 
 /* график работы и заметки дня */
-:root { --wk-work: #4f8cff; --wk-vac: #2e9e3e; --wk-sick: #e0902a; }
+:root { --wk-work: #4f8cff; --wk-vac: #2e9e3e; --wk-sick: #e0902a; --wk-extra: #b56cf0; }
+.clock-pop .cal-d.w-extra { background: color-mix(in srgb, var(--wk-extra) 24%, transparent); }
+.clock-pop .cal-d.w-extra::before { content: ''; position: absolute; top: 3px; left: 50%; transform: translateX(-50%); width: 12px; height: 2px; border-radius: 2px; background: var(--wk-extra); }
+.k-extra { --wkc: var(--wk-extra); }
 .clock-pop .cal-d.w-work { background: color-mix(in srgb, var(--wk-work) 16%, transparent); }
 .clock-pop .cal-d.w-vac { background: color-mix(in srgb, var(--wk-vac) 20%, transparent); }
 .clock-pop .cal-d.w-sick { background: color-mix(in srgb, var(--wk-sick) 22%, transparent); }
@@ -1369,7 +1372,10 @@ body.money-on .g-pill { right: auto; left: 24px; }
 .wk-hint { font-size: .74rem; color: var(--text-muted); }
 .wk-hint a { color: var(--wc, var(--accent-cyan)); }
 .day-item.note .ico { color: var(--text-muted); }
-.day-item.note .tm { line-height: 1.2; }
+.day-item.note { align-items: flex-start; }
+.day-item.note .tm { line-height: 1.35; padding-top: 1px; }
+.day-item.note .t { white-space: normal; overflow-wrap: anywhere; line-height: 1.35; }
+.day-item.note .ico { padding-top: 2px; }
 .day-item.note .note-del { width: 22px; height: 22px; border: none; background: none; color: var(--text-muted); border-radius: 6px; cursor: pointer; font-size: 1rem; opacity: 0; flex-shrink: 0; }
 .day-item.note:hover .note-del { opacity: 1; }
 @media (hover: none) { .day-item.note .note-del { opacity: .6; } }
@@ -1655,6 +1661,7 @@ body.money-on .g-pill { right: auto; left: 24px; }
                     <div class="settings-row" id="work-hours-row"><div class="settings-label">Смена</div><span class="work-hours"><input type="time" class="text-input" id="work-from"> – <input type="time" class="text-input" id="work-to"></span></div>
                     <div class="settings-row" id="work-hol-row"><div class="settings-label">Праздники — выходные</div><div class="toggle" id="work-hol"></div></div>
                     <div class="settings-hint" id="work-sum"></div>
+                    <div class="btn-row" style="margin-top:8px"><button class="settings-btn" id="days-import-btn">Загрузить график и заметки из файла</button><input type="file" id="days-import-file" accept=".json,application/json" style="display:none"></div>
                     <div class="settings-hint">Рабочие дни подсвечиваются в календаре (клик по часам). Любой день можно изменить там же: выходной, отпуск, больничный или другие часы. Заметки на день — внизу списка дня: «12:00 планерка». Всё синхронизируется с телефоном.</div>
                     </div>
                 </details>
@@ -3425,7 +3432,7 @@ function renderClockPop(skipFetch) {
     $('cp-day-list').innerHTML = (list || '<div class="day-empty">Ничего не запланировано</div>') + `<div class="day-add"><input class="note-inp" id="cp-note-input" placeholder="+ Заметка: 12:00 планерка" enterkeyhint="done"></div>`;
     if (keepNote !== null) { const ni = $('cp-note-input'); ni.value = keepNote; ni.focus(); }
     const ms = workOn && (hasSched || Object.keys(days.ovr).length) ? monthWorkStats(cp.month) : null;
-    $('cp-month-sum').textContent = ms && (ms.d || ms.vac || ms.sick) ? `${MONTHS[mo]}: ${ms.d} ${plural(ms.d, ['рабочий день', 'рабочих дня', 'рабочих дней'])}${ms.h ? ' · ' + fmtHours(ms.h) : ''}${ms.vac ? ` · отпуск ${ms.vac} дн.` : ''}${ms.sick ? ` · больничный ${ms.sick} дн.` : ''}` : '';
+    $('cp-month-sum').textContent = ms && (ms.d || ms.vac || ms.sick || ms.extra) ? `${MONTHS[mo]}: ` + [ms.d || hasSched ? `${ms.d} ${plural(ms.d, ['рабочий день', 'рабочих дня', 'рабочих дней'])}` : '', ms.extra ? `в выходные ${ms.extra} дн.` : '', ms.h ? fmtHours(ms.h) : ''].filter(Boolean).join(' · ') + `${ms.vac ? ` · отпуск ${ms.vac} дн.` : ''}${ms.sick ? ` · больничный ${ms.sick} дн.` : ''}` : '';
     // ползунки: стандартные + Google + мои календари
     const layers = [{ key: 'calShowTasks', name: 'Задачи', c: 'var(--w-clock)', on: settings.calShowTasks !== false },
         { key: 'calShowHolidays', name: (settings.holCountry || 'RU') === 'RU' ? 'Праздники РФ' : 'Праздники', c: 'var(--danger)', on: settings.calShowHolidays !== false },
@@ -3610,7 +3617,7 @@ function renderToday() {
     todayEvents = evs;
     let h = '';
     const wt = settings.calShowWork !== false ? workInfo(todayS) : null;
-    if (wt) h += `<div class="today-item work k-${wt.kind}" data-today-cal="1"><span class="wk-dot"></span><span class="tm">${wt.kind === 'work' && wt.from ? wt.from : ''}</span><span class="t">${wt.kind === 'work' ? (wt.from && wt.to ? `Смена до ${wt.to}` : 'Рабочий день') : esc(WORK_KINDS[wt.kind])}</span></div>`;
+    if (wt) h += `<div class="today-item work k-${wt.kind}" data-today-cal="1"><span class="wk-dot"></span><span class="tm">${wt.kind === 'work' && wt.from ? wt.from : ''}</span><span class="t">${wt.kind === 'work' ? (wt.from && wt.to ? `Смена до ${wt.to}` : 'Рабочий день') : esc(WORK_KINDS[wt.kind] || '')}</span></div>`;
     hol.forEach(x => { h += `<div class="today-item hol" data-today-cal="1"><span class="ico" style="color:var(--danger);display:flex">${ICON_STAR.replace('class="i"', 'class="i" style="width:12px;height:12px"')}</span><span class="t">${esc(x.name)}</span></div>`; });
     evs.forEach((x, i) => {
         const st = new Date(x.start), en = new Date(x.end), past = !x.allDay && en < now, cur = !x.allDay && st <= now && en > now;
@@ -5621,7 +5628,7 @@ const WORK_TYPES = {
     '3/3': { name: '3/3 — три через три', pat: 'РРРВВВ', from: '08:00', to: '20:00' },
     'custom': { name: 'Свой цикл', pat: '', from: '09:00', to: '18:00' },
 };
-const WORK_KINDS = { work: 'Рабочий день', off: 'Выходной', vac: 'Отпуск', sick: 'Больничный' };
+const WORK_KINDS = { work: 'Рабочий день', extra: 'Работал в выходной', off: 'Выходной', vac: 'Отпуск', sick: 'Больничный' };
 let days = (() => { try { const d = JSON.parse(localStorage.getItem(LS_DAYS)); if (d && d.v) { d.ovr = d.ovr || {}; d.notes = d.notes || []; return d; } } catch (e) {} return { v: 1, sched: null, ovr: {}, notes: [] }; })();
 function saveDays() {
     try { localStorage.setItem(LS_DAYS, JSON.stringify(days)); } catch (e) { toast('Не удалось сохранить: мало места'); }
@@ -5647,20 +5654,21 @@ function workInfo(ds) {
         if (s.type === '5/2') { const wd = parseDate(ds).getDay(); base = wd >= 1 && wd <= 5 && !(s.hol !== false && isHolidayDay(ds)); }
         else { const p = workPattern(s); if (p && s.start) { const i = ((dDiff(s.start, ds) % p.length) + p.length) % p.length; base = p[i] === 'Р'; } }
     }
-    if (o) return { kind: o.kind, from: o.from || (s && s.from) || '', to: o.to || (s && s.to) || '', ovr: true, base };
+    if (o) return { kind: o.kind, from: o.from || (s && s.from) || '', to: o.to || (s && s.to) || '', ovrFrom: o.from || '', ovrTo: o.to || '', ovr: true, base };
     if (base === null) return null;
     return { kind: base ? 'work' : 'off', from: s.from || '', to: s.to || '', ovr: false, base };
 }
 function workLabel(w) {
     if (!w) return '';
     if (w.kind === 'work') return 'Рабочий день' + (w.from && w.to ? ` · ${w.from}–${w.to} · ${fmtHours(shiftHours(w.from, w.to))}` : '');
+    if (w.kind === 'extra') return 'Работал в выходной' + (w.ovrFrom && w.ovrTo ? ` · ${w.ovrFrom}–${w.ovrTo} · ${fmtHours(shiftHours(w.ovrFrom, w.ovrTo))}` : '');
     return WORK_KINDS[w.kind] || '';
 }
 function monthWorkStats(month) {
     const y = month.getFullYear(), m = month.getMonth(), n = new Date(y, m + 1, 0).getDate();
-    let d = 0, h = 0, vac = 0, sick = 0;
-    for (let i = 1; i <= n; i++) { const w = workInfo(fmtDate(new Date(y, m, i))); if (!w) continue; if (w.kind === 'work') { d++; h += shiftHours(w.from, w.to); } else if (w.kind === 'vac') vac++; else if (w.kind === 'sick') sick++; }
-    return { d, h, vac, sick };
+    let d = 0, h = 0, vac = 0, sick = 0, extra = 0;
+    for (let i = 1; i <= n; i++) { const w = workInfo(fmtDate(new Date(y, m, i))); if (!w) continue; if (w.kind === 'work') { d++; h += shiftHours(w.from, w.to); } else if (w.kind === 'extra') { extra++; if (w.ovrFrom && w.ovrTo) h += shiftHours(w.ovrFrom, w.ovrTo); } else if (w.kind === 'vac') vac++; else if (w.kind === 'sick') sick++; }
+    return { d, h, vac, sick, extra };
 }
 // «12:00 планерка», «с 9.30 до 10:00 обход», «в 15 звонок» → время и текст
 function parseNote(str) {
@@ -5677,7 +5685,7 @@ let cpWorkEdit = false, cpNoteEdit = null;
 function dayWorkHTML(ds) {
     const w = layerOn('calShowWork') ? workInfo(ds) : null, hasSched = !!(days.sched && days.sched.type);
     let h = '';
-    if (w || cpWorkEdit) h += `<div class="day-work k-${w ? w.kind : 'none'}"><span class="wk-dot"></span><span class="t">${w ? esc(workLabel(w)) + (w.ovr ? ' <span class="wk-ovr">изменено</span>' : '') : 'Отметьте день'}</span><button class="pop-link" data-work-edit="1">${cpWorkEdit ? 'готово' : 'изменить'}</button></div>`;
+    if (w || cpWorkEdit) h += `<div class="day-work k-${w ? w.kind : 'none'}"><span class="wk-dot"></span><span class="t">${w ? esc(workLabel(w)) + (w.ovr && hasSched ? ' <span class="wk-ovr">изменено</span>' : '') : 'Отметьте день'}</span><button class="pop-link" data-work-edit="1">${cpWorkEdit ? 'готово' : 'изменить'}</button></div>`;
     if (cpWorkEdit) {
         const o = days.ovr[ds] || {};
         h += `<div class="day-work-edit">
@@ -5758,6 +5766,25 @@ function workFromUI() {
     days.sched = s; saveDays(); syncWorkUI();
 }
 ['work-type', 'work-pat', 'work-start', 'work-from', 'work-to'].forEach(id => $(id).addEventListener('change', workFromUI));
+/* импорт: { kind: 'zadachi-days', ovr: { 'дд.мм.гггг': { kind, from, to } }, notes: [{ id, date, time, to, text }], sched? } — повторная загрузка не дублирует */
+function importDaysText(text) {
+    const d = JSON.parse(String(text).replace(/^\ufeff/, ''));
+    if (d.kind !== 'zadachi-days') throw new Error('это не файл графика');
+    const okDate = (x) => /^\d\d\.\d\d\.\d{4}$/.test(x);
+    let o = 0, n = 0;
+    Object.keys(d.ovr || {}).forEach(k => { const v = d.ovr[k]; if (okDate(k) && v && WORK_KINDS[v.kind]) { days.ovr[k] = { kind: v.kind, ...(v.from ? { from: v.from } : {}), ...(v.to ? { to: v.to } : {}) }; o++; } });
+    const ids = new Set(days.notes.map(x => x.id));
+    (d.notes || []).forEach(x => { if (!x || !okDate(x.date) || !x.text) return; const id = x.id || ('imp-' + fnv(x.date + x.time + x.text).replace(':', '-')); if (ids.has(id)) { Object.assign(days.notes.find(y => y.id === id), { time: x.time || '', to: x.to || '', text: x.text }); return; } days.notes.push({ id, date: x.date, time: x.time || '', to: x.to || '', text: String(x.text), ts: Date.now() + n }); ids.add(id); n++; });
+    if (d.sched && d.sched.type && WORK_TYPES[d.sched.type]) days.sched = { ...d.sched };
+    saveDays(); try { syncWorkUI(); } catch (e) {}
+    toast(`Загружено: ${o} ${plural(o, ['день', 'дня', 'дней'])} с отметками, ${n} ${plural(n, ['заметка', 'заметки', 'заметок'])}`, 6000);
+    return { o, n };
+}
+$('days-import-btn').addEventListener('click', () => $('days-import-file').click());
+$('days-import-file').addEventListener('change', (e) => {
+    const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+    const r = new FileReader(); r.onload = () => { try { importDaysText(r.result); } catch (err) { toast('Не удалось загрузить: ' + err.message, 6000); } }; r.readAsText(f, 'utf-8');
+});
 $('work-hol').addEventListener('click', () => { $('work-hol').classList.toggle('on'); workFromUI(); });
 
 /* ===================== ДЕНЬГИ И РАЗВИТИЕ — СИНХРОНИЗАЦИЯ =====================
