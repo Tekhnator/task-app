@@ -1339,6 +1339,50 @@ body.money-on .g-pill { right: auto; left: 24px; }
 .g-edit .kind { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .g-edit.bad .m-inp.ico { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 45%, transparent); }
 
+
+/* график работы и заметки дня */
+:root { --wk-work: #4f8cff; --wk-vac: #2e9e3e; --wk-sick: #e0902a; }
+.clock-pop .cal-d.w-work { background: color-mix(in srgb, var(--wk-work) 16%, transparent); }
+.clock-pop .cal-d.w-vac { background: color-mix(in srgb, var(--wk-vac) 20%, transparent); }
+.clock-pop .cal-d.w-sick { background: color-mix(in srgb, var(--wk-sick) 22%, transparent); }
+.clock-pop .cal-d.w-work::before, .clock-pop .cal-d.w-vac::before, .clock-pop .cal-d.w-sick::before { content: ''; position: absolute; top: 3px; left: 50%; transform: translateX(-50%); width: 12px; height: 2px; border-radius: 2px; background: var(--wk-work); }
+.clock-pop .cal-d.w-vac::before { background: var(--wk-vac); } .clock-pop .cal-d.w-sick::before { background: var(--wk-sick); }
+.clock-pop .cal-d.today::before { background: currentColor !important; }
+.clock-pop .cal-d.today { background: var(--wc) !important; }
+.cp-month-sum { font-size: .74rem; color: var(--text-muted); text-align: center; margin: 4px 0 0; min-height: 0; }
+.cp-month-sum:empty { display: none; }
+.day-work { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; font-size: .84rem; background: color-mix(in srgb, var(--wkc, var(--text-muted)) 12%, transparent); }
+.day-work .t { flex: 1; min-width: 0; }
+.day-work .wk-ovr { font-size: .7rem; color: var(--text-muted); margin-left: 4px; }
+.wk-dot { width: 8px; height: 8px; border-radius: 2px; background: var(--wkc, var(--text-muted)); flex-shrink: 0; }
+.k-work { --wkc: var(--wk-work); } .k-vac { --wkc: var(--wk-vac); } .k-sick { --wkc: var(--wk-sick); } .k-off { --wkc: var(--danger); } .k-none { --wkc: var(--text-muted); }
+.pop-link { background: none; border: none; color: var(--wc, var(--accent-cyan)); font: inherit; font-size: .76rem; font-weight: 600; cursor: pointer; padding: 0; white-space: nowrap; }
+.day-work-edit { padding: 8px 6px 4px; display: flex; flex-direction: column; gap: 8px; }
+.wk-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.wk-chip { height: 28px; padding: 0 10px; border-radius: 8px; border: none; background: var(--seg-bg); color: var(--text-muted); font: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; }
+.wk-chip.on { background: color-mix(in srgb, var(--wkc) 26%, transparent); color: var(--text-white); box-shadow: inset 0 0 0 1px var(--wkc); }
+.wk-times { font-size: .8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.wk-times input, .work-hours input { height: 28px; border-radius: 7px; border: 1px solid var(--border-color); background: var(--seg-bg); color: var(--text-white); font: inherit; font-size: .82rem; padding: 0 6px; color-scheme: dark; }
+[data-mode="light"] .wk-times input, [data-mode="light"] .work-hours input { color-scheme: light; }
+.work-hours { display: inline-flex; align-items: center; gap: 6px; }
+.work-hours input { width: 96px; height: 32px; }
+.wk-hint { font-size: .74rem; color: var(--text-muted); }
+.wk-hint a { color: var(--wc, var(--accent-cyan)); }
+.day-item.note .ico { color: var(--text-muted); }
+.day-item.note .tm { line-height: 1.2; }
+.day-item.note .note-del { width: 22px; height: 22px; border: none; background: none; color: var(--text-muted); border-radius: 6px; cursor: pointer; font-size: 1rem; opacity: 0; flex-shrink: 0; }
+.day-item.note:hover .note-del { opacity: 1; }
+@media (hover: none) { .day-item.note .note-del { opacity: .6; } }
+.day-item.note .note-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+.day-item.note.editing { padding: 3px 4px; cursor: default; }
+.day-item.note.editing:hover { background: none; }
+.note-inp { width: 100%; height: 32px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--seg-bg); color: var(--text-white); font: inherit; font-size: .84rem; padding: 0 10px; outline: none; }
+.note-inp:focus { border-color: var(--wc, var(--accent-cyan)); }
+.day-add { padding: 4px 0 2px; }
+@media (max-width: 760px) { .note-inp { font-size: 16px; height: 38px; } }
+.today-item.work .wk-dot { margin-left: 0; }
+.today-item.work .t { color: var(--text-muted); }
+
 </style>
 </head>
 <body>
@@ -1524,6 +1568,7 @@ body.money-on .g-pill { right: auto; left: 24px; }
 <div class="w-pop clock-pop" id="clock-pop">
     <div class="cal-head"><button class="icon-btn" id="cp-prev"><svg class="i" viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg></button><span id="cp-title"></span><button class="icon-btn" id="cp-next"><svg class="i" viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button></div>
     <div class="cal-grid" id="cp-grid"></div>
+    <div class="cp-month-sum" id="cp-month-sum"></div>
     <div class="day-head" style="display:flex;align-items:center;justify-content:space-between"><span id="cp-day-title"></span><span class="cp-head-btns"><button class="pop-icon" id="cp-sync" title="Синхронизировать праздники и встречи"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><polyline points="4 3.5 4 8 8.5 8"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><polyline points="20 20.5 20 16 15.5 16"/></svg></button><button class="pop-today" id="cp-today">Сегодня</button></span></div>
     <div class="day-list" id="cp-day-list"></div>
     <div class="cp-layers" id="cp-layers">
@@ -1601,6 +1646,18 @@ body.money-on .g-pill { right: auto; left: 24px; }
             <div class="settings-section">
                 <div class="settings-section-title">Календарь (клик по часам)</div>
                 <div class="settings-row"><div class="settings-label">Страна для праздников</div><input type="text" class="text-input" id="hol-country" maxlength="2" style="width:80px;text-align:center;text-transform:uppercase" placeholder="RU"></div>
+                <details class="info-details fold" id="work-fold" style="margin-top:12px">
+                    <summary>Мой график работы</summary>
+                    <div class="fold-body">
+                    <div class="settings-row"><div class="settings-label">График</div><select class="theme-select" id="work-type"><option value="">Нет графика</option><option value="5/2">5/2 — пн–пт</option><option value="2/2">2/2 — два через два</option><option value="1/3">Сутки через трое</option><option value="1/2">Сутки через двое</option><option value="3/3">3/3 — три через три</option><option value="custom">Свой цикл</option></select></div>
+                    <div class="settings-row" id="work-pat-row"><div class="settings-label">Цикл: Р — рабочий, В — выходной</div><input type="text" class="text-input" id="work-pat" placeholder="РРВВ" style="width:140px;text-transform:uppercase;letter-spacing:2px"></div>
+                    <div class="settings-row" id="work-start-row"><div class="settings-label">Первый рабочий день цикла</div><input type="date" class="text-input" id="work-start" style="width:150px"></div>
+                    <div class="settings-row" id="work-hours-row"><div class="settings-label">Смена</div><span class="work-hours"><input type="time" class="text-input" id="work-from"> – <input type="time" class="text-input" id="work-to"></span></div>
+                    <div class="settings-row" id="work-hol-row"><div class="settings-label">Праздники — выходные</div><div class="toggle" id="work-hol"></div></div>
+                    <div class="settings-hint" id="work-sum"></div>
+                    <div class="settings-hint">Рабочие дни подсвечиваются в календаре (клик по часам). Любой день можно изменить там же: выходной, отпуск, больничный или другие часы. Заметки на день — внизу списка дня: «12:00 планерка». Всё синхронизируется с телефоном.</div>
+                    </div>
+                </details>
                 <div class="settings-sub-title" style="margin-top:12px">Мои календари</div>
                 <div class="cal-src-list" id="cal-src-list"></div>
                 <details class="info-details fold" id="cal-add-fold" style="margin-top:12px">
@@ -3328,6 +3385,8 @@ function renderClockPop(skipFetch) {
         settings.calendars.forEach(c => { if (calLayerOn(c.id)) ensureCalendar(c, false); });
     }
     const tasksM = layerOn('calShowTasks') ? deadlinesMap() : {}, holM = layerOn('calShowHolidays') ? holidaysByDay() : {}, evM = eventsByDay();
+    const workOn = layerOn('calShowWork'), hasSched = !!(days.sched && days.sched.type), notesM = {};
+    days.notes.forEach(n => { (notesM[n.date] = notesM[n.date] || []).push(n); });
     $('cp-title').textContent = `${MONTHS[mo]} ${y}`;
     let h = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d => `<div class="cal-dn">${d}</div>`).join('');
     const { start } = gridRange();
@@ -3335,32 +3394,43 @@ function renderClockPop(skipFetch) {
         const d = new Date(start); d.setDate(start.getDate() + i);
         if (i >= 35 && d.getMonth() !== mo) break;
         const s = fmtDate(d), tk = tasksM[s], hl = holM[s], ev = evM[s];
-        const wk = layerOn('calShowWeekends') && (d.getDay() === 0 || d.getDay() === 6);
+        const wi = workOn ? workInfo(s) : null, nt = notesM[s];
+        const wk = layerOn('calShowWeekends') && (wi && hasSched ? wi.kind === 'off' : (d.getDay() === 0 || d.getDay() === 6));
         let dots = '';
+        if (nt) dots += `<i style="background:var(--text-white);opacity:.7"></i>`;
         if (tk) { const cats = tk.map(x => category(x.t)); dots += `<i style="background:${cats.includes('danger') ? 'var(--danger)' : cats.includes('warning') ? 'var(--warning)' : 'var(--success)'}"></i>`; }
         if (ev) [...new Set(ev.map(x => x.color))].slice(0, 3).forEach(c => { dots += `<i style="background:${esc(c)}"></i>`; });
-        const tip = [hl && hl.map(x => x.name).join(', '), ev && `${ev.length} ${plural(ev.length, ['встреча','встречи','встреч'])}`, tk && `${tk.length} ${plural(tk.length, ['дедлайн','дедлайна','дедлайнов'])}`].filter(Boolean).join(' · ');
-        h += `<div class="cal-d${d.getMonth() !== mo ? ' out' : ''}${s === todayS ? ' today' : ''}${s === cp.sel ? ' sel' : ''}${hl ? ' hol' : ''}${wk ? ' wkend' : ''}" data-date="${s}" title="${esc(tip)}">${d.getDate()}${dots ? `<span class="dots">${dots}</span>` : ''}</div>`;
+        const tip = [wi && workLabel(wi), nt && nt.map(noteText).join('; '), hl && hl.map(x => x.name).join(', '), ev && `${ev.length} ${plural(ev.length, ['встреча','встречи','встреч'])}`, tk && `${tk.length} ${plural(tk.length, ['дедлайн','дедлайна','дедлайнов'])}`].filter(Boolean).join(' · ');
+        h += `<div class="cal-d${d.getMonth() !== mo ? ' out' : ''}${s === todayS ? ' today' : ''}${s === cp.sel ? ' sel' : ''}${hl ? ' hol' : ''}${wk ? ' wkend' : ''}${wi ? ' w-' + wi.kind : ''}" data-date="${s}" title="${esc(tip)}">${d.getDate()}${dots ? `<span class="dots">${dots}</span>` : ''}</div>`;
     }
     $('cp-grid').innerHTML = h;
     // список выбранного дня
     const sd = parseDate(cp.sel);
     $('cp-day-title').textContent = (cp.sel === todayS ? 'Сегодня, ' : '') + sd.toLocaleDateString('ru-RU', { weekday: cp.sel === todayS ? undefined : 'short', day: 'numeric', month: 'long' });
-    let list = '';
+    let list = dayWorkHTML(cp.sel);
     (holM[cp.sel] || []).forEach(x => { list += `<div class="day-item hol static"><span class="ico" style="color:var(--danger)">${ICON_STAR}</span><span class="t">${esc(x.name)}</span></div>`; });
     cpDayEvents = evM[cp.sel] || [];
+    // встречи и заметки — вперемешку по времени
+    const rows = [];
     cpDayEvents.forEach((x, i) => {
         const st = new Date(x.start), en = new Date(x.end);
         const tm = x.allDay ? 'весь день' : (fmtDate(st) === cp.sel ? fmtTime(st) : '…') + (fmtDate(en) === cp.sel && !x.allDay ? '–' + fmtTime(en) : '');
         const open = cpOpenEv === eventKey(x);
-        list += `<div class="day-item ev${open ? ' open' : ''}" data-ev="${i}"><span class="stat-dot" style="background:${esc(x.color || 'var(--ev)')}"></span><span class="tm">${tm}</span><span class="t">${esc(cleanTitle(x.title))}</span></div>${open ? eventDetailsHTML(x) : ''}`;
+        rows.push({ k: x.allDay ? '' : (fmtDate(st) === cp.sel ? fmtTime(st) : '00:00'), h: `<div class="day-item ev${open ? ' open' : ''}" data-ev="${i}"><span class="stat-dot" style="background:${esc(x.color || 'var(--ev)')}"></span><span class="tm">${tm}</span><span class="t">${esc(cleanTitle(x.title))}</span></div>${open ? eventDetailsHTML(x) : ''}` });
     });
+    notesOf(cp.sel).forEach(n => rows.push({ k: n.time || '', h: noteItemHTML(n) }));
+    rows.sort((a, b) => a.k.localeCompare(b.k)).forEach(r => { list += r.h; });
     (tasksM[cp.sel] || []).forEach(({ t, l }) => { list += `<div class="day-item" data-task="${t.id}" data-list="${esc(l.id)}"><span class="stat-dot ${category(t)}"></span><span class="t">${esc(t.title || '(без названия)')}</span><span class="l">${esc(l.name)}</span></div>`; });
-    $('cp-day-list').innerHTML = list || '<div class="day-empty">Ничего не запланировано</div>';
+    const keepNote = document.activeElement && document.activeElement.id === 'cp-note-input' ? document.activeElement.value : null;
+    $('cp-day-list').innerHTML = (list || '<div class="day-empty">Ничего не запланировано</div>') + `<div class="day-add"><input class="note-inp" id="cp-note-input" placeholder="+ Заметка: 12:00 планерка" enterkeyhint="done"></div>`;
+    if (keepNote !== null) { const ni = $('cp-note-input'); ni.value = keepNote; ni.focus(); }
+    const ms = workOn && (hasSched || Object.keys(days.ovr).length) ? monthWorkStats(cp.month) : null;
+    $('cp-month-sum').textContent = ms && (ms.d || ms.vac || ms.sick) ? `${MONTHS[mo]}: ${ms.d} ${plural(ms.d, ['рабочий день', 'рабочих дня', 'рабочих дней'])}${ms.h ? ' · ' + fmtHours(ms.h) : ''}${ms.vac ? ` · отпуск ${ms.vac} дн.` : ''}${ms.sick ? ` · больничный ${ms.sick} дн.` : ''}` : '';
     // ползунки: стандартные + Google + мои календари
     const layers = [{ key: 'calShowTasks', name: 'Задачи', c: 'var(--w-clock)', on: settings.calShowTasks !== false },
         { key: 'calShowHolidays', name: (settings.holCountry || 'RU') === 'RU' ? 'Праздники РФ' : 'Праздники', c: 'var(--danger)', on: settings.calShowHolidays !== false },
         { key: 'calShowWeekends', name: 'Выходные', c: 'var(--danger)', on: settings.calShowWeekends !== false }];
+    if (days.sched || Object.keys(days.ovr).length) layers.push({ key: 'calShowWork', name: 'Мой график', c: 'var(--wk-work)', on: settings.calShowWork !== false });
     if (settings.gcalClientId) layers.push({ cal: 'google', name: 'Google', c: '#0a84ff', on: calLayerOn('google') });
     settings.calendars.forEach(c => layers.push({ cal: c.id, name: c.name, c: c.color, on: calLayerOn(c.id) }));
     const soloKey = (l) => l.key || l.cal;
@@ -3381,7 +3451,7 @@ $('widget-clock').addEventListener('click', () => { if (togglePop($('clock-pop')
 $('cp-prev').addEventListener('click', () => { cp.month.setMonth(cp.month.getMonth() - 1); renderClockPop(); });
 $('cp-next').addEventListener('click', () => { cp.month.setMonth(cp.month.getMonth() + 1); renderClockPop(); });
 $('cp-today').addEventListener('click', () => { cp.month = new Date(); cp.month.setDate(1); cp.sel = fmtDate(new Date()); renderClockPop(); });
-$('cp-grid').addEventListener('click', (e) => { const d = e.target.closest('[data-date]'); if (!d) return; cp.sel = d.dataset.date; cpOpenEv = null; const pd = parseDate(cp.sel); if (pd.getMonth() !== cp.month.getMonth()) { cp.month = new Date(pd.getFullYear(), pd.getMonth(), 1); } renderClockPop(); });
+$('cp-grid').addEventListener('click', (e) => { const d = e.target.closest('[data-date]'); if (!d) return; cp.sel = d.dataset.date; cpOpenEv = null; cpNoteEdit = null; cpWorkEdit = false; const pd = parseDate(cp.sel); if (pd.getMonth() !== cp.month.getMonth()) { cp.month = new Date(pd.getFullYear(), pd.getMonth(), 1); } renderClockPop(); });
 $('cp-layers').addEventListener('click', (e) => {
     if (e.target.closest('#cp-status') || e.target.closest('[data-addcal]')) { e.preventDefault(); closePops(); openSettings(); $('cal-add-fold').open = true; setTimeout(() => { $('cal-new-name').scrollIntoView({ block: 'center' }); $('cal-new-name').focus(); }, 60); return; }
     if (e.target.closest('[data-solo-off]')) { e.preventDefault(); cpSolo = null; cpOpenEv = null; renderClockPop(); return; }
@@ -3539,13 +3609,17 @@ function renderToday() {
     const tks = settings.calShowTasks !== false ? (deadlinesMap()[todayS] || []) : [];
     todayEvents = evs;
     let h = '';
+    const wt = settings.calShowWork !== false ? workInfo(todayS) : null;
+    if (wt) h += `<div class="today-item work k-${wt.kind}" data-today-cal="1"><span class="wk-dot"></span><span class="tm">${wt.kind === 'work' && wt.from ? wt.from : ''}</span><span class="t">${wt.kind === 'work' ? (wt.from && wt.to ? `Смена до ${wt.to}` : 'Рабочий день') : esc(WORK_KINDS[wt.kind])}</span></div>`;
     hol.forEach(x => { h += `<div class="today-item hol" data-today-cal="1"><span class="ico" style="color:var(--danger);display:flex">${ICON_STAR.replace('class="i"', 'class="i" style="width:12px;height:12px"')}</span><span class="t">${esc(x.name)}</span></div>`; });
     evs.forEach((x, i) => {
         const st = new Date(x.start), en = new Date(x.end), past = !x.allDay && en < now, cur = !x.allDay && st <= now && en > now;
         h += `<div class="today-item${past ? ' past' : ''}${cur ? ' now' : ''}" data-today-ev="${i}"><span class="stat-dot" style="background:${esc(x.color || 'var(--ev)')}"></span><span class="tm">${x.allDay ? 'день' : fmtTime(st)}</span><span class="t">${esc(cleanTitle(x.title))}</span></div>`;
     });
-    tks.forEach(({ t, l }) => { h += `<div class="today-item" data-today-task="${t.id}" data-list="${esc(l.id)}"><span class="stat-dot ${category(t)}"></span><span class="tm">срок</span><span class="t">${esc(t.title || '(без названия)')}</span></div>`; });
-    const n = hol.length + evs.length + tks.length;
+    const nts = notesOf(todayS), nowM = now.getHours() * 60 + now.getMinutes();
+    nts.forEach(n => { const a = tMin(n.time), b = tMin(n.to); const past = a !== null && (b !== null ? b : a + 30) <= nowM, cur = a !== null && a <= nowM && (b !== null ? b : a + 30) > nowM; h += `<div class="today-item note${past ? ' past' : ''}${cur ? ' now' : ''}" data-today-cal="1"><span class="stat-dot" style="background:var(--text-muted)"></span><span class="tm">${n.time || ''}</span><span class="t">${esc(n.text)}</span></div>`; });
+    tks.forEach(({ t, l }) => { h += `<div class="today-item" data-today-task=""${t.id}" data-list="${esc(l.id)}"><span class="stat-dot ${category(t)}"></span><span class="tm">срок</span><span class="t">${esc(t.title || '(без названия)')}</span></div>`; });
+    const n = hol.length + evs.length + tks.length + nts.length;
     $('today-count').textContent = n ? String(n) : '';
     $('today-list').innerHTML = h || '<div class="today-empty">Ничего не запланировано</div>';
 }
@@ -3835,6 +3909,7 @@ function syncSettingsUI() {
     document.querySelectorAll('.scale-preset-btn').forEach(b => b.classList.toggle('active', +b.dataset.scale === (settings.uiScale || 100)));
     $('gcal-adv').open = !!settings.gcalClientId;
     $('voice-toggle').classList.toggle('on', settings.voiceEnabled !== false);
+    try { syncWorkUI(); } catch (e) {}
     $('gcal-client-id').value = settings.gcalClientId || ''; $('gcal-client-secret').value = settings.gcalClientSecret || ''; $('gcal-calendar-id').value = settings.gcalCalendarId || 'primary';
     $('gcal-auto-toggle').classList.toggle('on', settings.gcalAuto !== false);
     refreshGcalStatus();
@@ -3964,7 +4039,8 @@ const shardOf = (id) => 'tasks/' + (parseInt(fnv(String(id)), 36) % SHARDS).toSt
 const modShard = (id) => (parseInt(fnv(String(id)), 36) % 8).toString(16);
 const fileOfKey = (k) => k.startsWith('t:') ? shardOf(k.slice(2)) : k.startsWith('c:') ? 'calendars.json'
     : k.startsWith('m:tx:') ? 'money/tx-' + modShard(k.slice(5)) + '.json' : k.startsWith('m:') ? 'money/meta.json'
-    : k.startsWith('g:log:') ? 'growth/log-' + modShard(k.slice(6)) + '.json' : k.startsWith('g:') ? 'growth/meta.json' : 'meta.json';
+    : k.startsWith('g:log:') ? 'growth/log-' + modShard(k.slice(6)) + '.json' : k.startsWith('g:') ? 'growth/meta.json'
+    : k.startsWith('d:') ? 'days.json' : 'meta.json';
 const TASK_DERIVED = ['title', 'body', 'text', 'hasImg'];
 
 // текущее состояние программы → набор сущностей
@@ -4134,7 +4210,7 @@ async function syncNow(manual) {
                 const c = await ghReq('GET', `/git/commits/${head}`); if (c.status !== 200) throw ghFail(c, 'коммит');
                 treeSha = c.json.tree.sha;
                 const t = await ghReq('GET', `/git/trees/${treeSha}?recursive=1`); if (t.status !== 200) throw ghFail(t, 'дерево файлов');
-                remoteBlobs = {}; (t.json.tree || []).forEach(x => { if (x.type === 'blob' && /^(meta|calendars)\.json$|^tasks\/[0-9a-f]{2}\.json$|^(money|growth)\/[a-z0-9-]+\.json$/.test(x.path)) remoteBlobs[x.path] = x.sha; });
+                remoteBlobs = {}; (t.json.tree || []).forEach(x => { if (x.type === 'blob' && /^(meta|calendars|days)\.json$|^tasks\/[0-9a-f]{2}\.json$|^(money|growth)\/[a-z0-9-]+\.json$/.test(x.path)) remoteBlobs[x.path] = x.sha; });
                 const changedPaths = Object.keys(remoteBlobs).filter(p => remoteBlobs[p] !== syncSt.blobs[p]);
                 const items = {};
                 for (const p of changedPaths) {
@@ -4340,8 +4416,8 @@ function bkTx(mode, fn) { return bkDb().then(db => new Promise((res, rej) => { c
 const bkAll = () => bkTx('readonly', st => st.getAll()).then(a => (a || []).sort((x, y) => y.at - x.at));
 function dataSnapshot() {
     const src = {}; Object.keys(calEvents.src || {}).forEach(id => { if ((settings.calendars || []).some(c => c.id === id)) src[id] = { items: calEvents.src[id].items || [] }; });
-    let mo = null, gr = null; try { mo = money; gr = growth; } catch (e) {}
-    return { kind: 'zadachi-data', v: 1, savedAt: new Date().toISOString(), folders, lists, listIdCounter, folderIdCounter, calendars: settings.calendars || [], calSrc: src, money: mo, growth: gr };
+    let mo = null, gr = null, dy = null; try { mo = money; gr = growth; dy = days; } catch (e) {}
+    return { kind: 'zadachi-data', v: 1, savedAt: new Date().toISOString(), folders, lists, listIdCounter, folderIdCounter, calendars: settings.calendars || [], calSrc: src, money: mo, growth: gr, days: dy };
 }
 const snapStats = (d) => ({ lists: (d.lists || []).length, tasks: (d.lists || []).reduce((a, l) => a + (l.tasks || []).length, 0) });
 const statsText = (s) => `${s.lists} ${plural(s.lists, ['список', 'списка', 'списков'])}, ${s.tasks} ${plural(s.tasks, ['задача', 'задачи', 'задач'])}`;
@@ -4380,6 +4456,7 @@ function restoreSnapshot(d) {
     }
     if (d.money && d.money.v) { money = d.money; try { localStorage.setItem(LS_MONEY, JSON.stringify(money)); } catch (e) {} }
     if (d.growth && d.growth.v) { growth = d.growth; try { localStorage.setItem(LS_GROWTH, JSON.stringify(growth)); } catch (e) {} }
+    if (d.days && d.days.v) { days = d.days; try { localStorage.setItem(LS_DAYS, JSON.stringify(days)); } catch (e) {} }
     flushSave();   // при подключённой синхронизации восстановленное уйдёт на GitHub и на другие устройства
     modRefresh();
     activeListId = null; const v = lists.find(l => !l.hidden); setActiveList(v ? v.id : null);
@@ -4416,7 +4493,7 @@ async function ghSnapshotEnts(sha) {
     const t = await ghReq('GET', `/git/trees/${c.json.tree.sha}?recursive=1`); if (t.status !== 200) throw ghFail(t, 'файлы версии');
     const items = {};
     for (const x of (t.json.tree || [])) {
-        if (x.type !== 'blob' || !/^(meta|calendars)\.json$|^tasks\/[0-9a-f]{2}\.json$|^(money|growth)\/[a-z0-9-]+\.json$/.test(x.path)) continue;
+        if (x.type !== 'blob' || !/^(meta|calendars|days)\.json$|^tasks\/[0-9a-f]{2}\.json$|^(money|growth)\/[a-z0-9-]+\.json$/.test(x.path)) continue;
         const b = await ghReq('GET', `/git/blobs/${x.sha}`); if (b.status !== 200) throw ghFail(b, 'файл ' + x.path);
         try { Object.assign(items, JSON.parse(b64dec(b.json.content)).items || {}); } catch (e) {}
     }
@@ -5531,6 +5608,158 @@ function gAddDemo() {
 try { if (localStorage.getItem('planner_mode') === 'growth') setGrowthMode(true); } catch (e) {}
 gPillUpd();
 
+/* ===================== ГРАФИК РАБОТЫ И ЗАМЕТКИ НА ДЕНЬ =====================
+   График: 5/2, 2/2, сутки через двое/трое, 3/3 или свой цикл («РРВВ»), часы смены.
+   На любой день можно поставить исключение (рабочий, выходной, отпуск, больничный, свои часы)
+   и заметки: «12:00 планерка». Синхронизируется между устройствами (days.json), попадает в бэкапы. */
+const LS_DAYS = 'planner_days_v1';
+const WORK_TYPES = {
+    '5/2': { name: '5/2 — пн–пт', from: '09:00', to: '18:00' },
+    '2/2': { name: '2/2 — два через два', pat: 'РРВВ', from: '08:00', to: '20:00' },
+    '1/3': { name: 'Сутки через трое', pat: 'РВВВ', from: '08:00', to: '08:00' },
+    '1/2': { name: 'Сутки через двое', pat: 'РВВ', from: '08:00', to: '08:00' },
+    '3/3': { name: '3/3 — три через три', pat: 'РРРВВВ', from: '08:00', to: '20:00' },
+    'custom': { name: 'Свой цикл', pat: '', from: '09:00', to: '18:00' },
+};
+const WORK_KINDS = { work: 'Рабочий день', off: 'Выходной', vac: 'Отпуск', sick: 'Больничный' };
+let days = (() => { try { const d = JSON.parse(localStorage.getItem(LS_DAYS)); if (d && d.v) { d.ovr = d.ovr || {}; d.notes = d.notes || []; return d; } } catch (e) {} return { v: 1, sched: null, ovr: {}, notes: [] }; })();
+function saveDays() {
+    try { localStorage.setItem(LS_DAYS, JSON.stringify(days)); } catch (e) { toast('Не удалось сохранить: мало места'); }
+    modChanged();
+    try { if ($('clock-pop').classList.contains('visible')) renderClockPop(true); renderToday(); } catch (e) {}
+}
+const dParse = (x) => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(x || ''); return m ? new Date(+m[1], m[2] - 1, +m[3]) : parseDate(x); };   // и «2026-11-02», и «02.11.2026»
+const isoOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dDiff = (a, b) => Math.round((dParse(b) - dParse(a)) / 864e5);
+const tMin = (t) => { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); return m ? +m[1] * 60 + +m[2] : null; };
+function shiftHours(from, to) { const a = tMin(from), b = tMin(to); if (a === null || b === null) return 0; let d = b - a; if (d <= 0) d += 1440; return d / 60; }
+const fmtHours = (h) => (Math.round(h * 10) / 10).toString().replace('.', ',') + ' ч';
+function workPattern(s) {
+    const p = s.type === 'custom' ? String(s.pattern || '') : (WORK_TYPES[s.type] || {}).pat || '';
+    return p.toUpperCase().replace(/[RР1]/g, 'Р').replace(/[WВO0]/g, 'В').replace(/[^РВ]/g, '');
+}
+function isHolidayDay(ds) { try { return (holidaysByDayFor(parseDate(ds).getFullYear())[ds] || []).length > 0; } catch (e) { return false; } }
+// что за день по графику (null — графика нет и день не отмечен)
+function workInfo(ds) {
+    const s = days.sched, o = days.ovr[ds];
+    let base = null;
+    if (s && s.type) {
+        if (s.type === '5/2') { const wd = parseDate(ds).getDay(); base = wd >= 1 && wd <= 5 && !(s.hol !== false && isHolidayDay(ds)); }
+        else { const p = workPattern(s); if (p && s.start) { const i = ((dDiff(s.start, ds) % p.length) + p.length) % p.length; base = p[i] === 'Р'; } }
+    }
+    if (o) return { kind: o.kind, from: o.from || (s && s.from) || '', to: o.to || (s && s.to) || '', ovr: true, base };
+    if (base === null) return null;
+    return { kind: base ? 'work' : 'off', from: s.from || '', to: s.to || '', ovr: false, base };
+}
+function workLabel(w) {
+    if (!w) return '';
+    if (w.kind === 'work') return 'Рабочий день' + (w.from && w.to ? ` · ${w.from}–${w.to} · ${fmtHours(shiftHours(w.from, w.to))}` : '');
+    return WORK_KINDS[w.kind] || '';
+}
+function monthWorkStats(month) {
+    const y = month.getFullYear(), m = month.getMonth(), n = new Date(y, m + 1, 0).getDate();
+    let d = 0, h = 0, vac = 0, sick = 0;
+    for (let i = 1; i <= n; i++) { const w = workInfo(fmtDate(new Date(y, m, i))); if (!w) continue; if (w.kind === 'work') { d++; h += shiftHours(w.from, w.to); } else if (w.kind === 'vac') vac++; else if (w.kind === 'sick') sick++; }
+    return { d, h, vac, sick };
+}
+// «12:00 планерка», «с 9.30 до 10:00 обход», «в 15 звонок» → время и текст
+function parseNote(str) {
+    let s = String(str || '').trim(), time = '', to = '';
+    const m = /^(?:с|в|c)?\s*(\d{1,2})[:.](\d{2})(?:\s*(?:-|–|—|до)\s*(\d{1,2})[:.](\d{2}))?\s*[-–—,:]?\s*/i.exec(s) || /^(?:с|в)\s+(\d{1,2})()(?:\s*(?:-|–|—|до)\s*(\d{1,2})[:.]?(\d{2})?)?\s+/i.exec(s);
+    if (m && +m[1] < 24) { time = `${pad(+m[1])}:${m[2] ? m[2] : '00'}`; if (m[3] !== undefined && m[3] !== '' && +m[3] < 24) to = `${pad(+m[3])}:${m[4] ? m[4] : '00'}`; s = s.slice(m[0].length).trim(); }
+    return { time, to, text: s };
+}
+const notesOf = (ds) => days.notes.filter(n => n.date === ds).sort((a, b) => (a.time || '').localeCompare(b.time || '') || (a.ts || 0) - (b.ts || 0));
+const noteText = (n) => (n.time ? n.time + (n.to ? '–' + n.to : '') + ' ' : '') + n.text;
+
+/* --- панель дня в календаре --- */
+let cpWorkEdit = false, cpNoteEdit = null;
+function dayWorkHTML(ds) {
+    const w = layerOn('calShowWork') ? workInfo(ds) : null, hasSched = !!(days.sched && days.sched.type);
+    let h = '';
+    if (w || cpWorkEdit) h += `<div class="day-work k-${w ? w.kind : 'none'}"><span class="wk-dot"></span><span class="t">${w ? esc(workLabel(w)) + (w.ovr ? ' <span class="wk-ovr">изменено</span>' : '') : 'Отметьте день'}</span><button class="pop-link" data-work-edit="1">${cpWorkEdit ? 'готово' : 'изменить'}</button></div>`;
+    if (cpWorkEdit) {
+        const o = days.ovr[ds] || {};
+        h += `<div class="day-work-edit">
+            <div class="wk-chips">${Object.keys(WORK_KINDS).map(k => `<button class="wk-chip k-${k}${w && w.kind === k ? ' on' : ''}" data-work-kind="${k}">${WORK_KINDS[k]}</button>`).join('')}</div>
+            <div class="wk-times">Часы: <input type="time" id="cp-w-from" value="${esc(o.from || (w && w.from) || (days.sched && days.sched.from) || '')}"> – <input type="time" id="cp-w-to" value="${esc(o.to || (w && w.to) || (days.sched && days.sched.to) || '')}">
+            ${days.ovr[ds] ? `<button class="pop-link" data-work-reset="1">${hasSched ? 'как по графику' : 'убрать отметку'}</button>` : ''}</div>
+            ${hasSched ? '' : '<div class="wk-hint">Постоянный график (5/2, 2/2, сутки через трое…) задаётся один раз: <a href="#" data-work-settings="1">настроить график</a></div>'}
+        </div>`;
+    }
+    return h;
+}
+function noteItemHTML(n) {
+    if (cpNoteEdit === n.id) return `<div class="day-item note editing"><input class="note-inp" id="cp-note-edit" value="${esc(noteText(n))}" data-note-id="${esc(n.id)}"></div>`;
+    return `<div class="day-item note" data-note="${esc(n.id)}"><span class="ico"><svg class="i" viewBox="0 0 24 24"><path d="M5 4h14v12l-4 4H5z"/><path d="M15 20v-4h4"/></svg></span><span class="tm">${n.time ? n.time + (n.to ? '<br>' + n.to : '') : ''}</span><span class="t">${esc(n.text)}</span><button class="note-del" data-note-del="${esc(n.id)}" title="Удалить">×</button></div>`;
+}
+function addNoteFrom(input, ds) {
+    const v = input.value.trim(); if (!v) return false;
+    const p = parseNote(v); if (!p.text) { toast('Добавьте текст заметки'); return false; }
+    days.notes.push({ id: 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), date: ds, time: p.time, to: p.to, text: p.text, ts: Date.now() });
+    saveDays(); return true;
+}
+$('cp-day-list').addEventListener('click', (e) => {
+    const t = e.target;
+    if (t.closest('[data-work-edit]')) { e.stopPropagation(); cpWorkEdit = !cpWorkEdit; renderClockPop(true); return; }
+    const k = t.closest('[data-work-kind]'); if (k) { e.stopPropagation(); const o = days.ovr[cp.sel] || {}; o.kind = k.dataset.workKind; days.ovr[cp.sel] = o; saveDays(); return; }
+    if (t.closest('[data-work-reset]')) { e.stopPropagation(); delete days.ovr[cp.sel]; saveDays(); return; }
+    if (t.closest('[data-work-settings]')) { e.preventDefault(); e.stopPropagation(); closePops(); openSettings(); $('work-fold').open = true; setTimeout(() => $('work-fold').scrollIntoView({ block: 'center' }), 60); return; }
+    const del = t.closest('[data-note-del]'); if (del) { e.stopPropagation(); days.notes = days.notes.filter(n => n.id !== del.dataset.noteDel); saveDays(); return; }
+    const it = t.closest('.day-item.note[data-note]'); if (it) { e.stopPropagation(); cpNoteEdit = it.dataset.note; renderClockPop(true); const inp = $('cp-note-edit'); if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); } return; }
+}, true);
+$('cp-day-list').addEventListener('change', (e) => {
+    if (e.target.id === 'cp-w-from' || e.target.id === 'cp-w-to') {
+        const o = days.ovr[cp.sel] || { kind: (workInfo(cp.sel) || {}).kind || 'work' };
+        o.from = $('cp-w-from').value; o.to = $('cp-w-to').value; days.ovr[cp.sel] = o; saveDays();
+    }
+});
+$('cp-day-list').addEventListener('keydown', (e) => {
+    if (e.target.id === 'cp-note-input') {
+        if (e.key === 'Enter') { e.preventDefault(); if (addNoteFrom(e.target, cp.sel)) { const n = $('cp-note-input'); if (n) n.focus(); } }
+        else if (e.key === 'Escape') { e.target.value = ''; e.target.blur(); e.stopPropagation(); }
+    } else if (e.target.id === 'cp-note-edit') {
+        if (e.key === 'Enter') { e.preventDefault(); finishNoteEdit(e.target); }
+        else if (e.key === 'Escape') { e.stopPropagation(); cpNoteEdit = null; renderClockPop(true); }
+    }
+});
+$('cp-day-list').addEventListener('focusout', (e) => { if (e.target.id === 'cp-note-edit') setTimeout(() => { if (cpNoteEdit) finishNoteEdit(e.target); }, 120); });
+function finishNoteEdit(inp) {
+    const n = days.notes.find(x => x.id === inp.dataset.noteId); cpNoteEdit = null;
+    if (!n) { renderClockPop(true); return; }
+    const v = inp.value.trim();
+    if (!v) days.notes = days.notes.filter(x => x !== n);
+    else { const p = parseNote(v); Object.assign(n, { time: p.time, to: p.to, text: p.text || v }); }
+    saveDays();
+}
+
+/* --- настройки графика --- */
+function syncWorkUI() {
+    const s = days.sched || {};
+    $('work-type').value = s.type || '';
+    const t = s.type || '', cyc = t && t !== '5/2';
+    $('work-pat-row').style.display = t === 'custom' ? '' : 'none';
+    $('work-start-row').style.display = cyc ? '' : 'none';
+    $('work-hours-row').style.display = t ? '' : 'none';
+    $('work-hol-row').style.display = t === '5/2' ? '' : 'none';
+    $('work-pat').value = s.pattern || '';
+    $('work-start').value = s.start || '';
+    $('work-from').value = s.from || ''; $('work-to').value = s.to || '';
+    $('work-hol').classList.toggle('on', s.hol !== false);
+    const st = t ? monthWorkStats(new Date()) : null;
+    $('work-sum').textContent = st ? `В этом месяце: ${st.d} ${plural(st.d, ['рабочий день', 'рабочих дня', 'рабочих дней'])}${st.h ? ' · ' + fmtHours(st.h) : ''}.` + (cyc && !s.start ? ' Укажите первый рабочий день цикла.' : '') : '';
+}
+function workFromUI() {
+    const t = $('work-type').value;
+    if (!t) { days.sched = null; saveDays(); syncWorkUI(); return; }
+    const prev = days.sched || {}, def = WORK_TYPES[t];
+    const s = { type: t, pattern: $('work-pat').value.trim(), start: $('work-start').value || (prev.start || (t !== '5/2' ? isoOf(new Date()) : '')), from: $('work-from').value, to: $('work-to').value, hol: $('work-hol').classList.contains('on') };
+    if (prev.type !== t) { s.from = def.from; s.to = def.to; if (t === 'custom' && !s.pattern) s.pattern = 'РРВВ'; }
+    days.sched = s; saveDays(); syncWorkUI();
+}
+['work-type', 'work-pat', 'work-start', 'work-from', 'work-to'].forEach(id => $(id).addEventListener('change', workFromUI));
+$('work-hol').addEventListener('click', () => { $('work-hol').classList.toggle('on'); workFromUI(); });
+
 /* ===================== ДЕНЬГИ И РАЗВИТИЕ — СИНХРОНИЗАЦИЯ =====================
    Каждая запись — отдельная сущность (m:tx:…, g:log:…), как задачи: слияние по времени правки, удаления — надгробия.
    Файлы в репозитории данных: money/meta.json, money/tx-0..7.json, growth/meta.json, growth/log-0..7.json.
@@ -5553,11 +5782,17 @@ function modEntities() {
         e['g:cfg'] = { yearBooks: growth.yearBooks, order: growth.acts.map(a => a.id) };
         e['g:run'] = { r: growth.running || null };
     } catch (x) {}
+    try {
+        e['d:v'] = { v: 1 };   // метка «у этого устройства есть раздел графика» (для отката к версии)
+        if (days.sched) e['d:cfg'] = { ...days.sched };
+        Object.keys(days.ovr).forEach(k => { e['d:o:' + k] = { date: k, ...days.ovr[k] }; });
+        days.notes.forEach(n => { e['d:n:' + n.id] = { ...n }; });
+    } catch (x) {}
     return e;
 }
-var MOD_SINGLE = { 'm:cfg': 1, 'g:cfg': 1, 'g:run': 1 };
+var MOD_SINGLE = { 'm:cfg': 1, 'g:cfg': 1, 'g:run': 1, 'd:v': 1 };
 // запись в исходном виде «из коробки» — самая старая, чтобы не затереть правки с другого устройства
-function modIsSeed(k, h) { try { const m = k.startsWith('m:') ? money.seedFp : k.startsWith('g:') ? growth.seedFp : null; return !!(m && m[k] === h); } catch (x) { return false; } }
+function modIsSeed(k, h) { if (k === 'd:v') return true; try { const m = k.startsWith('m:') ? money.seedFp : k.startsWith('g:') ? growth.seedFp : null; return !!(m && m[k] === h); } catch (x) { return false; } }
 function modSeedFp() {
     const e = modEntities(), mf = {}, gf = {};
     for (const k in e) { const h = fnv(JSON.stringify(e[k])); if (k.startsWith('m:')) mf[k] = h; else gf[k] = h; }
@@ -5588,6 +5823,12 @@ function modRebuild(e) {
             growth.yearBooks = e['g:cfg'].yearBooks || 12;
             growth.running = e['g:run'] ? e['g:run'].r || null : growth.running;
             saveGrowth();
+        }
+        if (e['d:v']) {
+            days.sched = e['d:cfg'] ? (({ ...x }) => x)(e['d:cfg']) : null;
+            days.ovr = {}; keys.filter(k => k.startsWith('d:o:')).forEach(k => { const o = { ...e[k] }; const d = o.date; delete o.date; days.ovr[d] = o; });
+            days.notes = vals('d:n:').map(n => ({ ...n }));
+            saveDays();
         }
     } finally { modRebuilding = false; }
 }
