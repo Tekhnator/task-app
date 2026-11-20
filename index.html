@@ -255,6 +255,10 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 .w-pop { position: fixed; z-index: 1200; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow-pop); padding: 14px; display: none; color: var(--text-white); }
 .w-pop.visible { display: block; }
 .clock-pop { width: 312px; --wc: var(--w-clock); --ev: #0a84ff; }
+/* календарь никогда не выходит за экран: сетка и ползунки на месте, прокручивается только список дня */
+.clock-pop.visible { display: flex; flex-direction: column; max-height: calc(100dvh - var(--pop-top, 70px) - 10px); }
+.clock-pop > .cal-head, .clock-pop > .cal-grid, .clock-pop > .cp-month-sum, .clock-pop > .day-head, .clock-pop > .cp-layers { flex-shrink: 0; }
+.clock-pop > .day-list { flex: 1 1 auto; min-height: 72px; max-height: none; }
 .clock-pop .cal-d.today { background: var(--wc); color: #fff; font-weight: 700; }
 [data-theme="tasks"]:not([data-mode="light"]) .clock-pop .cal-d.today { color: #001a1f; }
 .clock-pop .cal-d.sel:not(.today) { box-shadow: inset 0 0 0 1.5px var(--wc); }
@@ -392,7 +396,7 @@ body.is-app .web-only { display: none !important; }
 [data-theme="iphone"] .calc-keys .op.on { background: #fff; color: var(--wc); }
 [data-theme="iphone"] .calc-keys .fn { background: #a5a5a5; color: #000; }
 [data-theme="iphone"][data-mode="light"] .calc-keys .fn { background: #d4d4d2; }
-@media (max-width: 760px) { .w-pop { left: 12px !important; right: 12px; width: auto; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom)); } }
+@media (max-width: 760px) { .w-pop { left: 12px !important; right: 12px; width: auto; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom)); } .clock-pop.visible { max-height: calc(100dvh - 24px - env(safe-area-inset-bottom) - env(safe-area-inset-top)); } }
 .w-net { --wc: var(--text-muted); cursor: pointer; gap: 7px; }
 #widget-sync { cursor: pointer; }
 .w-net .w-ico svg { width: 15px; height: 15px; }
@@ -3174,7 +3178,7 @@ function closePops(except) { document.querySelectorAll('.w-pop.visible').forEach
 function togglePop(pop, anchor) {
     if (pop.classList.contains('visible')) { closePops(); return false; }
     closePops(pop); pop._anchor = anchor; pop.classList.add('visible'); anchor.querySelector('.w-chip').classList.add('open');
-    if (!isMobile()) { const r = anchor.getBoundingClientRect(), w = pop.offsetWidth; pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px'; pop.style.top = (r.bottom + 8) + 'px'; }
+    if (!isMobile()) { const r = anchor.getBoundingClientRect(), w = pop.offsetWidth; pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px'; pop.style.top = (r.bottom + 8) + 'px'; pop.style.setProperty('--pop-top', (r.bottom + 8) + 'px'); }
     return true;
 }
 document.addEventListener('pointerdown', (e) => { if (!e.target.closest('.w-pop, #widget-clock, #widget-calc, #widget-weather')) closePops(); }, true);
